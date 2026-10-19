@@ -1,3 +1,5 @@
+"use client";
+
 import { site } from "@/lib/site";
 
 export function Footer() {
@@ -5,7 +7,7 @@ export function Footer() {
     <footer className="border-t border-black/8 bg-white py-10 text-[11px] text-[#86868b] dark:border-white/10 dark:bg-black transition-colors">
       <div className="mx-auto flex max-w-5xl flex-col items-center justify-between gap-4 px-6 sm:flex-row">
         <p>
-          Copyright © {new Date().getFullYear()} {site.name}. All rights reserved.
+          Copyright © 2026 {site.name}. All rights reserved.
         </p>
 
         <div className="flex items-center gap-6">

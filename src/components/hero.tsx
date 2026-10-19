@@ -5,81 +5,112 @@ import Link from "next/link";
 import { site } from "@/lib/site";
 
 export function Hero() {
+  const categories = [
+    { id: "work", label: "Featured Work", sub: "3 projects" },
+    { id: "ai", label: "AI Agents", sub: "Gemini & Tools" },
+    { id: "systems", label: "C++ Systems", sub: "SCPI & VISA" },
+    { id: "opensource", label: "Open Source", sub: "YC W25 SDK" },
+    { id: "experience", label: "Experience", sub: "JV Micronics" },
+    { id: "specs", label: "Tech Specs", sub: "Architecture" },
+  ];
+
   return (
-    <section id="overview" className="mx-auto flex min-h-[calc(100vh-3rem)] max-w-5xl flex-col justify-center px-6 pt-20 pb-24 text-center">
-      {/* Eyebrow */}
-      <p className="text-xs font-medium tracking-[0.24em] text-neutral-400 dark:text-neutral-500 uppercase">
-        Software Engineer · ECE-CS &apos;27, JIIT
-      </p>
-
-      {/* Main Name Headline */}
-      <h1 className="mt-5 text-[clamp(3rem,8vw,5.75rem)] leading-[0.94] font-semibold tracking-[-0.045em] text-neutral-900 dark:text-white">
-        {site.name}.
-      </h1>
-
-      {/* Product-like tagline */}
-      <p className="mt-4 text-[clamp(1.5rem,3.5vw,2.5rem)] leading-[1.15] font-semibold tracking-[-0.03em] text-[#86868b]">
-        Autonomous agents. C++ automation. Scalable APIs.
-      </p>
-
-      {/* Description */}
-      <p className="mx-auto mt-8 max-w-2xl text-[19px] leading-8 text-neutral-500 dark:text-neutral-400">
-        Bridging deterministic systems with intelligent LLM autonomy. Shipped a production RF suite used by 50 engineers, authored approved PRs for Corsair (YC W25), and won hyperSprint 2026.
-      </p>
-
-      {/* Action links */}
-      <div className="mt-10 flex flex-wrap items-center justify-center gap-6 text-[15px]">
-        <Link
-          href="/#work"
-          className="rounded-full bg-neutral-900 px-6 py-2.5 font-medium text-white transition-opacity hover:opacity-85 dark:bg-white dark:text-black"
-        >
-          Explore Work
-        </Link>
-        <a
-          href={`mailto:${site.email}`}
-          className="font-medium text-[#0066cc] dark:text-[#2997ff] transition-opacity hover:opacity-80 flex items-center gap-1"
-        >
-          <span>Open to 2026 roles</span>
-          <span className="text-sm">›</span>
-        </a>
-      </div>
-
-      {/* Apple-style Key Metrics (Clean, unboxed typography) */}
-      <div className="mx-auto mt-20 grid w-full max-w-4xl grid-cols-2 gap-8 border-t border-black/8 pt-12 sm:grid-cols-4 dark:border-white/10 text-left">
-        <div>
-          <div className="text-3xl font-semibold tracking-tight text-neutral-900 dark:text-white sm:text-4xl">
-            10h → 7m
+    <section id="overview" className="pt-10 pb-16 sm:pt-14 sm:pb-20">
+      <div className="mx-auto max-w-6xl px-6">
+        {/* Apple Store Top Header: Large dual-tone typography */}
+        <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-8">
+          <div className="max-w-3xl">
+            <h1 className="text-[34px] sm:text-[46px] lg:text-[52px] font-semibold tracking-[-0.025em] leading-[1.08]">
+              <span className="text-[#1d1d1f] dark:text-[#f5f5f7]">{site.name}. </span>
+              <span className="text-[#6e6e73] dark:text-[#86868b]">
+                Autonomous LLM agents, C++ automation, and production APIs.
+              </span>
+            </h1>
           </div>
-          <p className="mt-1 text-xs text-[#86868b] leading-5">
-            RF sweep duration reduction at JV Micronics
-          </p>
+
+          {/* Apple Store Side Info Card */}
+          <div className="flex flex-col gap-1 text-xs text-[#6e6e73] dark:text-[#86868b] lg:text-right shrink-0">
+            <span className="font-medium text-[#1d1d1f] dark:text-[#f5f5f7]">
+              Open to 2026 Engineering Roles
+            </span>
+            <span>B.Tech ECE-CS (2023–2027) · JIIT Noida</span>
+            <div className="mt-2 flex items-center lg:justify-end gap-3 text-xs">
+              <a
+                href={`mailto:${site.email}`}
+                className="text-[#0066cc] dark:text-[#2997ff] hover:underline"
+              >
+                Email Himanshu ›
+              </a>
+              <span className="text-black/20 dark:text-white/20">|</span>
+              <a
+                href={site.social.github}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-[#0066cc] dark:text-[#2997ff] hover:underline"
+              >
+                GitHub Profile ›
+              </a>
+            </div>
+          </div>
         </div>
 
-        <div>
-          <div className="text-3xl font-semibold tracking-tight text-neutral-900 dark:text-white sm:text-4xl">
-            15K+
+        {/* Apple Store Category Navigation Shelf */}
+        <div className="mt-12 overflow-x-auto pb-4 pt-2 -mx-6 px-6 scrollbar-none">
+          <div className="flex items-center gap-4 min-w-max">
+            {categories.map((cat) => (
+              <a
+                key={cat.id}
+                href={`#${cat.id}`}
+                className="apple-pill-item group flex flex-col items-center justify-center rounded-2xl bg-white px-6 py-4 shadow-[0_2px_12px_rgba(0,0,0,0.04)] dark:bg-[#161617] dark:shadow-none border border-black/4 dark:border-white/8 min-w-[140px] text-center"
+              >
+                <span className="text-sm font-semibold tracking-tight text-[#1d1d1f] group-hover:text-[#0066cc] dark:text-[#f5f5f7] dark:group-hover:text-[#2997ff] transition-colors">
+                  {cat.label}
+                </span>
+                <span className="text-[11px] text-[#6e6e73] dark:text-[#86868b] mt-0.5">
+                  {cat.sub}
+                </span>
+              </a>
+            ))}
           </div>
-          <p className="mt-1 text-xs text-[#86868b] leading-5">
-            GitHub stars on SDK contributed (Corsair YC W25)
-          </p>
         </div>
 
-        <div>
-          <div className="text-3xl font-semibold tracking-tight text-neutral-900 dark:text-white sm:text-4xl">
-            50
+        {/* Apple Store Stat Strip */}
+        <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-4">
+          <div className="apple-card p-6">
+            <div className="text-2xl sm:text-3xl font-semibold tracking-tight text-[#1d1d1f] dark:text-[#f5f5f7]">
+              10h → 7m
+            </div>
+            <div className="text-xs text-[#6e6e73] dark:text-[#86868b] mt-1">
+              RF sweep cycle reduction
+            </div>
           </div>
-          <p className="mt-1 text-xs text-[#86868b] leading-5">
-            Production RF engineers actively using desktop tool
-          </p>
-        </div>
 
-        <div>
-          <div className="text-3xl font-semibold tracking-tight text-neutral-900 dark:text-white sm:text-4xl">
-            1700+
+          <div className="apple-card p-6">
+            <div className="text-2xl sm:text-3xl font-semibold tracking-tight text-[#1d1d1f] dark:text-[#f5f5f7]">
+              15,000+
+            </div>
+            <div className="text-xs text-[#6e6e73] dark:text-[#86868b] mt-1">
+              Stars on SDK contributed
+            </div>
           </div>
-          <p className="mt-1 text-xs text-[#86868b] leading-5">
-            LeetCode contest rating with 500+ solved
-          </p>
+
+          <div className="apple-card p-6">
+            <div className="text-2xl sm:text-3xl font-semibold tracking-tight text-[#1d1d1f] dark:text-[#f5f5f7]">
+              50
+            </div>
+            <div className="text-xs text-[#6e6e73] dark:text-[#86868b] mt-1">
+              Production RF engineers
+            </div>
+          </div>
+
+          <div className="apple-card p-6">
+            <div className="text-2xl sm:text-3xl font-semibold tracking-tight text-[#1d1d1f] dark:text-[#f5f5f7]">
+              1,700+
+            </div>
+            <div className="text-xs text-[#6e6e73] dark:text-[#86868b] mt-1">
+              LeetCode contest rating
+            </div>
+          </div>
         </div>
       </div>
     </section>

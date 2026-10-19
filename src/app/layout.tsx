@@ -1,16 +1,9 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Nav } from "@/components/nav";
 import { Footer } from "@/components/footer";
 import { site } from "@/lib/site";
 import "./globals.css";
-
-const sans = Inter({
-  variable: "--font-inter",
-  subsets: ["latin"],
-  display: "swap",
-});
 
 export const metadata: Metadata = {
   title: {
@@ -46,8 +39,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" suppressHydrationWarning className={`${sans.variable} h-full antialiased`}>
+    <html lang="en" suppressHydrationWarning className="h-full antialiased">
       <head>
+        <link rel="preconnect" href="https://fonts.cdnfonts.com" />
+        <link rel="stylesheet" href="https://fonts.cdnfonts.com/css/sf-pro-display" />
         <script
           dangerouslySetInnerHTML={{
             __html: `
@@ -63,7 +58,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className="flex min-h-full flex-col bg-[#fbfbfd] text-[#1d1d1f] dark:bg-[#080c14] dark:text-[#f1f5f9] transition-colors duration-300">
+      <body className="flex min-h-full flex-col bg-[#f5f5f7] text-[#1d1d1f] dark:bg-[#000000] dark:text-[#f5f5f7] transition-colors duration-400">
         <ThemeProvider>
           <Nav />
           <main className="flex-1">{children}</main>

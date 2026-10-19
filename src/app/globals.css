@@ -1,29 +1,32 @@
 @import "tailwindcss";
+@import url('https://fonts.cdnfonts.com/css/sf-pro-display');
 
 @custom-variant dark (&:where(.dark, .dark *));
 
 :root {
-  --background: #ffffff;
-  --background-secondary: #f5f5f7;
+  --background: #f5f5f7;
+  --background-secondary: #ffffff;
+  --card-background: #ffffff;
+  --card-border: rgba(0, 0, 0, 0.04);
   --foreground: #1d1d1f;
-  --foreground-secondary: #86868b;
-  --border: #d2d2d7;
-  --border-subtle: rgba(0, 0, 0, 0.08);
+  --foreground-secondary: #6e6e73;
+  --foreground-tertiary: #86868b;
   --accent: #0071e3;
   --accent-hover: #0077ed;
-  --card-bg: #ffffff;
+  --card-hover-shadow: 0 16px 36px -12px rgba(0, 0, 0, 0.12), 0 0 1px 1px rgba(0, 0, 0, 0.04);
 }
 
 .dark {
   --background: #000000;
   --background-secondary: #161617;
+  --card-background: #161617;
+  --card-border: rgba(255, 255, 255, 0.08);
   --foreground: #f5f5f7;
-  --foreground-secondary: #86868b;
-  --border: #424245;
-  --border-subtle: rgba(255, 255, 255, 0.12);
+  --foreground-secondary: #a1a1a6;
+  --foreground-tertiary: #86868b;
   --accent: #2997ff;
   --accent-hover: #3ca3ff;
-  --card-bg: #161617;
+  --card-hover-shadow: 0 20px 48px -12px rgba(0, 0, 0, 0.7), 0 0 1px 1px rgba(255, 255, 255, 0.1);
 }
 
 html {
@@ -34,11 +37,11 @@ html {
 body {
   background-color: var(--background);
   color: var(--foreground);
-  font-family: var(--font-inter), -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Icons", "Helvetica Neue", Helvetica, Arial, sans-serif;
-  letter-spacing: -0.015em;
+  font-family: "SF Pro Display", -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  letter-spacing: -0.012em;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  transition: background-color 0.3s cubic-bezier(0.16, 1, 0.3, 1), color 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: background-color 0.4s cubic-bezier(0.25, 1, 0.5, 1), color 0.4s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 ::selection {
@@ -46,27 +49,57 @@ body {
   color: #ffffff;
 }
 
-/* Apple typography helpers */
-.apple-headline {
-  letter-spacing: -0.04em;
-  line-height: 1.05;
+/* Apple Store Card Hover Animation */
+.apple-card {
+  border-radius: 28px;
+  background-color: var(--card-background);
+  transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.4s cubic-bezier(0.25, 1, 0.5, 1), border-color 0.4s ease;
+  will-change: transform, box-shadow;
+  border: 1px solid var(--card-border);
 }
 
-.apple-subheadline {
+.apple-card:hover {
+  transform: scale(1.014) translateY(-3px);
+  box-shadow: var(--card-hover-shadow);
+}
+
+/* Apple Store Category Item Hover */
+.apple-pill-item {
+  transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1), background-color 0.2s ease, opacity 0.2s ease;
+}
+
+.apple-pill-item:hover {
+  transform: translateY(-2px);
+}
+
+/* Apple Typography */
+.apple-hero-title {
+  font-size: clamp(2.75rem, 6.5vw, 4.5rem);
+  font-weight: 600;
+  line-height: 1.04;
+  letter-spacing: -0.025em;
+}
+
+.apple-section-headline {
+  font-size: clamp(2rem, 4.5vw, 2.75rem);
+  font-weight: 600;
+  line-height: 1.1;
   letter-spacing: -0.02em;
-  line-height: 1.4;
 }
 
-/* Smooth transitions */
-.transition-apple {
-  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+.apple-body-muted {
+  color: var(--foreground-secondary);
 }
 
-/* Apple segmented control effect */
-.apple-tab-active {
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+/* Subtle scrollbar */
+::-webkit-scrollbar {
+  height: 6px;
+  width: 6px;
 }
-
-.dark .apple-tab-active {
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+::-webkit-scrollbar-thumb {
+  background: rgba(120, 120, 120, 0.25);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
 }

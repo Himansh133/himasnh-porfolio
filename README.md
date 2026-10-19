@@ -1,36 +1,67 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Himanshu Kumar — Portfolio
 
-## Getting Started
+> Personal portfolio website of **Himanshu Kumar**, Software Engineer & Systems Builder (B.Tech ECE-CS, 2023–2027 at JIIT Noida).
+> Live at: [https://github.com/Himansh133](https://github.com/Himansh133)
 
-First, run the development server:
+---
+
+## ⚡ Highlights & Features
+
+- **Resume Integration**: Complete career history including JV Micronics internship (C++17/Qt6/SCPI), Corsair (YC W25) open source contributions (15K+ stars SDK), hackathon wins, and certifications.
+- **Theme Switcher**: Seamless Dark / Light mode toggle with zero-flicker client hydration and local persistence.
+- **Interactive System Lab**: Live simulated execution of:
+  - *Revenue Rescue Agent* (FastAPI + Gemini + Deterministic Financial Floor Guardrails)
+  - *FieldFox RF Sweep Automation* (10-hour to 7-minute test sweep acceleration)
+  - *Natural Language Git Commit Explorer* (hyperSprint 2026 winner)
+- **Interactive Micro-Effects**: Ambient gradients, dynamic category filter pills, one-click email copy with toast feedback, and stat cards.
+- **Next.js & Tailwind CSS**: Modern App Router, responsive layout, and clean typography.
+
+---
+
+## 🛠️ Tech Stack
+
+- **Framework**: Next.js 16 (App Router)
+- **Library**: React 19, TypeScript
+- **Styling**: Tailwind CSS v4, Vanilla CSS Custom Properties
+- **Fonts**: Inter (`next/font/google`)
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+Ensure you have [Node.js](https://nodejs.org) (v18 or newer) installed.
+
+### Installation
+
+```bash
+git clone https://github.com/Himansh133/himasnh-porfolio.git
+cd himasnh-porfolio
+npm install
+```
+
+### Running Locally
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Building for Production
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run build
+npm run start
+```
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## 📬 Contact & Links
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **GitHub**: [github.com/Himansh133](https://github.com/Himansh133)
+- **LinkedIn**: [linkedin.com/in/himanshu-kumar-8686aa2a1](https://linkedin.com/in/himanshu-kumar-8686aa2a1)
+- **LeetCode**: [leetcode.com/u/UM00P4fvdz](https://leetcode.com/u/UM00P4fvdz)
+- **Codeforces**: [codeforces.com/profile/himanshuCodes](https://codeforces.com/profile/himanshuCodes)
+- **Email**: [himanshu3836@gmail.com](mailto:himanshu3836@gmail.com)

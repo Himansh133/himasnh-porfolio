@@ -24,16 +24,14 @@ export default async function WorkPage({ params }: { params: Promise<{ slug: str
 
   return (
     <article className="min-h-screen py-16">
-      <header className="mx-auto max-w-4xl px-6 pt-8 pb-12 text-center">
-        <div className="inline-flex items-center gap-2 rounded-full border border-blue-500/20 bg-blue-500/10 px-3.5 py-1 text-xs font-semibold text-blue-600 dark:text-cyan-400">
-          <span>{project.eyebrow}</span>
-          <span>·</span>
-          <span>{project.year}</span>
-        </div>
-        <h1 className="mt-6 text-4xl font-extrabold tracking-tight text-neutral-900 dark:text-white sm:text-6xl">
-          {project.title}
+      <header className="mx-auto max-w-4xl px-6 pt-12 pb-16 text-center">
+        <p className="text-xs font-semibold tracking-[0.24em] text-neutral-400 dark:text-neutral-500 uppercase">
+          {project.eyebrow} · {project.year}
+        </p>
+        <h1 className="mt-4 text-[clamp(2.5rem,6vw,4.5rem)] leading-[1.02] font-semibold tracking-[-0.04em] text-neutral-900 dark:text-white">
+          {project.title}.
         </h1>
-        <p className="mx-auto mt-6 max-w-2xl text-xl leading-8 text-neutral-600 dark:text-neutral-400">
+        <p className="mx-auto mt-6 max-w-2xl text-xl leading-8 text-[#86868b] font-normal">
           {project.summary}
         </p>
       </header>
@@ -42,69 +40,67 @@ export default async function WorkPage({ params }: { params: Promise<{ slug: str
         <ProductStage project={project} large />
       </div>
 
-      <div className="mx-auto max-w-3xl px-6 py-16 space-y-12">
-        {/* Deep Dive Sections */}
+      <div className="mx-auto max-w-3xl px-6 py-20 space-y-16">
+        {/* Architecture Narrative */}
         <div>
-          <h2 className="text-xl font-bold text-neutral-900 dark:text-white">
-            Architecture Overview
+          <h2 className="text-2xl font-semibold tracking-tight text-neutral-900 dark:text-white">
+            Architecture & Design.
           </h2>
-          <p className="mt-3 text-base leading-relaxed text-neutral-600 dark:text-neutral-300">
+          <p className="mt-4 text-lg leading-8 text-neutral-600 dark:text-neutral-300">
             {project.description}
           </p>
         </div>
 
-        <div className="grid gap-8 sm:grid-cols-2">
-          <div className="rounded-2xl border border-neutral-200 bg-white/80 p-6 dark:border-neutral-800 dark:bg-[#0f1626]/80">
-            <h3 className="text-sm font-bold uppercase tracking-wider text-rose-500 dark:text-rose-400">
-              The Engineering Challenge
+        {/* Challenge & Solution Grid (Minimal hairline separation, no bulky boxes) */}
+        <div className="grid gap-12 sm:grid-cols-2 border-t border-b border-black/8 py-12 dark:border-white/10">
+          <div>
+            <h3 className="text-xs font-semibold tracking-[0.2em] text-[#86868b] uppercase">
+              The Engineering Problem
             </h3>
-            <p className="mt-3 text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
+            <p className="mt-3 text-sm leading-7 text-neutral-700 dark:text-neutral-300">
               {project.challenge}
             </p>
           </div>
 
-          <div className="rounded-2xl border border-neutral-200 bg-white/80 p-6 dark:border-neutral-800 dark:bg-[#0f1626]/80">
-            <h3 className="text-sm font-bold uppercase tracking-wider text-emerald-500 dark:text-emerald-400">
-              The Technical Solution
+          <div>
+            <h3 className="text-xs font-semibold tracking-[0.2em] text-[#86868b] uppercase">
+              The Implementation
             </h3>
-            <p className="mt-3 text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
+            <p className="mt-3 text-sm leading-7 text-neutral-700 dark:text-neutral-300">
               {project.solution}
             </p>
           </div>
         </div>
 
+        {/* Outcomes & Validated Benchmarks */}
         <div>
-          <h2 className="text-xl font-bold text-neutral-900 dark:text-white">
-            Key Results & Outcome
+          <h2 className="text-2xl font-semibold tracking-tight text-neutral-900 dark:text-white">
+            Verified Outcomes.
           </h2>
-          <p className="mt-3 text-base leading-relaxed text-neutral-600 dark:text-neutral-300">
+          <p className="mt-4 text-base leading-7 text-neutral-600 dark:text-neutral-300">
             {project.outcome}
           </p>
 
-          <div className="mt-6 rounded-2xl border border-blue-500/20 bg-blue-50/50 p-6 dark:border-cyan-500/20 dark:bg-cyan-950/20">
-            <h4 className="text-xs font-bold uppercase tracking-widest text-blue-600 dark:text-cyan-400">
-              Validated Metrics
-            </h4>
-            <ul className="mt-3 space-y-2 text-sm text-neutral-700 dark:text-neutral-300">
-              {project.metrics.map((metric, i) => (
-                <li key={i} className="flex items-center gap-2">
-                  <span className="text-emerald-500 font-bold">✔</span>
-                  <span>{metric}</span>
-                </li>
-              ))}
-            </ul>
+          <div className="mt-8 divide-y divide-black/8 border-t border-b border-black/8 dark:divide-white/10 dark:border-white/10">
+            {project.metrics.map((metric, i) => (
+              <div key={i} className="flex items-center justify-between py-4 text-sm">
+                <span className="text-[#86868b]">Metric 0{i + 1}</span>
+                <span className="font-medium text-neutral-900 dark:text-white">{metric}</span>
+              </div>
+            ))}
           </div>
         </div>
 
+        {/* Tech Stack */}
         <div>
-          <h2 className="text-xs font-bold uppercase tracking-widest text-neutral-400">
-            Technologies Used
-          </h2>
-          <div className="mt-3 flex flex-wrap gap-2">
+          <h3 className="text-xs font-semibold tracking-[0.2em] text-[#86868b] uppercase">
+            Technologies
+          </h3>
+          <div className="mt-4 flex flex-wrap gap-2">
             {project.stack.map((item) => (
               <span
                 key={item}
-                className="rounded-lg border border-neutral-200 bg-neutral-100 px-3 py-1 text-xs font-semibold text-neutral-800 dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-300"
+                className="rounded-full bg-[#f5f5f7] px-3.5 py-1 text-xs text-neutral-700 dark:bg-[#1c1c1e] dark:text-neutral-300"
               >
                 {item}
               </span>
@@ -112,33 +108,36 @@ export default async function WorkPage({ params }: { params: Promise<{ slug: str
           </div>
         </div>
 
-        {/* Action links */}
-        <div className="flex flex-wrap items-center gap-4 pt-6 border-t border-neutral-200 dark:border-neutral-800">
-          {project.githubUrl && (
-            <a
-              href={project.githubUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="rounded-full bg-blue-600 px-5 py-2.5 text-xs font-semibold text-white shadow-sm hover:bg-blue-500"
-            >
-              View Repository on GitHub ↗
-            </a>
-          )}
-          {project.liveUrl && project.liveUrl !== project.githubUrl && (
-            <a
-              href={project.liveUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="rounded-full border border-neutral-300 px-5 py-2.5 text-xs font-semibold text-neutral-700 hover:bg-neutral-100 dark:border-neutral-700 dark:text-neutral-200 dark:hover:bg-neutral-800"
-            >
-              Live Demo ↗
-            </a>
-          )}
+        {/* Action Links */}
+        <div className="flex flex-wrap items-center justify-between gap-4 pt-8 border-t border-black/8 dark:border-white/10 text-sm">
+          <div className="flex items-center gap-6">
+            {project.githubUrl && (
+              <a
+                href={project.githubUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-medium text-[#0066cc] dark:text-[#2997ff] hover:underline"
+              >
+                View Repository ↗
+              </a>
+            )}
+            {project.liveUrl && project.liveUrl !== project.githubUrl && (
+              <a
+                href={project.liveUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-medium text-[#0066cc] dark:text-[#2997ff] hover:underline"
+              >
+                Live Demo ↗
+              </a>
+            )}
+          </div>
+
           <Link
             href="/#work"
-            className="text-xs font-semibold text-neutral-500 hover:text-neutral-900 dark:hover:text-white ml-auto"
+            className="text-neutral-500 hover:text-neutral-900 dark:hover:text-white flex items-center gap-1"
           >
-            ← Back to All Projects
+            <span>‹ All work</span>
           </Link>
         </div>
       </div>

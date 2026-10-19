@@ -2,144 +2,210 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { projects, Project } from "@/lib/site";
+import { projects } from "@/lib/site";
 
 export function ProjectsSection() {
-  const [filter, setFilter] = useState<"all" | "ai" | "systems" | "web">("all");
-
-  const filteredProjects =
-    filter === "all"
-      ? projects
-      : projects.filter((project) => project.category === filter);
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const activeProject = projects[selectedIndex];
 
   return (
-    <section id="work" className="py-24">
+    <section id="work" className="bg-[#f5f5f7] dark:bg-[#161617] py-24 sm:py-32 transition-colors">
       <div className="mx-auto max-w-6xl px-6">
-        {/* Section Heading */}
-        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-widest text-blue-600 dark:text-cyan-400">
-              Selected Work
-            </p>
-            <h2 className="mt-2 text-3xl font-extrabold tracking-tight text-neutral-900 dark:text-white sm:text-4xl">
-              Featured Engineering Projects
-            </h2>
-            <p className="mt-2 max-w-2xl text-neutral-600 dark:text-neutral-400">
-              Autonomous agents with financial guardrails, automated C++ instrument drivers, and award-winning developer tooling.
-            </p>
-          </div>
+        {/* Section Intro */}
+        <div className="text-center max-w-3xl mx-auto">
+          <p className="text-xs font-semibold tracking-[0.24em] text-neutral-400 dark:text-neutral-500 uppercase">
+            Featured Projects
+          </p>
+          <h2 className="mt-4 text-[clamp(2.2rem,5vw,3.75rem)] font-semibold tracking-[-0.04em] text-neutral-900 dark:text-white leading-[1.05]">
+            Engineered for performance. Built without compromise.
+          </h2>
+          <p className="mt-6 text-lg text-[#86868b]">
+            Switch between systems to see architectural decisions, verified benchmarks, and deployment outcomes.
+          </p>
+        </div>
 
-          {/* Filter Pills */}
-          <div className="flex flex-wrap gap-2">
-            {[
-              { id: "all", label: "All Projects" },
-              { id: "ai", label: "AI & Agents" },
-              { id: "systems", label: "Systems & C++" },
-              { id: "web", label: "Web & Tools" },
-            ].map((tab) => (
-              <button
-                key={tab.id}
-                onClick={() => setFilter(tab.id as typeof filter)}
-                className={`rounded-full px-4 py-1.5 text-xs font-semibold transition-all ${
-                  filter === tab.id
-                    ? "bg-blue-600 text-white shadow-md shadow-blue-500/25"
-                    : "border border-neutral-300/80 bg-white/70 text-neutral-700 hover:bg-neutral-100 dark:border-neutral-800 dark:bg-neutral-900/60 dark:text-neutral-300 dark:hover:bg-neutral-800"
-                }`}
-              >
-                {tab.label}
-              </button>
-            ))}
+        {/* Apple Segmented Switcher Bar with Animation */}
+        <div className="mt-12 flex justify-center">
+          <div className="inline-flex max-w-full overflow-x-auto rounded-full bg-black/5 p-1.5 backdrop-blur-md dark:bg-white/10 scrollbar-none">
+            {projects.map((p, idx) => {
+              const active = idx === selectedIndex;
+              return (
+                <button
+                  key={p.slug}
+                  onClick={() => setSelectedIndex(idx)}
+                  type="button"
+                  className={`relative whitespace-nowrap rounded-full px-5 py-2 text-xs font-medium transition-all duration-300 ${
+                    active
+                      ? "bg-white text-neutral-900 shadow-sm dark:bg-[#2c2c2e] dark:text-white"
+                      : "text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white"
+                  }`}
+                >
+                  {p.title}
+                </button>
+              );
+            })}
           </div>
         </div>
 
-        {/* Project Cards Grid */}
-        <div className="mt-12 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-          {filteredProjects.map((project: Project) => {
-            const toneBorder =
-              project.tone === "blue"
-                ? "hover:border-blue-500/60 dark:hover:border-blue-400/60"
-                : project.tone === "cyan"
-                ? "hover:border-cyan-500/60 dark:hover:border-cyan-400/60"
-                : "hover:border-emerald-500/60 dark:hover:border-emerald-400/60";
+        {/* Main Stage Display (Apple Product Stage with Smooth Transition) */}
+        <div className="mt-12 overflow-hidden rounded-[32px] bg-white p-8 sm:p-14 shadow-[0_20px_60px_-20px_rgba(0,0,0,0.06)] dark:bg-[#000000] dark:border dark:border-white/10 dark:shadow-none transition-all duration-500">
+          <div className="grid items-center gap-12 lg:grid-cols-2">
+            {/* Left Content */}
+            <div key={`info-${activeProject.slug}`} className="animate-[fadeIn_0.4s_ease-out]">
+              <p className="text-xs font-semibold tracking-[0.2em] text-[#0066cc] dark:text-[#2997ff] uppercase">
+                {activeProject.eyebrow} · {activeProject.year}
+              </p>
 
-            return (
-              <article
-                key={project.slug}
-                className={`group relative flex flex-col justify-between overflow-hidden rounded-3xl border border-neutral-200/90 bg-white/80 p-7 shadow-sm backdrop-blur-md transition-all duration-300 hover:-translate-y-1 hover:shadow-xl dark:border-neutral-800/90 dark:bg-[#0f1626]/80 ${toneBorder}`}
-              >
-                {/* Top Eyebrow & Year */}
+              <h3 className="mt-4 text-3xl font-semibold tracking-[-0.035em] text-neutral-900 dark:text-white sm:text-4xl">
+                {activeProject.title}
+              </h3>
+
+              <p className="mt-4 text-xl leading-8 text-[#86868b] font-normal">
+                {activeProject.summary}
+              </p>
+
+              {/* Apple-style Architecture Highlights */}
+              <div className="mt-8 space-y-4 border-t border-black/8 pt-6 dark:border-white/10">
                 <div>
-                  <div className="flex items-center justify-between">
-                    <span className="inline-flex items-center rounded-full bg-neutral-100 px-3 py-1 text-[11px] font-semibold text-neutral-700 dark:bg-neutral-800 dark:text-neutral-300">
-                      {project.eyebrow}
-                    </span>
-                    <span className="text-xs font-medium text-neutral-400 dark:text-neutral-500">
-                      {project.year}
-                    </span>
-                  </div>
-
-                  {/* Title */}
-                  <h3 className="mt-4 text-2xl font-bold tracking-tight text-neutral-900 group-hover:text-blue-600 dark:text-white dark:group-hover:text-cyan-400 transition-colors">
-                    {project.title}
-                  </h3>
-
-                  {/* Summary */}
-                  <p className="mt-3 text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
-                    {project.summary}
+                  <p className="text-xs font-semibold text-neutral-400 dark:text-neutral-500 uppercase tracking-wider">
+                    The Challenge
                   </p>
-
-                  {/* Key Metrics Pill */}
-                  <div className="mt-5 space-y-1.5 rounded-xl bg-neutral-50 p-3 text-xs dark:bg-[#131b2e]">
-                    <div className="font-semibold text-neutral-700 dark:text-neutral-300">
-                      Key Impact:
-                    </div>
-                    {project.metrics.map((metric, i) => (
-                      <div key={i} className="flex items-center gap-1.5 text-neutral-600 dark:text-neutral-400">
-                        <span className="text-blue-500 dark:text-cyan-400">✓</span>
-                        <span>{metric}</span>
-                      </div>
-                    ))}
-                  </div>
-
-                  {/* Stack Badges */}
-                  <div className="mt-5 flex flex-wrap gap-1.5">
-                    {project.stack.map((tech) => (
-                      <span
-                        key={tech}
-                        className="rounded-md border border-neutral-200/80 bg-neutral-100/80 px-2 py-0.5 text-[11px] font-medium text-neutral-600 dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-400"
-                      >
-                        {tech}
-                      </span>
-                    ))}
-                  </div>
+                  <p className="mt-1 text-sm text-neutral-700 dark:text-neutral-300 leading-relaxed">
+                    {activeProject.challenge}
+                  </p>
                 </div>
 
-                {/* Bottom Actions */}
-                <div className="mt-8 flex items-center justify-between border-t border-neutral-100 pt-4 dark:border-neutral-800/80">
-                  <Link
-                    href={`/work/${project.slug}`}
-                    className="inline-flex items-center gap-1 text-xs font-semibold text-blue-600 hover:underline dark:text-cyan-400"
+                <div>
+                  <p className="text-xs font-semibold text-neutral-400 dark:text-neutral-500 uppercase tracking-wider">
+                    The Solution
+                  </p>
+                  <p className="mt-1 text-sm text-neutral-700 dark:text-neutral-300 leading-relaxed">
+                    {activeProject.solution}
+                  </p>
+                </div>
+              </div>
+
+              {/* Technologies */}
+              <div className="mt-6 flex flex-wrap gap-2">
+                {activeProject.stack.map((tech) => (
+                  <span
+                    key={tech}
+                    className="rounded-full bg-[#f5f5f7] px-3 py-1 text-xs text-neutral-600 dark:bg-[#1c1c1e] dark:text-neutral-300"
                   >
-                    <span>Read Case Study</span>
-                    <span>→</span>
-                  </Link>
+                    {tech}
+                  </span>
+                ))}
+              </div>
 
-                  <div className="flex items-center gap-3">
-                    {project.githubUrl && (
-                      <a
-                        href={project.githubUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-xs font-medium text-neutral-500 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white"
-                      >
-                        GitHub ↗
-                      </a>
-                    )}
-                  </div>
+              {/* Action */}
+              <div className="mt-8 flex items-center gap-6">
+                <Link
+                  href={`/work/${activeProject.slug}`}
+                  className="font-medium text-[#0066cc] dark:text-[#2997ff] text-sm hover:underline flex items-center gap-1"
+                >
+                  <span>Read full case study</span>
+                  <span className="text-base">›</span>
+                </Link>
+
+                {activeProject.githubUrl && (
+                  <a
+                    href={activeProject.githubUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm text-neutral-500 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white transition-colors"
+                  >
+                    View on GitHub ↗
+                  </a>
+                )}
+              </div>
+            </div>
+
+            {/* Right Product Graphic Stage */}
+            <div
+              key={`stage-${activeProject.slug}`}
+              className="relative flex flex-col justify-between rounded-[24px] bg-[#f5f5f7] p-8 dark:bg-[#161617] border border-black/5 dark:border-white/10 min-h-[360px] animate-[fadeIn_0.5s_ease-out]"
+            >
+              <div>
+                <div className="flex items-center justify-between text-xs text-neutral-400 dark:text-neutral-500">
+                  <span className="font-mono">SPECIFICATION 0{selectedIndex + 1}</span>
+                  <span>VERIFIED RESULT</span>
                 </div>
-              </article>
-            );
-          })}
+
+                {/* Primary Metric Hero Display */}
+                <div className="mt-8">
+                  <div className="text-4xl font-semibold tracking-tight text-neutral-900 dark:text-white sm:text-5xl">
+                    {activeProject.slug === "fieldfox-rf-suite" && "98.8%"}
+                    {activeProject.slug === "revenue-rescue-agent" && "30,000"}
+                    {activeProject.slug === "github-commit-explorer" && "1st Place"}
+                  </div>
+                  <p className="mt-2 text-sm text-[#86868b]">
+                    {activeProject.slug === "fieldfox-rf-suite" && "Reduction in full antenna sweep test cycle"}
+                    {activeProject.slug === "revenue-rescue-agent" && "Synthetic transactions trained for offer-acceptance"}
+                    {activeProject.slug === "github-commit-explorer" && "Winner of hyperSprint 2026 hackathon at JIIT"}
+                  </p>
+                </div>
+
+                {/* Spec List */}
+                <div className="mt-8 space-y-3 border-t border-black/6 pt-6 dark:border-white/10">
+                  {activeProject.metrics.map((metric, i) => (
+                    <div key={i} className="flex items-baseline justify-between text-xs sm:text-sm">
+                      <span className="text-neutral-500 dark:text-neutral-400 font-normal">
+                        Metric 0{i + 1}
+                      </span>
+                      <span className="font-medium text-neutral-900 dark:text-white text-right">
+                        {metric}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="mt-8 pt-4 border-t border-black/6 dark:border-white/10 flex items-center justify-between text-[11px] text-[#86868b]">
+                <span>Designed by Himanshu Kumar</span>
+                <span>Production Shipped</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Apple-style 3-Column Editorial Grid for All Projects */}
+        <div className="mt-20 grid gap-8 md:grid-cols-3">
+          {projects.map((project, idx) => (
+            <div
+              key={project.slug}
+              className="flex flex-col justify-between rounded-[24px] bg-white p-8 dark:bg-[#000000] dark:border dark:border-white/10 shadow-[0_4px_24px_rgba(0,0,0,0.04)]"
+            >
+              <div>
+                <p className="text-[11px] font-semibold tracking-[0.18em] text-neutral-400 dark:text-neutral-500 uppercase">
+                  {project.eyebrow}
+                </p>
+                <h4 className="mt-3 text-xl font-semibold tracking-tight text-neutral-900 dark:text-white">
+                  {project.title}
+                </h4>
+                <p className="mt-3 text-sm leading-6 text-[#86868b]">
+                  {project.summary}
+                </p>
+              </div>
+
+              <div className="mt-8 pt-4 border-t border-black/6 dark:border-white/10 flex items-center justify-between">
+                <button
+                  onClick={() => {
+                    setSelectedIndex(idx);
+                    window.scrollTo({ top: document.getElementById("work")?.offsetTop || 0, behavior: "smooth" });
+                  }}
+                  className="text-xs font-medium text-[#0066cc] dark:text-[#2997ff] hover:underline"
+                >
+                  View on Stage ›
+                </button>
+                <Link
+                  href={`/work/${project.slug}`}
+                  className="text-xs text-neutral-400 hover:text-neutral-900 dark:hover:text-white"
+                >
+                  Details
+                </Link>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </section>

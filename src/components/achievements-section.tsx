@@ -5,61 +5,60 @@ import { achievements } from "@/lib/site";
 
 export function AchievementsSection() {
   return (
-    <section id="achievements" className="py-24 border-t border-black/5 dark:border-white/5 bg-neutral-50/40 dark:bg-[#0b101c]/40">
+    <section id="achievements" className="py-24 sm:py-32">
       <div className="mx-auto max-w-5xl px-6">
         <div>
-          <p className="text-xs font-semibold uppercase tracking-widest text-blue-600 dark:text-cyan-400">
-            Honors & Roles
+          <p className="text-xs font-semibold tracking-[0.24em] text-neutral-400 dark:text-neutral-500 uppercase">
+            Honors & Leadership
           </p>
-          <h2 className="mt-2 text-3xl font-extrabold tracking-tight text-neutral-900 dark:text-white sm:text-4xl">
-            Achievements & Leadership
+          <h2 className="mt-4 text-[clamp(2rem,4.5vw,3.25rem)] font-semibold tracking-[-0.035em] text-neutral-900 dark:text-white leading-[1.05]">
+            Recognitions & Leadership.
           </h2>
-          <p className="mt-2 max-w-2xl text-neutral-600 dark:text-neutral-400">
-            Hackathon victories, certified DevOps competencies, algorithmic competitive ratings, and IEEE chapter leadership.
-          </p>
         </div>
 
-        <div className="mt-12 grid gap-6 sm:grid-cols-2">
+        {/* Clean Apple List */}
+        <div className="mt-16 divide-y divide-black/8 dark:divide-white/10 border-t border-b border-black/8 dark:border-white/10">
           {achievements.map((item, idx) => (
             <div
               key={idx}
-              className="relative flex flex-col justify-between overflow-hidden rounded-3xl border border-neutral-200/90 bg-white/90 p-7 shadow-sm backdrop-blur-md transition-all duration-300 hover:border-blue-500/40 hover:shadow-lg dark:border-neutral-800/90 dark:bg-[#0f1626]/90 dark:hover:border-cyan-500/40"
+              className="grid gap-6 py-10 lg:grid-cols-12 items-baseline"
             >
-              <div>
-                <div className="flex items-center justify-between">
-                  <span className="inline-flex items-center rounded-full bg-blue-50 px-3 py-1 text-xs font-bold text-blue-700 dark:bg-blue-900/30 dark:text-cyan-300">
-                    {item.badge}
-                  </span>
-                  <span className="text-xs font-medium text-neutral-400 dark:text-neutral-500">
-                    {item.date}
-                  </span>
-                </div>
-
-                <h3 className="mt-4 text-xl font-bold tracking-tight text-neutral-900 dark:text-white">
-                  {item.title}
-                </h3>
-                <p className="mt-1 text-xs font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
-                  {item.subtitle}
-                </p>
-
-                <p className="mt-4 text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
-                  {item.description}
+              {/* Date & Badge */}
+              <div className="lg:col-span-3">
+                <span className="text-xs font-medium text-[#86868b]">
+                  {item.date}
+                </span>
+                <p className="mt-1 text-xs font-semibold text-[#0066cc] dark:text-[#2997ff]">
+                  {item.badge}
                 </p>
               </div>
 
-              {item.link && (
-                <div className="mt-6 border-t border-neutral-100 pt-4 dark:border-neutral-800/70">
-                  <a
-                    href={item.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1 text-xs font-semibold text-blue-600 hover:underline dark:text-cyan-400"
-                  >
-                    <span>View Profile</span>
-                    <span>↗</span>
-                  </a>
-                </div>
-              )}
+              {/* Title & Description */}
+              <div className="lg:col-span-9">
+                <h3 className="text-xl font-semibold tracking-tight text-neutral-900 dark:text-white">
+                  {item.title}
+                </h3>
+                <p className="text-xs text-[#86868b] mt-0.5">
+                  {item.subtitle}
+                </p>
+                <p className="mt-3 text-sm leading-relaxed text-neutral-600 dark:text-neutral-300">
+                  {item.description}
+                </p>
+
+                {item.link && (
+                  <div className="mt-4">
+                    <a
+                      href={item.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-xs font-medium text-[#0066cc] dark:text-[#2997ff] hover:underline flex items-center gap-1"
+                    >
+                      <span>View verification</span>
+                      <span>›</span>
+                    </a>
+                  </div>
+                )}
+              </div>
             </div>
           ))}
         </div>

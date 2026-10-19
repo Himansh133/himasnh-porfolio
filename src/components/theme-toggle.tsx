@@ -12,14 +12,7 @@ export function ThemeToggle({ className = "" }: { className?: string }) {
   }, []);
 
   if (!mounted) {
-    return (
-      <button
-        aria-label="Toggle theme"
-        className={`h-9 w-9 rounded-full border border-neutral-200 dark:border-neutral-800 flex items-center justify-center opacity-0 ${className}`}
-      >
-        <span className="sr-only">Toggle theme</span>
-      </button>
-    );
+    return <div className={`h-7 w-7 ${className}`} />;
   }
 
   const isDark = theme === "dark";
@@ -28,19 +21,18 @@ export function ThemeToggle({ className = "" }: { className?: string }) {
     <button
       onClick={toggleTheme}
       type="button"
-      aria-label={`Switch to ${isDark ? "light" : "dark"} theme`}
-      className={`group relative flex h-9 w-9 items-center justify-center rounded-full border border-neutral-300/80 bg-neutral-100/80 text-neutral-700 shadow-sm transition-all duration-300 hover:border-blue-500 hover:bg-neutral-200/80 hover:scale-105 active:scale-95 dark:border-neutral-700 dark:bg-neutral-900/80 dark:text-neutral-200 dark:hover:border-cyan-400 dark:hover:bg-neutral-800 ${className}`}
+      aria-label={`Switch to ${isDark ? "light" : "dark"} mode`}
+      className={`relative inline-flex h-7 w-7 items-center justify-center rounded-full text-neutral-500 transition-colors hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white ${className}`}
       title={`Switch to ${isDark ? "light" : "dark"} mode`}
     >
       {isDark ? (
-        // Sun Icon for Dark Mode (click to turn light)
+        // Minimal Sun Icon
         <svg
-          className="h-4 w-4 transition-transform duration-500 rotate-0 group-hover:rotate-90 text-amber-400"
-          xmlns="http://www.w3.org/2000/svg"
+          className="h-4 w-4"
           viewBox="0 0 24 24"
           fill="none"
           stroke="currentColor"
-          strokeWidth="2"
+          strokeWidth="1.75"
           strokeLinecap="round"
           strokeLinejoin="round"
         >
@@ -55,14 +47,13 @@ export function ThemeToggle({ className = "" }: { className?: string }) {
           <path d="m19.07 4.93-1.41 1.41" />
         </svg>
       ) : (
-        // Moon Icon for Light Mode (click to turn dark)
+        // Minimal Moon Icon
         <svg
-          className="h-4 w-4 transition-transform duration-500 -rotate-12 group-hover:rotate-0 text-neutral-700"
-          xmlns="http://www.w3.org/2000/svg"
+          className="h-4 w-4"
           viewBox="0 0 24 24"
           fill="none"
           stroke="currentColor"
-          strokeWidth="2"
+          strokeWidth="1.75"
           strokeLinecap="round"
           strokeLinejoin="round"
         >

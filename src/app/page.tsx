@@ -1,5 +1,4 @@
 import { Hero } from "@/components/hero";
-import { InteractiveShowcase } from "@/components/interactive-showcase";
 import { ProjectsSection } from "@/components/projects-section";
 import { ExperienceSection } from "@/components/experience-section";
 import { SkillsSection } from "@/components/skills-section";
@@ -8,26 +7,23 @@ import { ContactSection } from "@/components/contact-section";
 
 export default function Home() {
   return (
-    <div className="relative">
-      {/* Hero with resume highlights & quick actions */}
+    <div>
+      {/* Apple Product Intro */}
       <Hero />
 
-      {/* Interactive System Lab (Simulate Agent Guardrails, RF Sweeps, Git NL Query) */}
-      <InteractiveShowcase />
-
-      {/* Featured Projects with filter and deep impact metrics */}
+      {/* Apple Product Stage & Animated Project Switcher */}
       <ProjectsSection />
 
-      {/* Work Experience: JV Micronics & Corsair (YC W25) */}
+      {/* Experience Flow (JV Micronics & Corsair YC W25) */}
       <ExperienceSection />
 
-      {/* Technical Skills & Competencies */}
+      {/* Apple Tech Specs */}
       <SkillsSection />
 
-      {/* Achievements, Hackathon, LeetCode, Certifications & IEEE Leadership */}
+      {/* Recognitions & Leadership */}
       <AchievementsSection />
 
-      {/* Contact & Bio Section */}
+      {/* Apple Closing Callout */}
       <ContactSection />
     </div>
   );

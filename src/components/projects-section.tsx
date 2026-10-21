@@ -13,112 +13,149 @@ export function ProjectsSection() {
       : projects.filter((project) => project.category === filter);
 
   return (
-    <section id="work" className="py-20 sm:py-28">
-      <div className="mx-auto max-w-6xl px-6">
-        {/* Apple Store Section Headline */}
-        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
-          <div>
-            <h2 className="text-[28px] sm:text-[38px] font-semibold tracking-[-0.02em] leading-[1.1]">
-              <span className="text-[#1d1d1f] dark:text-[#f5f5f7]">The Latest. </span>
-              <span className="text-[#6e6e73] dark:text-[#86868b]">
-                Take a look at what’s built, right now.
-              </span>
-            </h2>
-          </div>
-
-          {/* Apple Store Segmented Filter */}
-          <div className="flex rounded-full bg-black/5 p-1 backdrop-blur-md dark:bg-white/10 self-start md:self-auto">
-            {[
-              { id: "all", label: "All" },
-              { id: "ai", label: "AI Agents" },
-              { id: "systems", label: "C++ Systems" },
-              { id: "web", label: "Tools" },
-            ].map((tab) => (
-              <button
-                key={tab.id}
-                onClick={() => setFilter(tab.id as typeof filter)}
-                className={`rounded-full px-4 py-1.5 text-xs font-medium transition-all duration-300 ${
-                  filter === tab.id
-                    ? "bg-white text-[#1d1d1f] shadow-sm dark:bg-[#2c2c2e] dark:text-white"
-                    : "text-[#6e6e73] hover:text-[#1d1d1f] dark:text-[#86868b] dark:hover:text-white"
-                }`}
-              >
-                {tab.label}
-              </button>
-            ))}
-          </div>
+    <section id="projects" className="py-12 border-t border-[var(--border)]">
+      {/* Corner Dots Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-2">
+        <div>
+          <h2 className="section-title-modern">
+            <div className="corner-dots">
+              <div className="dot top-left" />
+              <div className="dot top-right" />
+              <div className="dot bottom-left" />
+              <div className="dot bottom-right" />
+            </div>
+            <span className="title-text">Things I&apos;ve Built</span>
+          </h2>
         </div>
 
-        {/* Apple Store Cards Grid */}
-        <div className="mt-10 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-          {filteredProjects.map((project: Project) => (
-            <div
-              key={project.slug}
-              className="apple-card group flex flex-col justify-between p-8 sm:p-9 min-h-[440px]"
+        {/* Filter Pills */}
+        <div className="flex rounded-lg border border-[var(--border)] bg-[var(--card)] p-1 text-xs self-start sm:self-auto">
+          {[
+            { id: "all", label: "All" },
+            { id: "ai", label: "AI Agents" },
+            { id: "systems", label: "C++ Systems" },
+            { id: "web", label: "Web Tools" },
+          ].map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => setFilter(tab.id as typeof filter)}
+              className={`rounded-md px-3 py-1 font-medium transition-all ${
+                filter === tab.id
+                  ? "bg-[#D21319] text-white shadow-xs"
+                  : "text-[var(--muted)] hover:text-[var(--foreground)]"
+              }`}
             >
+              {tab.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <p className="text-sm text-[var(--muted)] mb-8">
+        Recent production software, autonomous LLM agents, and automation tools.
+      </p>
+
+      {/* Modern Projects Grid */}
+      <div className="space-y-6">
+        {filteredProjects.map((project: Project) => (
+          <article
+            key={project.slug}
+            className="modern-card p-6 sm:p-7 relative overflow-hidden group"
+          >
+            {/* Tone Accent Bar - Clean neutral grey matching other cards */}
+            <div className="absolute top-0 left-0 right-0 h-1 bg-[#AFAEA2] dark:bg-neutral-800" />
+
+            {/* Header info */}
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 pb-4 border-b border-[var(--border)]">
               <div>
-                {/* Eyebrow */}
-                <p className="text-[12px] font-semibold uppercase tracking-[0.06em] text-[#6e6e73] dark:text-[#86868b]">
-                  {project.eyebrow} · {project.year}
-                </p>
-
-                {/* Title */}
-                <h3 className="mt-3 text-[26px] font-semibold tracking-[-0.015em] leading-tight text-[#1d1d1f] dark:text-[#f5f5f7]">
-                  {project.title}
+                <div className="flex items-center gap-2">
+                  <span className="text-[11px] font-mono uppercase tracking-wider text-[#D21319] font-semibold">
+                    {project.eyebrow}
+                  </span>
+                  <span className="text-xs text-[var(--muted)]">•</span>
+                  <span className="text-xs font-mono text-[var(--muted)]">{project.year}</span>
+                </div>
+                <h3 className="text-xl font-bold tracking-tight text-[var(--foreground)] mt-1">
+                  <Link
+                    href={`/work/${project.slug}`}
+                    className="hover:text-[#D21319] transition-colors"
+                  >
+                    {project.title}
+                  </Link>
                 </h3>
-
-                {/* Subtitle / Narrative */}
-                <p className="mt-3 text-[15px] leading-relaxed text-[#6e6e73] dark:text-[#86868b]">
-                  {project.summary}
-                </p>
-
-                {/* Apple Store Spec Highlight Box */}
-                <div className="mt-8 rounded-2xl bg-[#f5f5f7] p-4 dark:bg-[#232326] transition-colors">
-                  <div className="text-xs font-semibold text-[#1d1d1f] dark:text-[#f5f5f7]">
-                    Key Benchmark
-                  </div>
-                  <div className="mt-1 text-xs text-[#6e6e73] dark:text-[#a1a1a6]">
-                    {project.metrics[0]}
-                  </div>
-                </div>
-
-                {/* Tech Pills */}
-                <div className="mt-6 flex flex-wrap gap-1.5">
-                  {project.stack.map((item) => (
-                    <span
-                      key={item}
-                      className="rounded-full bg-[#f5f5f7] px-3 py-1 text-[11px] font-normal text-neutral-600 dark:bg-[#232326] dark:text-neutral-300"
-                    >
-                      {item}
-                    </span>
-                  ))}
-                </div>
               </div>
 
-              {/* Bottom Apple Link Action */}
-              <div className="mt-8 pt-5 border-t border-black/4 dark:border-white/8 flex items-center justify-between text-xs">
-                <Link
-                  href={`/work/${project.slug}`}
-                  className="font-medium text-[#0066cc] dark:text-[#2997ff] hover:underline flex items-center gap-1"
-                >
-                  <span>Learn more</span>
-                  <span className="text-sm">›</span>
-                </Link>
-
+              {/* Action Links */}
+              <div className="flex items-center gap-2.5 self-start sm:self-auto">
+                {project.liveUrl && (
+                  <a
+                    href={project.liveUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="rounded-md border border-[var(--border)] bg-[var(--card)] px-2.5 py-1 text-xs font-medium text-[var(--foreground)] hover:border-[#D21319]/40 hover:text-[#D21319] transition-all flex items-center gap-1"
+                  >
+                    <span>Live</span>
+                    <span className="text-[10px]">↗</span>
+                  </a>
+                )}
                 {project.githubUrl && (
                   <a
                     href={project.githubUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-[#6e6e73] hover:text-[#1d1d1f] dark:text-[#86868b] dark:hover:text-white transition-colors"
+                    className="rounded-md border border-[var(--border)] bg-[var(--card)] px-2.5 py-1 text-xs font-medium text-[var(--muted)] hover:text-[#D21319] hover:border-[#D21319]/40 transition-all flex items-center gap-1"
                   >
-                    View on GitHub ↗
+                    <span>GitHub</span>
+                    <span className="text-[10px]">↗</span>
                   </a>
                 )}
+                <Link
+                  href={`/work/${project.slug}`}
+                  className="rounded-md bg-[#D21319]/10 border border-[#D21319]/25 px-2.5 py-1 text-xs font-medium text-[#D21319] hover:bg-[#D21319]/20 transition-all flex items-center gap-1"
+                >
+                  <span>Case Study</span>
+                  <span>→</span>
+                </Link>
               </div>
             </div>
-          ))}
-        </div>
+
+            {/* Summary */}
+            <p className="mt-4 text-[14px] text-[var(--muted)] leading-relaxed">
+              {project.summary}
+            </p>
+
+            {/* Benchmark highlight box */}
+            <div className="mt-4 rounded-lg bg-[var(--tag-bg)] p-3 border border-[var(--border)] flex items-center justify-between text-xs">
+              <span className="text-[var(--muted)] font-mono">Key Result:</span>
+              <span className="font-semibold text-[var(--foreground)]">
+                {project.metrics[0]}
+              </span>
+            </div>
+
+            {/* Tech stack tags */}
+            <div className="mt-4 pt-4 border-t border-[var(--border)] flex flex-wrap gap-1.5">
+              {project.stack.map((item) => (
+                <span
+                  key={item}
+                  className="rounded-md bg-[var(--tag-bg)] px-2.5 py-1 text-[11px] font-mono text-[var(--tag-fg)] border border-[var(--border)]"
+                >
+                  {item}
+                </span>
+              ))}
+            </div>
+          </article>
+        ))}
+      </div>
+
+      {/* Button to view all projects */}
+      <div className="mt-8 text-center">
+        <Link
+          href="/projects"
+          className="inline-flex items-center gap-2 rounded-lg border border-[var(--border)] bg-[var(--card)] px-5 py-2.5 text-xs font-medium text-[var(--foreground)] hover:border-[#D21319]/40 hover:text-[#D21319] hover:bg-[var(--card-hover)] transition-all"
+        >
+          <span>Show All Projects &amp; Case Studies</span>
+          <span>→</span>
+        </Link>
       </div>
     </section>
   );

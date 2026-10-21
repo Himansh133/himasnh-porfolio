@@ -44,7 +44,7 @@ export const site = {
   name: "Himanshu Kumar",
   role: "Software Engineer & Systems Builder",
   college: "Jaypee Institute of Information Technology (JIIT)",
-  degree: "B.Tech in Electronics and Communication Engineering (ECE-CS), 2023 – 2027",
+  degree: "B.Tech in Electronics and Communication Engineering (ECE-CS), 2023 - 2027",
   location: "Noida, India",
   email: "himanshu3836@gmail.com",
   phone: "+91 9110058109",
@@ -54,7 +54,7 @@ export const site = {
     body: [
       "I am a software engineer (B.Tech ECE-CS, 2027 at JIIT Noida) working at the intersection of robust backend APIs, C++ systems automation, and autonomous LLM agents.",
       "At JV Micronics, I engineered a production RF test suite in C++17/Qt6 that automated Keysight FieldFox VNA sweeps, cutting test cycles from 10 hours to 7 minutes for 50 RF engineers. As an open-source contributor to Corsair (YC W25), I built plugins and fixed critical state sync issues across major integrations with 100+ tests.",
-      "I believe in building software that doesn't just look sleek, but solves hard engineering challenges with provable speed, deterministic safety floors, and resilient architecture.",
+      "I believe in building software that does not just look sleek, but solves hard engineering challenges with provable speed, deterministic safety floors, and resilient architecture.",
     ],
   },
   social: {
@@ -65,7 +65,7 @@ export const site = {
     email: "mailto:himanshu3836@gmail.com",
   },
   stats: [
-    { value: "10h → 7m", label: "RF sweep cycle time reduction", highlight: "98.8% faster" },
+    { value: "10h → 7h", label: "RF sweep cycle time reduction", highlight: "98.8% faster" },
     { value: "15K+", label: "GitHub Stars on Corsair SDK", highlight: "3 PRs Merged" },
     { value: "50+", label: "Engineers using production tool", highlight: "JV Micronics" },
     { value: "500+", label: "DSA problems solved", highlight: "1700+ Rating" },
@@ -103,8 +103,8 @@ export const experiences: Experience[] = [
   {
     role: "Software Engineering Intern",
     company: "JV Micronics",
-    period: "May 2026 – July 2026",
-    location: "Faridabad, India",
+    period: "May 2026 - July 2026",
+    location: "dabad, India",
     summary:
       "Engineered automated RF test software and high-throughput instrument control for microwave & antenna testing.",
     stack: ["C++17", "Qt6", "SCPI", "GPIB", "USB VISA", "Keysight FieldFox"],
@@ -211,7 +211,7 @@ export const projects: Project[] = [
     outcome:
       "Cut end-to-end antenna test sweep duration from 10 hours down to 7 minutes (98.8% time saved) and deployed into active production workflows across 50 RF engineers.",
     metrics: [
-      "10h → 7m sweep reduction (98.8%)",
+      "10h -> 7h sweep reduction (98.8%)",
       "50 production engineers using the tool",
       "Modular SCPI driver with zero UI coupling",
     ],
@@ -224,7 +224,7 @@ export const projects: Project[] = [
 
 export const achievements: Achievement[] = [
   {
-    title: "1st Place Winner — hyperSprint 2026",
+    title: "1st Place Winner : hyperSprint 2026",
     subtitle: "hyperDart Hackathon at JIIT",
     date: "August 2026",
     description:
@@ -253,16 +253,6 @@ export const achievements: Achievement[] = [
     category: "certification",
     icon: "cert",
     badge: "Certified",
-  },
-  {
-    title: "Secretary — IEEE AP-S Student Chapter",
-    subtitle: "Jaypee Institute of Information Technology",
-    date: "2025 – Present",
-    description:
-      "Direct chapter initiatives and operations across university faculty, industry advisors, and student engineers; organized 5 hands-on workshops in RF instrumentation, wireless systems, and antenna engineering.",
-    category: "leadership",
-    icon: "users",
-    badge: "Leadership",
   },
 ];
 

@@ -12,7 +12,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const project = getProject(slug);
   if (!project) return {};
   return {
-    title: project.title,
+    title: `${project.title} | Himanshu Kumar`,
     description: project.summary,
   };
 }
@@ -23,122 +23,137 @@ export default async function WorkPage({ params }: { params: Promise<{ slug: str
   if (!project) notFound();
 
   return (
-    <article className="min-h-screen py-16">
-      <header className="mx-auto max-w-4xl px-6 pt-12 pb-16 text-center">
-        <p className="text-xs font-semibold tracking-[0.24em] text-neutral-400 dark:text-neutral-500 uppercase">
-          {project.eyebrow} · {project.year}
-        </p>
-        <h1 className="mt-4 text-[clamp(2.5rem,6vw,4.5rem)] leading-[1.02] font-semibold tracking-[-0.04em] text-neutral-900 dark:text-white">
-          {project.title}.
+    <article className="container-narrow py-12">
+      {/* Back button */}
+      <div className="mb-8">
+        <Link
+          href="/projects"
+          className="inline-flex items-center gap-1.5 text-xs font-mono text-[var(--muted)] hover:text-[#D21319] transition-colors"
+        >
+          <span>←</span>
+          <span>Back to Things I&apos;ve Built</span>
+        </Link>
+      </div>
+
+      <header className="pb-8 border-b border-[var(--border)]">
+        <div className="flex items-center gap-2">
+          <span className="text-xs font-mono uppercase tracking-wider text-[#D21319] font-bold">
+            {project.eyebrow}
+          </span>
+          <span className="text-xs text-[var(--muted)]">•</span>
+          <span className="text-xs font-mono text-[var(--muted)]">{project.year}</span>
+        </div>
+
+        <h1 className="mt-2 text-2xl sm:text-3xl font-bold tracking-tight text-[var(--foreground)]">
+          {project.title}
         </h1>
-        <p className="mx-auto mt-6 max-w-2xl text-xl leading-8 text-[#86868b] font-normal">
+
+        <p className="mt-3 text-base sm:text-lg text-[var(--muted)] leading-relaxed">
           {project.summary}
         </p>
+
+        {/* Action Links */}
+        <div className="mt-5 flex flex-wrap items-center gap-3">
+          {project.liveUrl && (
+            <a
+              href={project.liveUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 rounded-lg bg-[#D21319] hover:bg-[#b00f14] px-4 py-2 text-xs font-medium text-white transition-all shadow-xs"
+            >
+              <span>Live Demonstration</span>
+              <span>↗</span>
+            </a>
+          )}
+          {project.githubUrl && (
+            <a
+              href={project.githubUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 rounded-lg border border-[var(--border)] bg-[var(--card)] px-4 py-2 text-xs font-medium text-[var(--foreground)] hover:border-[#D21319]/40 hover:text-[#D21319] transition-all"
+            >
+              <span>View Source Code</span>
+              <span>↗</span>
+            </a>
+          )}
+        </div>
       </header>
 
-      <div className="mx-auto max-w-5xl px-6">
+      {/* Hero Visual Stage */}
+      <div className="my-8">
         <ProductStage project={project} large />
       </div>
 
-      <div className="mx-auto max-w-3xl px-6 py-20 space-y-16">
-        {/* Architecture Narrative */}
+      {/* Deep-Dive Case Study Narrative */}
+      <div className="space-y-10">
+        {/* Architecture & Design */}
         <div>
-          <h2 className="text-2xl font-semibold tracking-tight text-neutral-900 dark:text-white">
-            Architecture & Design.
+          <h2 className="text-lg font-semibold text-[var(--foreground)]">
+            Architecture &amp; System Design
           </h2>
-          <p className="mt-4 text-lg leading-8 text-neutral-600 dark:text-neutral-300">
+          <p className="mt-3 text-sm text-[var(--muted)] leading-relaxed">
             {project.description}
           </p>
         </div>
 
-        {/* Challenge & Solution Grid (Minimal hairline separation, no bulky boxes) */}
-        <div className="grid gap-12 sm:grid-cols-2 border-t border-b border-black/8 py-12 dark:border-white/10">
-          <div>
-            <h3 className="text-xs font-semibold tracking-[0.2em] text-[#86868b] uppercase">
-              The Engineering Problem
+        {/* Engineering Challenge vs Solution */}
+        <div className="grid gap-4 sm:grid-cols-2">
+          <div className="modern-card p-5">
+            <h3 className="text-xs font-mono uppercase tracking-wider text-[#D21319] font-bold">
+              The Engineering Challenge
             </h3>
-            <p className="mt-3 text-sm leading-7 text-neutral-700 dark:text-neutral-300">
+            <p className="mt-2.5 text-xs sm:text-sm text-[var(--muted)] leading-relaxed">
               {project.challenge}
             </p>
           </div>
 
-          <div>
-            <h3 className="text-xs font-semibold tracking-[0.2em] text-[#86868b] uppercase">
-              The Implementation
+          <div className="modern-card p-5">
+            <h3 className="text-xs font-mono uppercase tracking-wider text-[var(--muted)] font-bold">
+              The Technical Solution
             </h3>
-            <p className="mt-3 text-sm leading-7 text-neutral-700 dark:text-neutral-300">
+            <p className="mt-2.5 text-xs sm:text-sm text-[var(--muted)] leading-relaxed">
               {project.solution}
             </p>
           </div>
         </div>
 
-        {/* Outcomes & Validated Benchmarks */}
+        {/* Verified Outcomes */}
         <div>
-          <h2 className="text-2xl font-semibold tracking-tight text-neutral-900 dark:text-white">
-            Verified Outcomes.
+          <h2 className="text-lg font-semibold text-[var(--foreground)]">
+            Verified Outcomes &amp; Benchmarks
           </h2>
-          <p className="mt-4 text-base leading-7 text-neutral-600 dark:text-neutral-300">
+          <p className="mt-2 text-sm text-[var(--muted)] leading-relaxed">
             {project.outcome}
           </p>
 
-          <div className="mt-8 divide-y divide-black/8 border-t border-b border-black/8 dark:divide-white/10 dark:border-white/10">
+          <div className="mt-4 space-y-2">
             {project.metrics.map((metric, i) => (
-              <div key={i} className="flex items-center justify-between py-4 text-sm">
-                <span className="text-[#86868b]">Metric 0{i + 1}</span>
-                <span className="font-medium text-neutral-900 dark:text-white">{metric}</span>
+              <div
+                key={i}
+                className="flex items-center justify-between rounded-lg border border-[var(--border)] bg-[var(--card)] p-3 text-xs"
+              >
+                <span className="font-mono text-[var(--muted)]">Metric 0{i + 1}</span>
+                <span className="font-semibold text-[var(--foreground)]">{metric}</span>
               </div>
             ))}
           </div>
         </div>
 
         {/* Tech Stack */}
-        <div>
-          <h3 className="text-xs font-semibold tracking-[0.2em] text-[#86868b] uppercase">
-            Technologies
+        <div className="pt-6 border-t border-[var(--border)]">
+          <h3 className="text-xs font-mono uppercase tracking-wider text-[var(--muted)]">
+            Stack &amp; Tooling
           </h3>
-          <div className="mt-4 flex flex-wrap gap-2">
+          <div className="mt-3 flex flex-wrap gap-1.5">
             {project.stack.map((item) => (
               <span
                 key={item}
-                className="rounded-full bg-[#f5f5f7] px-3.5 py-1 text-xs text-neutral-700 dark:bg-[#1c1c1e] dark:text-neutral-300"
+                className="rounded-md bg-[var(--tag-bg)] px-2.5 py-1 text-xs font-mono text-[var(--tag-fg)] border border-[var(--border)]"
               >
                 {item}
               </span>
             ))}
           </div>
-        </div>
-
-        {/* Action Links */}
-        <div className="flex flex-wrap items-center justify-between gap-4 pt-8 border-t border-black/8 dark:border-white/10 text-sm">
-          <div className="flex items-center gap-6">
-            {project.githubUrl && (
-              <a
-                href={project.githubUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="font-medium text-[#0066cc] dark:text-[#2997ff] hover:underline"
-              >
-                View Repository ↗
-              </a>
-            )}
-            {project.liveUrl && project.liveUrl !== project.githubUrl && (
-              <a
-                href={project.liveUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="font-medium text-[#0066cc] dark:text-[#2997ff] hover:underline"
-              >
-                Live Demo ↗
-              </a>
-            )}
-          </div>
-
-          <Link
-            href="/#work"
-            className="text-neutral-500 hover:text-neutral-900 dark:hover:text-white flex items-center gap-1"
-          >
-            <span>‹ All work</span>
-          </Link>
         </div>
       </div>
     </article>

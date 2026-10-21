@@ -1,21 +1,23 @@
 "use client";
 
+import React from "react";
 import { site } from "@/lib/site";
 
 export function Footer() {
   return (
-    <footer className="border-t border-black/8 bg-white py-10 text-[11px] text-[#86868b] dark:border-white/10 dark:bg-black transition-colors">
-      <div className="mx-auto flex max-w-5xl flex-col items-center justify-between gap-4 px-6 sm:flex-row">
-        <p>
-          Copyright © 2026 {site.name}. All rights reserved.
-        </p>
+    <footer className="border-t border-[var(--border)] py-12 text-xs text-[var(--muted)] transition-colors mt-12">
+      <div className="container-narrow flex flex-col sm:flex-row items-center justify-between gap-6">
+        <div>
+          <p className="font-semibold text-[var(--foreground)]">Let&apos;s connect</p>
+          <small className="text-[var(--muted-light)]">Find me on these platforms</small>
+        </div>
 
-        <div className="flex items-center gap-6">
+        <div className="flex flex-wrap items-center gap-5 text-xs">
           <a
             href={site.social.github}
             target="_blank"
             rel="noopener noreferrer"
-            className="hover:text-neutral-900 dark:hover:text-white transition-colors"
+            className="hover:text-[#D21319] transition-colors"
           >
             GitHub
           </a>
@@ -23,7 +25,7 @@ export function Footer() {
             href={site.social.linkedin}
             target="_blank"
             rel="noopener noreferrer"
-            className="hover:text-neutral-900 dark:hover:text-white transition-colors"
+            className="hover:text-[#D21319] transition-colors"
           >
             LinkedIn
           </a>
@@ -31,7 +33,7 @@ export function Footer() {
             href={site.social.leetcode}
             target="_blank"
             rel="noopener noreferrer"
-            className="hover:text-neutral-900 dark:hover:text-white transition-colors"
+            className="hover:text-[#D21319] transition-colors"
           >
             LeetCode
           </a>
@@ -39,11 +41,21 @@ export function Footer() {
             href={site.social.codeforces}
             target="_blank"
             rel="noopener noreferrer"
-            className="hover:text-neutral-900 dark:hover:text-white transition-colors"
+            className="hover:text-[#D21319] transition-colors"
           >
             Codeforces
           </a>
+          <a
+            href={`mailto:${site.email}`}
+            className="hover:text-[#D21319] transition-colors"
+          >
+            Mail
+          </a>
         </div>
+
+        <p className="text-[11px] text-[var(--muted-light)] font-mono">
+          © 2026 {site.name}.
+        </p>
       </div>
     </footer>
   );

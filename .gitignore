@@ -39,3 +39,13 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# scratch scrapers & raw dumps
+fetch-profiles.mjs
+fetched-profiles.json
+leetcode-real.json
+query-lc.mjs
+src/data/*.mjs
+src/data/*.html
+src/data/*-fetched.json
+src/data/*-exact-days.json

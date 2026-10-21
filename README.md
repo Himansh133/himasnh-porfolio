@@ -1,6 +1,6 @@
-# Himanshu Kumar — Portfolio
+# Himanshu Kumar : Portfolio
 
-> Personal portfolio website of **Himanshu Kumar**, Software Engineer & Systems Builder (B.Tech ECE-CS, 2023–2027 at JIIT Noida).
+> Personal portfolio website of **Himanshu Kumar**, Software Engineer & Systems Builder (B.Tech ECE-CS, 2023 - 2027 at JIIT Noida).
 > Live at: [https://github.com/Himansh133](https://github.com/Himansh133)
 
 ---

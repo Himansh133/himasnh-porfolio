@@ -126,7 +126,7 @@ export function Hero() {
       {/* About Paragraph */}
       <div className="mt-8 pt-8 border-t border-[var(--border)]">
         <p className="text-[15px] sm:text-[16px] leading-relaxed text-[var(--muted)]">
-          Hey, I&apos;m <span className="text-[var(--foreground)] font-semibold">Himanshu</span>. I am a software engineer (B.Tech ECE-CS, 2027 at JIIT Noida) working at the intersection of high-performance C++ automation, robust backend APIs, and autonomous LLM agents. At JV Micronics, I engineered a production RF test tool in C++17/Qt6 driving Keysight FieldFox VNAs over SCPI/GPIB, cutting sweep runs from 10 hours to 7 minutes. As an active open source contributor to Corsair (YC W25), I built plugins and fixed critical synchronization bugs with 100+ tests.
+          Hey, I&apos;m <span className="text-[var(--foreground)] font-semibold">Himanshu</span>. I engineer systems at the intersection of high-speed C++, scalable web backends, and AI agents. Currently at JIIT Noida (2027), I build developer tooling, contribute to Corsair (YC W25), and design reliable software built for scale.
         </p>
       </div>
 

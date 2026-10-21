@@ -52,8 +52,8 @@ export const site = {
   about: {
     headline: "Bridging deterministic systems with intelligent LLM autonomy.",
     body: [
-      "I am a software engineer (B.Tech ECE-CS, 2027 at JIIT Noida) working at the intersection of robust backend APIs, C++ systems automation, and autonomous LLM agents.",
-      "At JV Micronics, I engineered a production RF test suite in C++17/Qt6 that automated Keysight FieldFox VNA sweeps, cutting test cycles from 10 hours to 7 minutes for 50 RF engineers. As an open-source contributor to Corsair (YC W25), I built plugins and fixed critical state sync issues across major integrations with 100+ tests.",
+      "I engineer systems at the intersection of high-speed C++, scalable web backends, and AI agents. Currently at JIIT Noida (2027), I build developer tooling, contribute to Corsair (YC W25), and design reliable software built for scale.",
+      "As an open-source contributor to Corsair (YC W25), I build plugins and fix critical synchronization bugs across core SDK integrations with comprehensive automated tests.",
       "I believe in building software that does not just look sleek, but solves hard engineering challenges with provable speed, deterministic safety floors, and resilient architecture.",
     ],
   },

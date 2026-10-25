@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { ProductStage } from "@/components/product-stage";
+import { ProjectCover } from "@/components/project-card";
 import { getProject, projects } from "@/lib/site";
 
 export function generateStaticParams() {
@@ -81,7 +81,9 @@ export default async function WorkPage({ params }: { params: Promise<{ slug: str
 
       {/* Hero Visual Stage */}
       <div className="my-8">
-        <ProductStage project={project} large />
+        <div className="relative aspect-[16/9] overflow-hidden rounded-2xl border border-[var(--border)]">
+          <ProjectCover project={project} sizes="(min-width: 820px) 780px, 100vw" priority />
+        </div>
       </div>
 
       {/* Deep-Dive Case Study Narrative */}

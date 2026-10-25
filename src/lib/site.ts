@@ -5,6 +5,10 @@ export interface Project {
   eyebrow: string;
   category: "ai" | "systems" | "web";
   summary: string;
+  /** One curious line shown on the project card */
+  hook: string;
+  /** Cover screenshot under /public, e.g. "/projects/my-app.png" */
+  image?: string;
   description: string;
   challenge: string;
   solution: string;
@@ -148,6 +152,7 @@ export const projects: Project[] = [
     category: "ai",
     summary:
       "Autonomous agent using Gemini and 5 custom tools to recover failed invoices with deterministic discount guardrails.",
+    hook: "Can an LLM chase unpaid invoices without ever giving away the store?",
     description:
       "Revenue Rescue Agent is an intelligent invoice recovery system that ranks overdue invoices, predicts offer acceptance probability, and dynamically negotiates payments over multichannel outreach.",
     challenge:
@@ -175,6 +180,7 @@ export const projects: Project[] = [
     category: "web",
     summary:
       "Natural-language Git explorer parsing natural queries into deep commit analytics with parallelized API fetches.",
+    hook: "Ask a repo a question in plain English. Get its history back as a picture.",
     description:
       "An award-winning developer tool that converts plain English developer questions like 'github repo facebook/react commits last month' into instant visual commit graphs, repository insights, and contributor heatmaps.",
     challenge:
@@ -202,6 +208,7 @@ export const projects: Project[] = [
     category: "systems",
     summary:
       "C++17/Qt6 automation software driving Keysight FieldFox VNA over SCPI, cutting 10-hour test runs to 7 minutes.",
+    hook: "A 10-hour antenna test, finished before your coffee gets cold.",
     description:
       "High-reliability desktop automation application for high-frequency microwave and antenna testing, connecting multi-axis positioners and Keysight FieldFox N9951B Vector Network Analyzers.",
     challenge:

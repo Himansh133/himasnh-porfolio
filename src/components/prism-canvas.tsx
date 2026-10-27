@@ -15,6 +15,13 @@ import {
 const REST_ANGLE = (16 * Math.PI) / 180;
 // Steep enough that the fan leaves the glass close to level and stays in the strip
 const BEAM_RISE = (20 * Math.PI) / 180;
+// How far the beam can be swung, as its direction of travel (negative rises)
+const BEAM_MIN = (-48 * Math.PI) / 180;
+const BEAM_MAX = (30 * Math.PI) / 180;
+// The beam starts this far past the left edge, so the light arrives from outside
+const BEAM_LEAD = 24;
+// Bright packets travelling along the beam toward the glass
+const PULSES = 3;
 // Neighbouring colours that leave further apart than this are not joined
 const MAX_BAND_ANGLE = 0.1;
 
@@ -39,10 +46,9 @@ interface State {
   vy: number;
   ang: number;
   av: number;
-  sx: number;
-  sy: number;
-  svx: number;
-  svy: number;
+  /** Beam direction of travel and its angular velocity */
+  ba: number;
+  bav: number;
 }
 
 const wrapAngle = (a: number) => Math.atan2(Math.sin(a), Math.cos(a));
@@ -59,7 +65,7 @@ export function PrismCanvas() {
   const wrapRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const prismHitRef = useRef<HTMLDivElement>(null);
-  const sourceHitRef = useRef<HTMLDivElement>(null);
+  const beamHitRef = useRef<HTMLDivElement>(null);
   const hintRef = useRef<HTMLParagraphElement>(null);
 
   useEffect(() => {
@@ -96,8 +102,8 @@ export function PrismCanvas() {
     let visible = true;
     let time = 0;
 
-    const st: State = { px: 0, py: 0, vx: 0, vy: 0, ang: REST_ANGLE, av: 0, sx: 0, sy: 0, svx: 0, svy: 0 };
-    const home = { x: 0, y: 0, sx: 0, sy: 0 };
+    const st: State = { px: 0, py: 0, vx: 0, vy: 0, ang: REST_ANGLE, av: 0, ba: -BEAM_RISE, bav: 0 };
+    const home = { x: 0, y: 0 };
 
     let mode: Mode | null = null;
     let grab = { x: 0, y: 0, angle: 0 };
@@ -117,20 +123,19 @@ export function PrismCanvas() {
       // Prism sits left of centre so the colours get most of the strip
       home.x = Math.max(width * 0.34, size * 1.9);
       home.y = height * 0.42;
-      home.sx = width * 0.07;
-      // A beam that rises slightly and crosses the prism's upper-left face
-      home.sy = home.y - size * 0.2 + Math.tan(BEAM_RISE) * (home.x - home.sx);
     };
 
     const geometry = () => {
       const prism: Prism = { cx: st.px, cy: st.py, size, apex: Math.PI / 3, rotation: st.ang };
+      // The beam always aims at the prism's upper-left face and pivots there
       const target = { x: st.px, y: st.py - size * 0.2 };
-      const dx = target.x - st.sx;
-      const dy = target.y - st.sy;
-      const len = Math.hypot(dx, dy) || 1;
-      const beam: Beam = { origin: { x: st.sx, y: st.sy }, dir: { x: dx / len, y: dy / len } };
-      return { prism, beam };
+      const dir = { x: Math.cos(st.ba), y: Math.sin(st.ba) };
+      const reach = (target.x + BEAM_LEAD) / dir.x;
+      const beam: Beam = { origin: { x: target.x - dir.x * reach, y: target.y - dir.y * reach }, dir };
+      return { prism, beam, target, reach };
     };
+
+    const pointerAngle = (p: Vec, target: Vec) => Math.atan2(target.y - p.y, target.x - p.x);
 
     const resize = () => {
       const rect = wrap.getBoundingClientRect();
@@ -153,55 +158,97 @@ export function PrismCanvas() {
       if (firstLayout) {
         st.px = home.x;
         st.py = home.y;
-        st.sx = home.sx;
-        st.sy = home.sy;
       }
       draw();
     };
 
     const hitTest = (p: Vec): Mode | null => {
       // Fingers need bigger targets than a mouse
-      const reach = coarse.matches ? 1.4 : 1;
-      if (Math.hypot(p.x - st.sx, p.y - st.sy) < 22 * reach) return "source";
-      const { prism } = geometry();
+      const touch = coarse.matches ? 1.4 : 1;
+      const { prism, beam, reach } = geometry();
       const verts = prismVertices(prism);
-      if (verts.some((v) => Math.hypot(p.x - v.x, p.y - v.y) < 18 * reach)) return "rotate";
+      if (verts.some((v) => Math.hypot(p.x - v.x, p.y - v.y) < 18 * touch)) return "rotate";
       if (pointInTriangle(p, verts)) return "move";
+      // Anywhere along the beam grabs it
+      const rx = p.x - beam.origin.x;
+      const ry = p.y - beam.origin.y;
+      const along = rx * beam.dir.x + ry * beam.dir.y;
+      const across = Math.abs(rx * beam.dir.y - ry * beam.dir.x);
+      if (along > 0 && along < reach - size * 0.3 && across < 12 * touch) return "source";
       return null;
     };
 
     const draw = () => {
       const dark = root.classList.contains("dark");
-      const { prism, beam } = geometry();
+      const { prism, beam, target } = geometry();
       const rays = traceSpectrum(prism, beam, samples);
       const verts = prismVertices(prism);
-      const t = reducedMotion.matches ? 0 : time;
+      const calm = reducedMotion.matches;
+      const t = calm ? 0 : time;
+      const ink = dark ? "255,255,255" : "29,29,31";
+      const active = (m: Mode) => (mode === m || (!mode && hover === m) ? 1 : 0);
 
       ctx.clearRect(0, 0, width, height);
       ctx.lineJoin = "round";
       ctx.lineCap = "round";
-      ctx.globalCompositeOperation = "source-over";
+      ctx.globalCompositeOperation = dark ? "lighter" : "source-over";
 
-      // White beam into the glass
-      const entry = rays[0]?.entry ?? { x: prism.cx, y: prism.cy };
-      const beamGrad = ctx.createLinearGradient(beam.origin.x, beam.origin.y, entry.x, entry.y);
-      const beamRgb = dark ? "255,255,255" : "29,29,31";
-      beamGrad.addColorStop(0, `rgba(${beamRgb},0.25)`);
-      beamGrad.addColorStop(1, `rgba(${beamRgb},${dark ? 0.95 : 0.8})`);
+      // White light arriving from beyond the left edge, gathering strength on its way in
+      const entry = rays[0]?.entry ?? target;
+      const edge = { x: 0, y: beam.origin.y + (beam.dir.y * BEAM_LEAD) / beam.dir.x };
+      const held = active("source");
+      const beamGrad = ctx.createLinearGradient(edge.x, edge.y, entry.x, entry.y);
+      beamGrad.addColorStop(0, `rgba(${ink},0.15)`);
+      beamGrad.addColorStop(0.5, `rgba(${ink},0.6)`);
+      beamGrad.addColorStop(1, `rgba(${ink},${dark ? 1 : 0.85})`);
+      ctx.strokeStyle = beamGrad;
       for (const [lw, alpha] of [
-        [9, 0.07],
-        [4, 0.14],
-        [1.6, 1],
+        [14, 0.04],
+        [6, 0.1],
+        [2.6, 0.22],
+        [1.3 + 0.5 * held, 1],
       ] as const) {
-        ctx.globalAlpha = alpha;
-        ctx.strokeStyle = beamGrad;
-        ctx.lineWidth = lw;
+        ctx.globalAlpha = alpha * (1 + 0.6 * held);
+        ctx.lineWidth = lw * scale;
         ctx.beginPath();
         ctx.moveTo(beam.origin.x, beam.origin.y);
         ctx.lineTo(entry.x, entry.y);
         ctx.stroke();
       }
       ctx.globalAlpha = 1;
+
+      // Packets of light running along the beam into the glass
+      if (!calm) {
+        const pulseGrad = ctx.createLinearGradient(edge.x, edge.y, entry.x, entry.y);
+        pulseGrad.addColorStop(0, `rgba(${ink},0)`);
+        for (let k = 0; k < PULSES; k++) {
+          const f = (t * 0.22 + k / PULSES) % 1;
+          // Faint as it enters the strip, brightest just before the glass
+          const peak = (dark ? 0.85 : 0.5) * Math.min(1, f * 2.5);
+          pulseGrad.addColorStop(Math.max(0, f - 0.07), `rgba(${ink},0)`);
+          pulseGrad.addColorStop(f, `rgba(${ink},${peak})`);
+          pulseGrad.addColorStop(Math.min(1, f + 0.07), `rgba(${ink},0)`);
+        }
+        pulseGrad.addColorStop(1, `rgba(${ink},0)`);
+        ctx.strokeStyle = pulseGrad;
+        ctx.lineWidth = 2.4 * scale;
+        ctx.beginPath();
+        ctx.moveTo(edge.x, edge.y);
+        ctx.lineTo(entry.x, entry.y);
+        ctx.stroke();
+      }
+
+      // Soft flare where the light strikes the glass
+      const flareRadius = (dark ? 16 : 11) * scale;
+      const flare = ctx.createRadialGradient(entry.x, entry.y, 0, entry.x, entry.y, flareRadius);
+      const flareAlpha = (dark ? 0.4 : 0.14) * (0.85 + 0.15 * Math.sin(t * 2.1));
+      flare.addColorStop(0, `rgba(${ink},${flareAlpha})`);
+      flare.addColorStop(1, `rgba(${ink},0)`);
+      ctx.fillStyle = flare;
+      ctx.beginPath();
+      ctx.arc(entry.x, entry.y, flareRadius, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.globalCompositeOperation = "source-over";
 
       // Glass body
       ctx.beginPath();
@@ -333,20 +380,7 @@ export function PrismCanvas() {
       ctx.lineWidth = 1.25;
       ctx.stroke();
 
-      // Handles: the light source and the prism corners
-      const ink = dark ? "255,255,255" : "29,29,31";
-      const active = (m: Mode) => (mode === m || (!mode && hover === m) ? 1 : 0);
-
-      ctx.fillStyle = `rgba(${ink},${0.55 + 0.4 * active("source")})`;
-      ctx.beginPath();
-      ctx.arc(st.sx, st.sy, 3.2, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.strokeStyle = `rgba(${ink},${0.15 + 0.5 * active("source")})`;
-      ctx.lineWidth = 1;
-      ctx.beginPath();
-      ctx.arc(st.sx, st.sy, 8 + 2 * active("source"), 0, Math.PI * 2);
-      ctx.stroke();
-
+      // Handles on the prism corners
       ctx.fillStyle = `rgba(${ink},${0.3 + 0.6 * active("rotate")})`;
       for (const v of verts) {
         ctx.beginPath();
@@ -362,8 +396,12 @@ export function PrismCanvas() {
         prismHit.style.height = `${box}px`;
         prismHit.style.transform = `translate(${st.px - box / 2}px, ${st.py - box / 2}px)`;
       }
-      const sourceHit = sourceHitRef.current;
-      if (sourceHit) sourceHit.style.transform = `translate(${st.sx - 22}px, ${st.sy - 22}px)`;
+      const beamHit = beamHitRef.current;
+      if (beamHit) {
+        const along = Math.max(0, Math.hypot(entry.x - beam.origin.x, entry.y - beam.origin.y) - size * 0.3);
+        beamHit.style.width = `${along}px`;
+        beamHit.style.transform = `translate(${beam.origin.x}px, ${beam.origin.y - 16}px) rotate(${st.ba}rad)`;
+      }
     };
 
     const step = (now: number) => {
@@ -414,24 +452,20 @@ export function PrismCanvas() {
       }
 
       if (mode === "source") {
-        const sx = st.sx;
-        const sy = st.sy;
-        st.sx += (dragTarget.x - st.sx) * follow;
-        st.sy += (dragTarget.y - st.sy) * follow;
-        st.svx = (st.sx - sx) / dt;
-        st.svy = (st.sy - sy) / dt;
+        const prev = st.ba;
+        st.ba += (dragTarget.angle - st.ba) * follow;
+        st.bav = (st.ba - prev) / dt;
       } else {
-        st.svx += (3 * (home.sx + driftX * 0.3 - st.sx) - 3 * st.svx) * dt;
-        st.svy += (3 * (home.sy + driftY * 0.6 - st.sy) - 3 * st.svy) * dt;
-        st.sx += st.svx * dt;
-        st.sy += st.svy * dt;
+        // A released beam swings back to rest with a little overshoot
+        const beamSway = calm ? 0 : 0.02 * Math.sin(now / 2100);
+        st.bav += (7 * (-BEAM_RISE + beamSway - st.ba) - 3.6 * st.bav) * dt;
+        st.ba += st.bav * dt;
       }
 
       // Keep everything inside the strip and the beam coming from the left
       st.px = clamp(st.px, width * 0.2, width * 0.7);
       st.py = clamp(st.py, height * 0.25, height * 0.78);
-      st.sx = clamp(st.sx, width * 0.04, st.px - size * 1.1);
-      st.sy = clamp(st.sy, height * 0.08, height * 0.92);
+      st.ba = clamp(st.ba, BEAM_MIN, BEAM_MAX);
 
       // The light follows the pointer with a little lag
       ptr.x += (ptr.rawX - ptr.x) * Math.min(1, dt * 10);
@@ -477,8 +511,9 @@ export function PrismCanvas() {
         grab = { x: 0, y: 0, angle: wrapAngle(Math.atan2(p.y - st.py, p.x - st.px) - st.ang) };
         dragTarget = { x: st.px, y: st.py, angle: st.ang };
       } else {
-        grab = { x: p.x - st.sx, y: p.y - st.sy, angle: 0 };
-        dragTarget = { x: st.sx, y: st.sy, angle: st.ang };
+        // Keep the offset between finger and beam so grabbing never makes it jump
+        grab = { x: 0, y: 0, angle: pointerAngle(p, geometry().target) - st.ba };
+        dragTarget = { x: 0, y: 0, angle: st.ba };
       }
     };
 
@@ -490,6 +525,12 @@ export function PrismCanvas() {
       if (mode) {
         if (mode === "rotate") {
           dragTarget.angle = st.ang + wrapAngle(Math.atan2(p.y - st.py, p.x - st.px) - grab.angle - st.ang);
+        } else if (mode === "source") {
+          const target = geometry().target;
+          // Past the glass the angle flips; hold the beam where it was
+          if (p.x < target.x - 8) {
+            dragTarget.angle = clamp(pointerAngle(p, target) - grab.angle, BEAM_MIN, BEAM_MAX);
+          }
         } else {
           dragTarget.x = p.x - grab.x;
           dragTarget.y = p.y - grab.y;
@@ -574,8 +615,8 @@ export function PrismCanvas() {
         ref={wrapRef}
         role="img"
         tabIndex={0}
-        aria-label="A prism splitting a beam of light into flowing colours. Drag the prism to move it, drag its corners to turn it, drag the glowing dot to aim the light, or use the left and right arrow keys."
-        className="relative h-44 w-full outline-none focus-visible:ring-1 focus-visible:ring-[var(--muted-light)] sm:h-48"
+        aria-label="A prism splitting a beam of light into flowing colours. Drag the prism to move it, drag its corners to turn it, drag the beam to aim the light, or use the left and right arrow keys."
+        className="relative h-44 w-full overflow-hidden outline-none focus-visible:ring-1 focus-visible:ring-[var(--muted-light)] sm:h-48"
         style={{
           maskImage:
             "linear-gradient(to bottom, transparent, black 10%, black 90%, transparent), linear-gradient(to right, transparent, black 4%, black 85%, transparent)",
@@ -600,9 +641,9 @@ export function PrismCanvas() {
           style={{ touchAction: "none" }}
         />
         <div
-          ref={sourceHitRef}
+          ref={beamHitRef}
           aria-hidden
-          className="absolute left-0 top-0 size-11"
+          className="absolute left-0 top-0 h-8 origin-left"
           style={{ touchAction: "none" }}
         />
       </div>
@@ -611,7 +652,7 @@ export function PrismCanvas() {
         aria-hidden
         className="pointer-events-none absolute bottom-0 left-0 text-[11px] text-[var(--muted-light)] transition-opacity duration-500"
       >
-        drag the prism, turn its corners, move the light
+        drag the prism, turn its corners, swing the light
       </p>
     </div>
   );

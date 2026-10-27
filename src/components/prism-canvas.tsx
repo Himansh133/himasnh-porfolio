@@ -14,7 +14,7 @@ import {
 
 const REST_ANGLE = (16 * Math.PI) / 180;
 // Steep enough that the fan leaves the glass close to level and stays in the strip
-const BEAM_RISE = (20 * Math.PI) / 180;
+const BEAM_RISE = (22 * Math.PI) / 180;
 // How far the beam can be swung, as its direction of travel (negative rises)
 const BEAM_MIN = (-48 * Math.PI) / 180;
 const BEAM_MAX = (30 * Math.PI) / 180;
@@ -122,7 +122,7 @@ export function PrismCanvas() {
       scale = size / BASE_SIZE;
       // Prism sits left of centre so the colours get most of the strip
       home.x = Math.max(width * 0.34, size * 1.9);
-      home.y = height * 0.42;
+      home.y = height * 0.38;
     };
 
     const geometry = () => {
@@ -257,35 +257,26 @@ export function PrismCanvas() {
       ctx.fillStyle = dark ? "rgba(255,255,255,0.05)" : "rgba(255,255,255,0.6)";
       ctx.fill();
 
-      // Colours travelling inside the glass
-      ctx.globalCompositeOperation = dark ? "lighter" : "source-over";
-      for (const ray of rays) {
-        const [r, g, b] = wavelengthToRgb(ray.wavelength);
-        ctx.strokeStyle = `rgba(${r},${g},${b},${dark ? 0.22 : 0.3})`;
-        ctx.lineWidth = 1;
-        ctx.beginPath();
-        ctx.moveTo(ray.entry.x, ray.entry.y);
-        ctx.lineTo(ray.exit.x, ray.exit.y);
-        ctx.stroke();
-      }
-
       // Flowing ribbons of light leaving the glass
-      const length = width * 1.15;
       const need = rays.length * (segments + 1) * 2;
       if (pts.length < need) pts = new Float32Array(need);
+      // The outermost colours fade out so the fan has soft edges instead of dark rims
+      const edgeAt = (i: number) => Math.min(1, (i + 1) / 5, (rays.length - i) / 5);
       const alphaAt = (i: number, j: number) => {
         const u = j / segments;
-        const fadeIn = Math.min(1, u * 14);
-        const fadeOut = Math.pow(1 - u, 0.85);
-        // Slow brightness packets drifting outward, out of step across the spectrum
-        const pulse = 0.72 + 0.28 * Math.sin(u * 5.5 - t * 0.8 + i * 0.18);
+        // Slow brightness packets drifting outward, out of step across the spectrum;
+        // they grow in after the glass so the light leaves it at the brightness it had inside
+        const ramp = Math.min(1, u * 6);
+        const pulse = 0.72 + 0.28 * ramp * Math.sin(u * 5.5 - t * 0.8 + i * 0.18);
         const breathe = 0.9 + 0.1 * Math.sin(t * 0.4 + i * 0.05);
-        return fadeIn * fadeOut * pulse * breathe;
+        return pulse * breathe * (1 - 0.2 * u) * edgeAt(i);
       };
 
       rays.forEach((ray, i) => {
         const nx = -ray.dir.y;
         const ny = ray.dir.x;
+        // Long enough to run off the right edge, like the beam arriving from the left
+        const length = Math.min(width * 1.6, (width + 40 - ray.exit.x) / Math.max(ray.dir.x, 0.3));
         for (let j = 0; j <= segments; j++) {
           const u = j / segments;
           const s = length * Math.pow(u, 1.2);
@@ -317,6 +308,27 @@ export function PrismCanvas() {
       });
 
       fanCtx.clearRect(0, 0, width, height);
+
+      // The spreading colours inside the glass, on the same layer as the ribbons so
+      // they share one glow and meet them without a seam
+      fanCtx.lineWidth = 1.5;
+      for (let i = 0; i < rays.length; i++) {
+        const a = rays[i];
+        const b = rays[i + 1];
+        fanCtx.globalAlpha = alphaAt(i, 0) * 0.95;
+        const [r, g, bl] = wavelengthToRgb(a.wavelength);
+        fanCtx.fillStyle = fanCtx.strokeStyle = `rgb(${r},${g},${bl})`;
+        fanCtx.beginPath();
+        fanCtx.moveTo(a.entry.x, a.entry.y);
+        fanCtx.lineTo(a.exit.x, a.exit.y);
+        if (b && Math.hypot(a.exit.x - b.exit.x, a.exit.y - b.exit.y) < 6) {
+          fanCtx.lineTo(b.exit.x, b.exit.y);
+          fanCtx.closePath();
+          fanCtx.fill();
+        }
+        fanCtx.stroke();
+      }
+
       for (let i = 0; i < rays.length; i++) {
         const a = rays[i];
         const b = rays[i + 1];
@@ -619,9 +631,9 @@ export function PrismCanvas() {
         className="relative h-44 w-full overflow-hidden outline-none focus-visible:ring-1 focus-visible:ring-[var(--muted-light)] sm:h-48"
         style={{
           maskImage:
-            "linear-gradient(to bottom, transparent, black 10%, black 90%, transparent), linear-gradient(to right, transparent, black 4%, black 85%, transparent)",
+            "linear-gradient(to bottom, transparent, black 10%, black 90%, transparent), linear-gradient(to right, transparent, black 4%, black 94%, transparent)",
           WebkitMaskImage:
-            "linear-gradient(to bottom, transparent, black 10%, black 90%, transparent), linear-gradient(to right, transparent, black 4%, black 85%, transparent)",
+            "linear-gradient(to bottom, transparent, black 10%, black 90%, transparent), linear-gradient(to right, transparent, black 4%, black 94%, transparent)",
           maskComposite: "intersect",
           WebkitMaskComposite: "source-in",
         }}

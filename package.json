@@ -14,7 +14,8 @@
     "next": "16.4.2",
     "react": "19.3.0",
     "react-activity-calendar": "^3.2.1",
-    "react-dom": "19.3.0"
+    "react-dom": "19.3.0",
+    "simple-icons": "^16.35.0"
   },
   "devDependencies": {
     "@tailwindcss/turbopack": "^4",

@@ -1,127 +1,157 @@
-"use client";
-
-import React, { useState } from "react";
+import {
+  type SimpleIcon,
+  siC,
+  siCplusplus,
+  siDocker,
+  siFastapi,
+  siGithubactions,
+  siGnubash,
+  siGooglegemini,
+  siHuggingface,
+  siLangchain,
+  siLinux,
+  siMeta,
+  siNextdotjs,
+  siNodedotjs,
+  siPostgresql,
+  siPython,
+  siQt,
+  siReact,
+  siTypescript,
+} from "simple-icons";
 import { site } from "@/lib/site";
 
-export function SkillsSection() {
-  const [activeGroup, setActiveGroup] = useState<string>("all");
+// Outline glyphs for things without a logo, or whose makers have asked
+// Simple Icons to remove theirs
+const GLYPHS = {
+  database: (
+    <>
+      <ellipse cx="12" cy="5.5" rx="7.5" ry="2.75" />
+      <path d="M4.5 5.5v13c0 1.5 3.4 2.75 7.5 2.75s7.5-1.25 7.5-2.75v-13" />
+      <path d="M4.5 12c0 1.5 3.4 2.75 7.5 2.75s7.5-1.25 7.5-2.75" />
+    </>
+  ),
+  cloud: <path d="M7 18.5h10a4 4 0 0 0 .6-7.95 6 6 0 0 0-11.4-1.4A4.6 4.6 0 0 0 7 18.5z" />,
+  spark: (
+    <>
+      <path d="M11 4l1.7 4.8 4.8 1.7-4.8 1.7L11 17l-1.7-4.8-4.8-1.7 4.8-1.7z" />
+      <path d="M18 15l.8 2.2 2.2.8-2.2.8L18 21l-.8-2.2-2.2-.8 2.2-.8z" />
+    </>
+  ),
+  wave: <path d="M2.5 12h3l2.25-6.5 4.5 13 3.25-9 1.75 2.5h4.25" />,
+  curve: (
+    <>
+      <path d="M3 20.5h18" />
+      <path d="M3.5 20c4.5 0 5.5-15 8.5-15s4 15 8.5 15" />
+    </>
+  ),
+  cube: (
+    <>
+      <path d="M12 2.75l8 4.5v9.5l-8 4.5-8-4.5v-9.5z" />
+      <path d="M4 7.25l8 4.5 8-4.5M12 11.75v9.5" />
+    </>
+  ),
+  chip: (
+    <>
+      <rect x="6" y="6" width="12" height="12" rx="2" />
+      <path d="M9.5 2.5V6M14.5 2.5V6M9.5 18v3.5M14.5 18v3.5M2.5 9.5H6M2.5 14.5H6M18 9.5h3.5M18 14.5h3.5" />
+    </>
+  ),
+};
 
-  const marqueeItems = [
-    { name: "C++17", category: "Languages" },
-    { name: "Python", category: "Languages" },
-    { name: "TypeScript", category: "Languages" },
-    { name: "FastAPI", category: "Frameworks" },
-    { name: "Qt6", category: "Frameworks" },
-    { name: "Next.js", category: "Frameworks" },
-    { name: "React", category: "Frameworks" },
-    { name: "Gemini API", category: "AI/ML" },
-    { name: "LLM Agents", category: "AI/ML" },
-    { name: "LangChain", category: "AI/ML" },
-    { name: "Docker", category: "DevOps" },
-    { name: "GitHub Actions", category: "DevOps" },
-    { name: "PostgreSQL", category: "Databases" },
-    { name: "Oracle Cloud (OCI)", category: "DevOps" },
-    { name: "SCPI / GPIB", category: "Hardware" },
-    { name: "Linux / Bash", category: "Systems" },
-  ];
+type Icon = SimpleIcon | keyof typeof GLYPHS;
 
+const ICONS: Record<string, Icon> = {
+  "C++17": siCplusplus,
+  C: siC,
+  Python: siPython,
+  TypeScript: siTypescript,
+  SQL: "database",
+  Bash: siGnubash,
+  FastAPI: siFastapi,
+  React: siReact,
+  Qt6: siQt,
+  "Next.js": siNextdotjs,
+  LangChain: siLangchain,
+  "Node.js": siNodedotjs,
+  "Gemini API": siGooglegemini,
+  "LLM tool calling": "spark",
+  "RAG pipelines": "spark",
+  "OpenAI API": "spark",
+  Llama: siMeta,
+  "Hugging Face": siHuggingface,
+  Docker: siDocker,
+  "GitHub Actions": siGithubactions,
+  AWS: "cloud",
+  "Oracle Cloud (OCI)": "cloud",
+  Linux: siLinux,
+  PostgreSQL: siPostgresql,
+  "SCPI / GPIB": "wave",
+  "Keysight VISA": "wave",
+  MATLAB: "curve",
+  "ANSYS HFSS": "cube",
+  "Cadence Virtuoso": "chip",
+};
+
+// Brand colours show on hover; ones too dark or too pale to read on either
+// theme fall back to the text colour
+function hoverColor(hex: string) {
+  const [r, g, b] = [0, 2, 4].map((i) => parseInt(hex.slice(i, i + 2), 16) / 255);
+  const light = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+  return light < 0.12 || light > 0.85 ? "var(--foreground)" : `#${hex}`;
+}
+
+function TechIcon({ icon }: { icon?: Icon }) {
+  if (!icon) return <span className="size-4 shrink-0" />;
+  if (typeof icon === "string") {
+    return (
+      <svg
+        aria-hidden
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        className="size-4 shrink-0"
+      >
+        {GLYPHS[icon]}
+      </svg>
+    );
+  }
   return (
-    <section id="stack" className="py-12 border-t border-[var(--border)]">
-      {/* Corner Dots Header */}
-      <div className="mb-2">
-        <h2 className="section-title-modern">
-          <div className="corner-dots">
-            <div className="dot top-left" />
-            <div className="dot top-right" />
-            <div className="dot bottom-left" />
-            <div className="dot bottom-right" />
-          </div>
-          <span className="title-text">Tech stack I use</span>
-        </h2>
-      </div>
+    <svg aria-hidden viewBox="0 0 24 24" fill="currentColor" className="size-4 shrink-0">
+      <path d={icon.path} />
+    </svg>
+  );
+}
 
-      <p className="text-sm text-[var(--muted)] mb-6">
-        Technologies and frameworks I engineer systems and products with.
-      </p>
-
-      {/* Infinite Smooth Marquee (ReactBits style) with Crimson Red dots */}
-      <div className="marquee-container py-3 mb-8 border-y border-[var(--border)] bg-[var(--card)]/40">
-        <div className="marquee-track">
-          {marqueeItems.concat(marqueeItems).map((item, idx) => (
-            <div
-              key={idx}
-              className="inline-flex items-center gap-2 rounded-lg border border-[var(--border)] bg-[var(--card)] px-3 py-1.5 text-xs font-mono text-[var(--foreground)] shadow-xs shrink-0"
-            >
-              <span className="h-1.5 w-1.5 rounded-full bg-[var(--accent)]" />
-              <span>{item.name}</span>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Category Tabs */}
-      <div className="flex flex-wrap gap-1.5 mb-6">
-        <button
-          onClick={() => setActiveGroup("all")}
-          className={`rounded-lg px-3 py-1 text-xs font-medium transition-all ${
-            activeGroup === "all"
-              ? "bg-[var(--accent)] text-white shadow-xs"
-              : "border border-[var(--border)] bg-[var(--card)] text-[var(--muted)] hover:text-[var(--foreground)] hover:border-[var(--accent)]/30"
-          }`}
-        >
-          All Tech
-        </button>
-        {site.skills.map((grp) => (
-          <button
-            key={grp.group}
-            onClick={() => setActiveGroup(grp.group)}
-            className={`rounded-lg px-3 py-1 text-xs font-medium transition-all ${
-              activeGroup === grp.group
-                ? "bg-[var(--accent)] text-white shadow-xs"
-                : "border border-[var(--border)] bg-[var(--card)] text-[var(--muted)] hover:text-[var(--foreground)] hover:border-[var(--accent)]/30"
-            }`}
-          >
-            {grp.group}
-          </button>
-        ))}
-      </div>
-
-      {/* Categorized Skills Grid */}
-      <div className="grid gap-4 sm:grid-cols-2">
-        {site.skills
-          .filter((grp) => activeGroup === "all" || activeGroup === grp.group)
-          .map((skillGroup) => (
-            <div
-              key={skillGroup.group}
-              className="modern-card p-5 flex flex-col justify-between"
-            >
-              <div>
-                <div className="flex items-center justify-between">
-                  <h3 className="text-sm font-semibold text-[var(--foreground)]">
-                    {skillGroup.group}
-                  </h3>
-                  <span className="text-[11px] font-mono text-[var(--muted-light)]">
-                    {skillGroup.items.length} items
+export function SkillsSection() {
+  return (
+    <div className="flex flex-col gap-12">
+      {site.skills.map((group) => (
+        <section key={group.group} aria-label={group.group}>
+          <p className="mb-5 text-[11px] text-[var(--muted-light)]">{group.group.toLowerCase()}</p>
+          <ul className="grid grid-cols-2 gap-x-6 gap-y-3.5 sm:grid-cols-3">
+            {group.items.map((name) => {
+              const icon = ICONS[name];
+              const color = icon && typeof icon !== "string" ? hoverColor(icon.hex) : "var(--foreground)";
+              return (
+                <li
+                  key={name}
+                  style={{ "--brand": color } as React.CSSProperties}
+                  className="group flex items-center gap-2.5 text-[var(--muted)] transition-colors hover:text-[var(--foreground)]"
+                >
+                  <span className="text-[var(--muted-light)] transition-colors duration-200 group-hover:text-[var(--brand)]">
+                    <TechIcon icon={icon} />
                   </span>
-                </div>
-                <p className="mt-1 text-xs text-[var(--muted)] leading-relaxed">
-                  {skillGroup.description}
-                </p>
-
-                <div className="mt-4 flex flex-wrap gap-1.5">
-                  {skillGroup.items.map((skill) => (
-                    <span
-                      key={skill}
-                      className="rounded-md bg-[var(--tag-bg)] px-2.5 py-1 text-[11.5px] font-mono text-[var(--tag-fg)] border border-[var(--border)]"
-                    >
-                      {skill}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </div>
-          ))}
-      </div>
-    </section>
+                  {name}
+                </li>
+              );
+            })}
+          </ul>
+        </section>
+      ))}
+    </div>
   );
 }

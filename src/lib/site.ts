@@ -71,9 +71,7 @@ export const site = {
     email: "mailto:himanshu3836@gmail.com",
   },
   stats: [
-    { value: "10h → 7m", label: "RF sweep cycle time reduction", highlight: "98.8% faster" },
     { value: "15K+", label: "GitHub Stars on Corsair SDK", highlight: "3 PRs Merged" },
-    { value: "50+", label: "Engineers using production tool", highlight: "JV Micronics" },
     { value: "500+", label: "DSA problems solved", highlight: "1700+ Rating" },
   ],
   skills: [
@@ -83,24 +81,24 @@ export const site = {
       items: ["C++17", "C", "Python", "TypeScript", "SQL", "Bash"],
     },
     {
-      group: "Frameworks & Backend",
+      group: "Frameworks",
       description: "Modern frameworks for web services and native GUI applications",
-      items: ["FastAPI", "React.js", "Qt6", "Next.js", "LangChain", "Node.js"],
+      items: ["FastAPI", "React", "Qt6", "Next.js", "LangChain", "Node.js"],
     },
     {
-      group: "AI / ML & Agents",
+      group: "AI & agents",
       description: "Autonomous reasoning, deterministic guardrails, and LLM tooling",
-      items: ["Gemini API", "LLM Tool-Calling", "RAG Pipelines", "OpenAI & Llama APIs", "Hugging Face"],
+      items: ["Gemini API", "OpenAI API", "Llama", "Hugging Face", "LLM tool calling", "RAG pipelines"],
     },
     {
       group: "Cloud & DevOps",
       description: "Automated pipelines, containerization, and enterprise deployments",
-      items: ["Docker", "GitHub Actions (CI/CD)", "AWS", "Oracle Cloud (OCI Certified)", "Linux", "PostgreSQL"],
+      items: ["Docker", "GitHub Actions", "AWS", "Oracle Cloud (OCI)", "Linux", "PostgreSQL"],
     },
     {
       group: "Hardware & EDA",
       description: "Instrument communication protocols and RF design software",
-      items: ["SCPI / GPIB Protocol", "Keysight VNA VISA", "MATLAB", "ANSYS HFSS", "Cadence Virtuoso"],
+      items: ["SCPI / GPIB", "Keysight VISA", "MATLAB", "ANSYS HFSS", "Cadence Virtuoso"],
     },
   ],
 };
@@ -110,18 +108,18 @@ export const experiences: Experience[] = [
     role: "Software Engineering Intern",
     company: "JV Micronics",
     period: "May – Jul 2026",
-    location: "dabad, India",
+    location: "Faridabad, India",
     summary:
       "Engineered automated RF test software and high-throughput instrument control for microwave & antenna testing.",
     blurb: [
       "Built a Windows desktop tool in C++17 and Qt6 that drives a Keysight FieldFox VNA over SCPI, replacing manual antenna test runs.",
-      "A full sweep went from 10 hours to 7 minutes, and about 50 RF engineers now use it.",
+      "It drives the analyzer and the positioners through a full antenna sweep on its own, then writes the report.",
     ],
     stack: ["C++17", "Qt6", "SCPI", "GPIB", "USB VISA", "Keysight FieldFox"],
     points: [
-      "Built a production Windows desktop tool in C++17 and Qt6 that drives a Keysight FieldFox N9951B VNA over SCPI (GPIB/USB), replacing manual RF test runs and slashing antenna sweep duration from 10 hours to 7 minutes.",
+      "Built a production Windows desktop tool in C++17 and Qt6 that drives a Keysight FieldFox N9951B VNA over SCPI (GPIB/USB), replacing manual RF test runs with automated antenna sweeps.",
       "Designed a clean layered architecture separating instrument control, data acquisition, positioner automation, and test sequencing so new instruments and test plans plug in seamlessly without modifying the UI layer.",
-      "Shipped a real-time Qt GUI with live plotting, automated calibration checks, and one-click test report generation adopted by 50 RF engineers.",
+      "Shipped a real-time Qt GUI with live plotting, automated calibration checks, and one-click test report generation.",
     ],
     links: [
       { label: "Antenna Measurement Software", url: "https://github.com/Himansh133" },
@@ -213,18 +211,18 @@ export const projects: Project[] = [
     eyebrow: "C++17 desktop tool",
     category: "systems",
     summary:
-      "Desktop software that runs antenna tests on a Keysight FieldFox VNA over SCPI. Built at JV Micronics, it cut a 10-hour sweep to 7 minutes.",
+      "Desktop software that runs antenna tests on a Keysight FieldFox VNA over SCPI. Built at JV Micronics to replace manual test runs.",
     description:
       "A desktop automation app for microwave and antenna testing. It connects multi-axis positioners and a Keysight FieldFox N9951B vector network analyzer, and plots results live.",
     challenge:
-      "Manual RF test runs needed an engineer present for up to 10 hours per antenna, with plenty of room for error in calibration and angle indexing.",
+      "Manual RF test runs needed an engineer at the bench for the whole sweep, with plenty of room for error in calibration and angle indexing.",
     solution:
       "A layered C++17 architecture keeps instrument control, data acquisition, positioner automation and test sequencing apart, so new instruments plug in without touching the UI. SCPI runs over GPIB and USB VISA, with real-time polar and Cartesian plots in Qt6.",
     outcome:
-      "A full antenna sweep dropped from 10 hours to 7 minutes (98.8% faster), and the tool is now used by about 50 RF engineers.",
+      "A full antenna sweep runs on its own, from calibration checks to the finished report.",
     metrics: [
-      "10 hours → 7 minutes per sweep",
-      "About 50 engineers use it",
+      "Sweeps run unattended, end to end",
+      "Calibration checks and reports built in",
       "SCPI driver fully decoupled from the UI",
     ],
     stack: ["C++17", "Qt6", "SCPI", "GPIB / USB VISA", "CMake"],

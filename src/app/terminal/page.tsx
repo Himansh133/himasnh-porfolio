@@ -74,7 +74,7 @@ export default function TerminalPage() {
               Specializing in C++17 test automation, autonomous LLM agent pipelines, and high-performance backend APIs.
             </p>
             <p className="text-[#AFAEA2]">
-              Shipped production RF instrumentation tool at JV Micronics (cut sweep from 10h to 7m) and approved PRs to Corsair (YC W25) SDK.
+              Shipped production RF instrumentation tool at JV Micronics (automated antenna test runs) and approved PRs to Corsair (YC W25) SDK.
             </p>
           </div>
         );
@@ -111,7 +111,7 @@ export default function TerminalPage() {
             <div>
               <p className="text-[var(--accent)] font-semibold">3. FieldFox RF Measurement Suite (May 2026)</p>
               <p className="text-[#AFAEA2]">
-                C++17/Qt6 automation tool driving Keysight FieldFox VNA, slashing sweeps from 10h to 7m.
+                C++17/Qt6 automation tool driving Keysight FieldFox VNA, automating full antenna sweeps.
               </p>
             </div>
           </div>
@@ -126,7 +126,7 @@ export default function TerminalPage() {
                 Software Engineering Intern @ JV Micronics (May 2026 - July 2026)
               </p>
               <p className="text-[#AFAEA2]">
-                C++17, Qt6, SCPI, GPIB • Automated RF test runs, 10h to 7m sweep reduction, deployed to 50 engineers.
+                C++17, Qt6, SCPI, GPIB • Automated RF test runs end to end.
               </p>
             </div>
             <div>

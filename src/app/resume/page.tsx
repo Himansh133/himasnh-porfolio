@@ -140,13 +140,13 @@ export default function ResumePage() {
               </div>
               <ul className="space-y-2 text-xs sm:text-sm text-[var(--muted)] list-disc pl-5">
                 <li>
-                  Built a production Windows tool in C++17 / Qt6 that drives a Keysight FieldFox N9951B VNA over SCPI (GPIB/USB), replacing manual RF test runs and cutting a full antenna sweep from 10 hours to 7 minutes.
+                  Built a production Windows tool in C++17 / Qt6 that drives a Keysight FieldFox N9951B VNA over SCPI (GPIB/USB), replacing manual RF test runs with automated antenna sweeps.
                 </li>
                 <li>
                   Designed a layered architecture (instrument control, data acquisition, positioner automation, test sequencing) so new instruments and test plans plug in without touching the UI.
                 </li>
                 <li>
-                  Shipped a real-time Qt GUI for test setup and live plots, and auto-generated reports used by 50 engineers.
+                  Shipped a real-time Qt GUI for test setup and live plots, and auto-generated test reports.
                 </li>
               </ul>
             </div>

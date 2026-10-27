@@ -8,10 +8,13 @@
 // starts with: beach-1.jpg and beach-2.jpg both play beach.mp3. Photos without a
 // match play default.mp3, or the first song if there's no default. Captions and
 // song names go in public/memories/notes.txt.
+//
+// Full songs are cut down to their best 18 seconds (see trim-songs.mjs).
 
 import { existsSync, readdirSync, readFileSync, statSync, watch, writeFileSync } from "node:fs";
 import path from "node:path";
 import sharp from "sharp";
+import { trimSongs } from "./trim-songs.mjs";
 
 const ROOT = path.resolve(import.meta.dirname, "..");
 const DIR = path.join(ROOT, "public/memories");
@@ -25,10 +28,10 @@ const PHONE_COUNT = 12;
 // The board is laid out on a 1440×900 screen and scaled to fit others
 const W = 1440;
 const H = 900;
-// Places photos keep clear of: the glass, the name above it, the reset button
+// Places photos keep clear of: the glass, the name (where the header has it), the reset button
 const AVOID = [
   { l: 560, t: 290, r: 880, b: 610 },
-  { l: 470, t: 150, r: 730, b: 235 },
+  { l: 410, t: 100, r: 650, b: 195 },
   { l: 1320, t: 860, r: 1440, b: 900 },
 ];
 
@@ -62,6 +65,14 @@ function readNotes() {
   }
   return notes;
 }
+
+const isSong = (f) => SONG.has(path.extname(f).toLowerCase());
+
+// A song's line in notes.txt still applies once it's been cut down to an .mp3
+const songNote = (notes, f) => {
+  const name = path.parse(f).name.toLowerCase();
+  return notes.get(f.toLowerCase()) ?? [...notes].find(([k]) => isSong(k) && path.parse(k).name === name)?.[1];
+};
 
 /** Shrinks oversized photos in place, turned the right way up; returns width over height */
 async function prepare(file) {
@@ -141,8 +152,10 @@ function place(photos, fresh) {
 
 async function build({ relayout = false } = {}) {
   if (!existsSync(DIR)) return;
-  const files = readdirSync(DIR).filter((f) => statSync(path.join(DIR, f)).isFile());
   const notes = readNotes();
+  const list = () => readdirSync(DIR).filter((f) => statSync(path.join(DIR, f)).isFile());
+  await trimSongs(DIR, ROOT, list(), (f) => songNote(notes, f), isSong);
+  const files = list();
   let previous = [];
   try {
     previous = relayout ? [] : JSON.parse(readFileSync(OUT, "utf8"));
@@ -150,10 +163,11 @@ async function build({ relayout = false } = {}) {
   const before = new Map(previous.map((p) => [p.id, p]));
 
   const songs = files
-    .filter((f) => SONG.has(path.extname(f).toLowerCase()))
+    .filter(isSong)
     .map((f) => {
       const name = path.parse(f).name;
-      const [title, artist = ""] = (notes.get(f.toLowerCase()) ?? words(name)).split(/\s+[-–]\s+/);
+      const note = songNote(notes, f)?.replace(/\s*@\s*[\d:.]+\s*$/, "");
+      const [title, artist = ""] = (note || words(name)).split(/\s+[-–]\s+/);
       return { key: slug(name), track: { title, artist, src: `/memories/${encodeURI(f)}` } };
     })
     .sort((a, b) => a.key.localeCompare(b.key));
@@ -230,8 +244,8 @@ if (args.has("--watch")) {
   watch(DIR, (_, file) => {
     if (!file || file.startsWith(".")) return;
     clearTimeout(timer);
-    // Wait for copies to finish before reading them
-    timer = setTimeout(() => (running = running.then(() => build()).catch((e) => console.error(e))), 400);
+    // Wait for copies (a whole song can take a moment) to finish before reading them
+    timer = setTimeout(() => (running = running.then(() => build()).catch((e) => console.error(e))), 1500);
   });
   console.log("memories: watching public/memories");
 }

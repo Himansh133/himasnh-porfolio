@@ -3,8 +3,20 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React, { useLayoutEffect, useRef, useState, ViewTransition } from "react";
-import { handoff, memories, MOBILE_BELOW, readPeek, RETURN_KEY } from "@/lib/memories";
+import React, {
+  useLayoutEffect,
+  useRef,
+  useState,
+  ViewTransition,
+} from "react";
+import {
+  handoff,
+  memories,
+  MOBILE_BELOW,
+  portal,
+  readPeek,
+  RETURN_KEY,
+} from "@/lib/memories";
 import { site } from "@/lib/site";
 
 // Photos settle into place with a little overshoot
@@ -58,7 +70,8 @@ interface Rope {
   alpha: number;
 }
 
-const clamp = (v: number, lo: number, hi: number) => Math.max(lo, Math.min(hi, v));
+const clamp = (v: number, lo: number, hi: number) =>
+  Math.max(lo, Math.min(hi, v));
 
 /** Two players that crossfade, so one memory can hand over to the next */
 function createDeck() {
@@ -78,7 +91,8 @@ function createDeck() {
     if (!ctx) {
       const AC =
         window.AudioContext ??
-        (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+        (window as unknown as { webkitAudioContext?: typeof AudioContext })
+          .webkitAudioContext;
       if (AC) {
         const c = new AC();
         gains = els.map((el) => {
@@ -177,7 +191,8 @@ function strings(nodes: { x: number; y: number }[]): [number, number][] {
   best[0] = 0;
   for (let step = 0; step < nodes.length; step++) {
     let u = -1;
-    for (let i = 0; i < nodes.length; i++) if (!inTree[i] && (u < 0 || best[i] < best[u])) u = i;
+    for (let i = 0; i < nodes.length; i++)
+      if (!inTree[i] && (u < 0 || best[i] < best[u])) u = i;
     inTree[u] = true;
     if (from[u] >= 0) edges.push([from[u], u]);
     for (let v = 0; v < nodes.length; v++) {
@@ -196,14 +211,12 @@ interface Api {
   activate: (id: string) => void;
   eject: () => void;
   reset: () => void;
-  /** Fade the scene out and stop the music, then call `done` */
+  /** Stop the music and start the portal closing, then call `done` to change page */
   leave: (done: () => void) => void;
 }
 
-// How long the scene takes to fade before the page changes
-const LEAVE_MS = 240;
-// How long the photos take to glide home after that (the morph in globals.css)
-const GLIDE_MS = 600;
+// How long the portal takes to close and the photos to fly home (globals.css)
+const CLOSE_MS = 950;
 
 export function MemoryBoard() {
   const router = useRouter();
@@ -268,8 +281,15 @@ export function MemoryBoard() {
     let visible = true;
     let hotNow = false;
     const pointer = { x: 0, y: 0, active: false };
-    let drag: { b: Body; id: number; gx: number; gy: number; sx: number; sy: number; moved: boolean } | null =
-      null;
+    let drag: {
+      b: Body;
+      id: number;
+      gx: number;
+      gy: number;
+      sx: number;
+      sy: number;
+      moved: boolean;
+    } | null = null;
 
     const bodies: Body[] = memories.map((m) => ({
       id: m.id,
@@ -310,10 +330,14 @@ export function MemoryBoard() {
       const gx = (playerBox.l + playerBox.r) / 2;
       const gy = (playerBox.t + playerBox.b) / 2;
       // The glass counts as taken, so only the photos tucked under it on purpose land there
-      const placed = [{ x: gx, y: gy, r: ((playerBox.r - playerBox.l) / 2) * 0.8 }];
+      const placed = [
+        { x: gx, y: gy, r: ((playerBox.r - playerBox.l) / 2) * 0.8 },
+      ];
       const out: Layout = {};
       // The first two photos that aren't the avatar's sit partly under the glass
-      const tucked = bodies.filter((b) => b.shown && !peek.has(b.id)).slice(0, 2);
+      const tucked = bodies
+        .filter((b) => b.shown && !peek.has(b.id))
+        .slice(0, 2);
       bodies
         .filter((b) => b.shown)
         .forEach((b) => {
@@ -336,7 +360,8 @@ export function MemoryBoard() {
               const cx = xMin + Math.random() * (xMax - xMin);
               const cy = yMin + Math.random() * (yMax - yMin);
               let room = Infinity;
-              for (const p of placed) room = Math.min(room, Math.hypot(p.x - cx, p.y - cy) - p.r - r);
+              for (const p of placed)
+                room = Math.min(room, Math.hypot(p.x - cx, p.y - cy) - p.r - r);
               if (room > best) {
                 best = room;
                 x = cx;
@@ -359,8 +384,12 @@ export function MemoryBoard() {
     const loadLayout = () => {
       homes = defaults();
       try {
-        const saved = JSON.parse(localStorage.getItem(storageKey()) ?? "null") as Layout | null;
-        if (saved) for (const id of Object.keys(homes)) if (saved[id]) homes[id] = saved[id];
+        const saved = JSON.parse(
+          localStorage.getItem(storageKey()) ?? "null",
+        ) as Layout | null;
+        if (saved)
+          for (const id of Object.keys(homes))
+            if (saved[id]) homes[id] = saved[id];
       } catch {}
     };
     const saveLayout = () => {
@@ -376,7 +405,8 @@ export function MemoryBoard() {
 
     // On the glass a photo grows to fit a box as wide as the glass and 1.12 times
     // as tall, keeping its shape, the same frame unfunnyket.com mounts photos in
-    const fitScale = (b: Body) => Math.min(slotFit / b.w, (slotFit * 1.12) / b.h);
+    const fitScale = (b: Body) =>
+      Math.min(slotFit / b.w, (slotFit * 1.12) / b.h);
 
     const placeTargets = () => {
       for (const b of bodies) {
@@ -434,8 +464,25 @@ export function MemoryBoard() {
       const modeChanged = first || nextMobile !== mobile;
       mobile = nextMobile;
 
+      // The name sits exactly over the header's, still there beneath the scene, so
+      // it holds perfectly still while the portal opens and closes around it
+      const header = document
+        .querySelector<HTMLElement>("header .avatar-peek")
+        ?.getBoundingClientRect();
+      if (header && header.width && header.top >= 0) {
+        Object.assign(identity.style, {
+          left: `${header.left}px`,
+          top: `${header.top}px`,
+          translate: "none",
+        });
+      } else {
+        Object.assign(identity.style, { left: "", top: "", translate: "" });
+      }
+
       // Photo sizes are given for a 1440×900 screen; phones get them at under half
-      const scale = mobile ? clamp(W / 390, 0.85, 1.15) * 0.45 : clamp(Math.min(W / 1440, H / 900), 0.62, 1.3);
+      const scale = mobile
+        ? clamp(W / 390, 0.85, 1.15) * 0.45
+        : clamp(Math.min(W / 1440, H / 900), 0.62, 1.3);
       for (const b of bodies) {
         b.shown = !mobile || !!memories.find((m) => m.id === b.id)?.phone;
         b.el.style.display = b.shown ? "" : "none";
@@ -449,7 +496,17 @@ export function MemoryBoard() {
       // The glass is a 240px square on a typical laptop, scaled by the same
       // breakpoints as unfunnyket.com; the CSS scales its corners and text with --k
       const k =
-        H <= 600 || W < 380 ? 0.44 : W < 640 ? 0.5 : W < 900 ? 0.68 : W < 1200 ? 0.84 : W < 1600 ? 1 : 1.2;
+        H <= 600 || W < 380
+          ? 0.44
+          : W < 640
+            ? 0.5
+            : W < 900
+              ? 0.68
+              : W < 1200
+                ? 0.84
+                : W < 1600
+                  ? 1
+                  : 1.2;
       scene.style.setProperty("--k", String(k));
       const side = Math.round(240 * k);
       player.style.width = `${side}px`;
@@ -463,7 +520,10 @@ export function MemoryBoard() {
         b: pr.bottom - sceneRect.top,
       };
       // A loaded photo takes over the whole glass
-      slot = { x: (playerBox.l + playerBox.r) / 2, y: (playerBox.t + playerBox.b) / 2 };
+      slot = {
+        x: (playerBox.l + playerBox.r) / 2,
+        y: (playerBox.t + playerBox.b) / 2,
+      };
       slotFit = side;
 
       dpr = Math.min(window.devicePixelRatio || 1, coarse.matches ? 1.5 : 2);
@@ -494,7 +554,7 @@ export function MemoryBoard() {
               y: b.ty + (slot.y - b.ty) * 0.18,
               r: b.tr * 0.4,
               s: 0.88,
-              delay: 0.2 + (d / reach) * 0.5,
+              delay: 0.45 + (d / reach) * 0.6,
             });
           }
           writeTransform(b);
@@ -523,15 +583,27 @@ export function MemoryBoard() {
           b.vy = (ny - b.y) / dt;
           b.x = nx;
           b.y = ny;
-          const swing = reducedMotion.matches ? 0 : clamp(b.vx * 0.012, -10, 10);
-          b.vr += (STIFFNESS * (b.tilt * 0.4 + swing - b.r) - DAMPING * b.vr) * dt;
+          const swing = reducedMotion.matches
+            ? 0
+            : clamp(b.vx * 0.012, -10, 10);
+          b.vr +=
+            (STIFFNESS * (b.tilt * 0.4 + swing - b.r) - DAMPING * b.vr) * dt;
           b.r += b.vr * dt;
           const lift = hotNow ? fitScale(b) * 0.92 : 1.05;
           b.vs += (STIFFNESS * (lift - b.s) - DAMPING * b.vs) * dt;
           b.s += b.vs * dt;
           motion = 1;
         } else if (reducedMotion.matches) {
-          Object.assign(b, { x: b.tx, y: b.ty, r: b.tr, s: b.ts, vx: 0, vy: 0, vr: 0, vs: 0 });
+          Object.assign(b, {
+            x: b.tx,
+            y: b.ty,
+            r: b.tr,
+            s: b.ts,
+            vx: 0,
+            vy: 0,
+            vr: 0,
+            vs: 0,
+          });
         } else {
           b.vx += (STIFFNESS * (b.tx - b.x) - DAMPING * b.vx) * dt;
           b.vy += (STIFFNESS * (b.ty - b.y) - DAMPING * b.vy) * dt;
@@ -543,7 +615,11 @@ export function MemoryBoard() {
           b.s += b.vs * dt;
           motion = Math.max(
             motion,
-            Math.abs(b.vx) + Math.abs(b.vy) + Math.abs(b.vr) + Math.abs(b.tx - b.x) + Math.abs(b.ty - b.y),
+            Math.abs(b.vx) +
+              Math.abs(b.vy) +
+              Math.abs(b.vr) +
+              Math.abs(b.tx - b.x) +
+              Math.abs(b.ty - b.y),
           );
         }
         writeTransform(b);
@@ -615,7 +691,12 @@ export function MemoryBoard() {
       ctx.moveTo(pts[0], pts[1]);
       for (let k = 1; k < n; k++) {
         const i = k * 2;
-        ctx.quadraticCurveTo(pts[i], pts[i + 1], (pts[i] + pts[i + 2]) / 2, (pts[i + 1] + pts[i + 3]) / 2);
+        ctx.quadraticCurveTo(
+          pts[i],
+          pts[i + 1],
+          (pts[i] + pts[i + 2]) / 2,
+          (pts[i + 1] + pts[i + 3]) / 2,
+        );
       }
       ctx.lineTo(pts[n * 2], pts[n * 2 + 1]);
     };
@@ -633,7 +714,9 @@ export function MemoryBoard() {
       ctx.beginPath();
       for (const rope of ropes) {
         const target = rope.a.delay <= 0 && rope.b.delay <= 0 ? 1 : 0;
-        rope.alpha = reducedMotion.matches ? target : rope.alpha + (target - rope.alpha) * Math.min(1, dt * 4);
+        rope.alpha = reducedMotion.matches
+          ? target
+          : rope.alpha + (target - rope.alpha) * Math.min(1, dt * 4);
         if (rope.alpha > 0.99) trace(rope);
       }
       ctx.stroke();
@@ -665,9 +748,17 @@ export function MemoryBoard() {
       if (acc > STEP) acc = 0;
       const fading = drawRopes(dt);
 
-      quiet = !drag && !pointer.active && !fading && bodyMotion < 0.3 && ropeMotion < 0.01 ? quiet + 1 : 0;
+      quiet =
+        !drag &&
+        !pointer.active &&
+        !fading &&
+        bodyMotion < 0.3 &&
+        ropeMotion < 0.01
+          ? quiet + 1
+          : 0;
       // Sleep once everything has come to rest; any interaction wakes it again
-      if (quiet < 30 && visible && !document.hidden) raf = requestAnimationFrame(frame);
+      if (quiet < 30 && visible && !document.hidden)
+        raf = requestAnimationFrame(frame);
     };
 
     function wake() {
@@ -749,21 +840,34 @@ export function MemoryBoard() {
         try {
           sessionStorage.setItem(RETURN_KEY, "1");
         } catch {}
-        const wait = reducedMotion.matches ? 0 : LEAVE_MS;
-        handoff.until = performance.now() + wait + GLIDE_MS;
-        window.setTimeout(done, wait);
+        // The portal shrinks back into the avatar
+        const r = identity.getBoundingClientRect();
+        portal("close", r.left + 20, r.top + r.height / 2);
+        if (!reducedMotion.matches)
+          handoff.until = performance.now() + CLOSE_MS;
+        done();
       },
     };
 
     const onDown = (e: PointerEvent) => {
-      const el = (e.target as HTMLElement).closest<HTMLElement>("[data-memory]");
+      const el = (e.target as HTMLElement).closest<HTMLElement>(
+        "[data-memory]",
+      );
       const b = el && byId.get(el.dataset.memory!);
       if (!b || drag || e.button > 0) return;
       e.preventDefault();
       deck.prime();
       el.setPointerCapture(e.pointerId);
       const p = local(e);
-      drag = { b, id: e.pointerId, gx: p.x - b.x, gy: p.y - b.y, sx: p.x, sy: p.y, moved: false };
+      drag = {
+        b,
+        id: e.pointerId,
+        gx: p.x - b.x,
+        gy: p.y - b.y,
+        sx: p.x,
+        sy: p.y,
+        moved: false,
+      };
       b.tx = b.x;
       b.ty = b.y;
       b.el.style.zIndex = String(++z);
@@ -788,7 +892,11 @@ export function MemoryBoard() {
 
       let tx = p.x - drag.gx;
       let ty = p.y - drag.gy;
-      const over = tx > playerBox.l && tx < playerBox.r && ty > playerBox.t && ty < playerBox.b;
+      const over =
+        tx > playerBox.l &&
+        tx < playerBox.r &&
+        ty > playerBox.t &&
+        ty < playerBox.b;
       setHotState(over);
       if (over) {
         // Over the glass the photo is drawn toward its slot
@@ -878,87 +986,124 @@ export function MemoryBoard() {
   };
 
   return (
-    <div
-      ref={sceneRef}
-      role="region"
-      aria-label="Memories. Drag a photo onto the glass in the middle to hear its song, or drag photos anywhere to rearrange them. With a keyboard, press Enter on a photo to play it and Escape to stop."
-      className="memory-scene fixed inset-0 z-50 touch-none overflow-hidden bg-[var(--background)] select-none"
+    // Opens and closes through a circle centred on the avatar (globals.css)
+    <ViewTransition
+      name="memories-portal"
+      enter="portal-open"
+      exit="portal-close"
+      default="none"
     >
-      <canvas ref={canvasRef} aria-hidden className="pointer-events-none absolute inset-0 h-full w-full" />
-
-      <Link
-        ref={identityRef}
-        href="/"
-        onClick={(e) => {
-          // Let new-tab clicks through untouched
-          if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || !apiRef.current) return;
-          e.preventDefault();
-          apiRef.current.leave(() => router.push("/"));
-        }}
-        className="absolute top-[5%] left-1/2 z-[15] flex -translate-x-1/2 items-center gap-3 rounded-md sm:top-[20%] sm:left-[34%] sm:translate-x-0"
-      >
-        <ViewTransition name="memories-identity" share="morph" default="none">
-          <span className="flex items-center gap-3">
-            <span className="relative block size-10 shrink-0 overflow-hidden rounded-full bg-[var(--tag-bg)]">
-              <Image src="/himanshu.jpg" alt="" fill sizes="40px" className="object-cover object-[center_20%]" />
-            </span>
-            <span className="leading-tight whitespace-nowrap">
-              <span className="block text-[14px] font-medium text-[var(--foreground)]">{site.name}</span>
-              <span className="block text-[var(--muted-light)]">Software Engineer</span>
-            </span>
-          </span>
-        </ViewTransition>
-      </Link>
-
       <div
-        ref={playerRef}
-        data-hot={hot ? "" : undefined}
-        data-loaded={loadedId ? "" : undefined}
-        // Above the resting photos so they show through it softened; taps go through to them
-        className="memory-glass pointer-events-none absolute top-1/2 left-1/2 z-[15] -translate-x-1/2 -translate-y-1/2"
+        ref={sceneRef}
+        role="region"
+        aria-label="Memories. Drag a photo onto the glass in the middle to hear its song, or drag photos anywhere to rearrange them. With a keyboard, press Enter on a photo to play it and Escape to stop."
+        className="memory-scene fixed inset-0 z-50 touch-none overflow-hidden bg-[var(--background)] select-none"
       >
-        <p className="absolute inset-0 m-auto grid h-fit max-w-[140px] place-content-center text-center">
-          drop a memory here
-          <br />
-          see what it sounds like
-        </p>
-      </div>
+        <canvas
+          ref={canvasRef}
+          aria-hidden
+          className="pointer-events-none absolute inset-0 h-full w-full"
+        />
 
-      {memories.map((m) => (
-        <button
-          key={m.id}
-          type="button"
-          data-memory={m.id}
-          aria-label={`${m.caption ?? m.alt}. ${loadedId === m.id ? "Playing; press to stop." : m.track ? `Press to play ${m.track.title}.` : "No song yet."}`}
-          aria-pressed={loadedId === m.id}
-          onKeyDown={(e) => onPhotoKey(e, m.id)}
-          className="memory-photo absolute top-0 left-0 z-10 block cursor-grab outline-none"
+        <Link
+          ref={identityRef}
+          href="/"
+          onClick={(e) => {
+            // Let new-tab clicks through untouched
+            if (
+              e.metaKey ||
+              e.ctrlKey ||
+              e.shiftKey ||
+              e.altKey ||
+              !apiRef.current
+            )
+              return;
+            e.preventDefault();
+            apiRef.current.leave(() => router.push("/"));
+          }}
+          className="absolute top-[5%] left-1/2 z-[15] flex -translate-x-1/2 items-center gap-3 rounded-md sm:top-[20%] sm:left-[34%] sm:translate-x-0"
         >
-          <ViewTransition name={`memory-${m.id}`} share="morph" default="none">
-            <span className="memory-photo-frame absolute inset-0">
-              <Image
-                src={m.photo}
-                alt={m.alt}
-                fill
-                loading="eager"
-                draggable={false}
-                // Big enough to stay sharp when the photo is enlarged on the player
-                sizes="360px"
-                className="pointer-events-none object-cover"
-              />
+          <ViewTransition
+            name="memories-identity"
+            share="identity-lock"
+            default="none"
+          >
+            <span className="flex items-center gap-3">
+              <span className="relative block size-10 shrink-0 overflow-hidden rounded-full bg-[var(--tag-bg)]">
+                <Image
+                  src="/himanshu.jpg"
+                  alt=""
+                  fill
+                  sizes="40px"
+                  className="object-cover object-[center_20%]"
+                />
+              </span>
+              <span className="leading-tight whitespace-nowrap">
+                <span className="block text-[14px] font-medium text-[var(--foreground)]">
+                  {site.name}
+                </span>
+                <span className="block text-[var(--muted-light)]">
+                  Software Engineer
+                </span>
+              </span>
             </span>
           </ViewTransition>
-          {m.caption && <span className="memory-caption">{m.caption}</span>}
-        </button>
-      ))}
+        </Link>
 
-      <button
-        type="button"
-        onClick={() => apiRef.current?.reset()}
-        className="memory-reset absolute right-4 bottom-3 z-[15] text-[11px] text-[var(--muted-light)] hover:text-[var(--foreground)]"
-      >
-        reset layout
-      </button>
-    </div>
+        <div
+          ref={playerRef}
+          data-hot={hot ? "" : undefined}
+          data-loaded={loadedId ? "" : undefined}
+          // Above the resting photos so they show through it softened; taps go through to them
+          className="memory-glass pointer-events-none absolute top-1/2 left-1/2 z-[15] -translate-x-1/2 -translate-y-1/2"
+        >
+          <p className="absolute inset-0 m-auto grid h-fit max-w-[140px] place-content-center text-center">
+            drop a memory here
+            <br />
+            see what it sounds like
+          </p>
+        </div>
+
+        {memories.map((m) => (
+          <button
+            key={m.id}
+            type="button"
+            data-memory={m.id}
+            aria-label={`${m.caption ?? m.alt}. ${loadedId === m.id ? "Playing; press to stop." : m.track ? `Press to play ${m.track.title}.` : "No song yet."}`}
+            aria-pressed={loadedId === m.id}
+            onKeyDown={(e) => onPhotoKey(e, m.id)}
+            className="memory-photo absolute top-0 left-0 z-10 block cursor-grab outline-none"
+          >
+            <ViewTransition
+              name={`memory-${m.id}`}
+              share="morph"
+              default="none"
+            >
+              <span className="memory-photo-frame absolute inset-0">
+                <Image
+                  src={m.photo}
+                  alt={m.alt}
+                  fill
+                  loading="eager"
+                  draggable={false}
+                  // Big enough to stay sharp when the photo is enlarged on the player
+                  sizes="360px"
+                  className="pointer-events-none object-cover"
+                />
+              </span>
+            </ViewTransition>
+            {m.caption && <span className="memory-caption">{m.caption}</span>}
+          </button>
+        ))}
+
+        <button
+          type="button"
+          onClick={() => apiRef.current?.reset()}
+          className="memory-reset absolute right-4 bottom-3 z-[15] text-[11px] text-[var(--muted-light)] hover:text-[var(--foreground)]"
+        >
+          reset layout
+        </button>
+      </div>
+    </ViewTransition>
   );
 }

@@ -180,15 +180,18 @@ body {
 }
 
 /* Memories scene */
+/* Each photo comes into focus as it settles, as on unfunnyket.com */
 .memory-photo {
   opacity: 0;
+  filter: blur(7px) saturate(0.75);
   transform-origin: center;
   will-change: transform;
-  transition: opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1), filter 0.7s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .memory-photo[data-ready] {
   opacity: 1;
+  filter: none;
 }
 
 .memory-photo[data-dragging] {
@@ -288,38 +291,24 @@ body {
   scale: 0.96;
 }
 
-/* Opening: the glass eases in as the photos settle around it */
+/* Opening: the glass rises into focus as the portal opens around it */
 .memory-glass {
-  animation: glass-in 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.1s backwards;
+  animation: glass-in 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.5s backwards;
 }
 
 @keyframes glass-in {
   from {
     opacity: 0;
-    scale: 0.94;
+    scale: 0.72;
+    filter: blur(10px) saturate(0.7);
   }
 }
 
-/* Closing: everything but the avatar's photos fades, then the page changes */
-.memory-scene canvas {
-  transition: opacity 0.3s ease;
-}
-
 .memory-reset {
-  transition: opacity 0.3s ease, color 0.15s ease;
+  transition: color 0.15s ease;
 }
 
-.memory-scene[data-leaving] :is(.memory-photo:not([data-peek]), canvas, .memory-reset) {
-  opacity: 0;
-  transition: opacity 0.22s cubic-bezier(0.4, 0, 1, 1);
-}
-
-.memory-scene[data-leaving] .memory-glass {
-  opacity: 0;
-  scale: 0.96;
-  transition: opacity 0.22s cubic-bezier(0.4, 0, 1, 1), scale 0.22s cubic-bezier(0.4, 0, 1, 1);
-}
-
+/* Closing: the portal shrinks the whole scene away (see the page transitions) */
 .memory-scene[data-leaving] {
   pointer-events: none;
 }
@@ -464,20 +453,100 @@ body {
   }
 }
 
-/* Photos glide between the avatar and the memories scene */
+/*
+  The memories portal, after unfunnyket.com. Opening, the page recedes into a
+  blur while the scene opens through a circle growing out of the avatar;
+  closing, the circle shrinks back into it and the page comes back into focus.
+  The scene is its own transition group (MemoryBoard); --portal-x/y and
+  data-portal are set by portal() in lib/memories.ts.
+*/
+html[data-portal="open"]::view-transition-old(root) {
+  animation: 0.52s cubic-bezier(0.4, 0, 1, 1) both work-recedes;
+}
+
+::view-transition-group(.portal-open),
+::view-transition-group(.portal-close) {
+  z-index: 90;
+  animation: none;
+}
+
+::view-transition-new(.portal-open) {
+  animation: 0.82s cubic-bezier(0.76, 0, 0.24, 1) both portal-opens;
+}
+
+::view-transition-old(.portal-close) {
+  animation: 0.76s cubic-bezier(0.76, 0, 0.24, 1) both portal-closes;
+}
+
+/* The page coming back is live underneath the shrinking scene; it starts once it's shown */
+html[data-portal="close"] main > :not(.memory-scene) {
+  animation: 0.42s cubic-bezier(0.22, 1, 0.36, 1) 0.26s both work-returns;
+}
+
+@keyframes work-recedes {
+  to {
+    opacity: 0;
+    filter: blur(7px) saturate(0.85);
+    transform: scale(0.975);
+  }
+}
+
+@keyframes portal-opens {
+  from {
+    clip-path: circle(0 at var(--portal-x, 50%) var(--portal-y, 50%));
+  }
+  to {
+    clip-path: circle(150vmax at var(--portal-x, 50%) var(--portal-y, 50%));
+  }
+}
+
+@keyframes portal-closes {
+  from {
+    clip-path: circle(150vmax at var(--portal-x, 50%) var(--portal-y, 50%));
+  }
+  to {
+    clip-path: circle(0 at var(--portal-x, 50%) var(--portal-y, 50%));
+  }
+}
+
+@keyframes work-returns {
+  from {
+    opacity: 0;
+    filter: blur(6px);
+    transform: scale(0.98);
+  }
+}
+
+/* The avatar's photos fly between the arc and the scene, through a soft focus */
 ::view-transition-group(.morph) {
-  animation-duration: 600ms;
-  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  z-index: 120;
+  animation-duration: 0.94s;
+  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 ::view-transition-image-pair(.morph) {
-  animation-name: via-blur;
+  animation-name: photo-focus;
 }
 
-@keyframes via-blur {
-  30% {
-    filter: blur(2px);
+@keyframes photo-focus {
+  35% {
+    filter: saturate(1.15) blur(1px);
   }
+}
+
+/* The name sits in the same spot on both pages, so it holds still and sharp */
+::view-transition-group(.identity-lock) {
+  z-index: 130;
+  animation: none;
+}
+
+::view-transition-old(.identity-lock) {
+  display: none;
+}
+
+::view-transition-new(.identity-lock) {
+  opacity: 1;
+  animation: none;
 }
 
 ::view-transition {

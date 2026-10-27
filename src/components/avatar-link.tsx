@@ -4,7 +4,7 @@ import Image, { getImageProps } from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useLayoutEffect, useRef, useSyncExternalStore, ViewTransition } from "react";
-import { MOBILE_BELOW, type Memory, memories, pickPeek, RETURN_KEY } from "@/lib/memories";
+import { MOBILE_BELOW, type Memory, memories, pickPeek, portal, RETURN_KEY } from "@/lib/memories";
 
 // The photos peeking out, picked at random on the client. Kept outside React so the
 // header, which stays mounted across pages, keeps the same ones on the way back from
@@ -187,6 +187,12 @@ export function AvatarLink({ children }: { children: React.ReactNode }) {
       ref={linkRef}
       href={home ? "/memories" : "/"}
       aria-label={home ? "See the personal side: memories" : "Home"}
+      onClick={(e) => {
+        if (!home || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+        // The scene opens out of the avatar, a 40px circle at the link's left edge
+        const r = e.currentTarget.getBoundingClientRect();
+        portal("open", r.left + 20, r.top + r.height / 2);
+      }}
       className="avatar-peek group relative flex items-center gap-3"
     >
       {home && (
@@ -202,8 +208,8 @@ export function AvatarLink({ children }: { children: React.ReactNode }) {
         </span>
       )}
       {home ? (
-        // Glides to and from the same name on the memories scene
-        <ViewTransition name="memories-identity" share="morph" default="none">
+        // The scene puts its own name in this exact spot, so it holds still across the switch
+        <ViewTransition name="memories-identity" share="identity-lock" default="none">
           <span className="relative z-10 flex items-center gap-3">{children}</span>
         </ViewTransition>
       ) : (

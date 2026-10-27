@@ -10,11 +10,12 @@ import "./globals.css";
 const geist = Geist({ subsets: ["latin"], variable: "--font-geist-sans" });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(site.url),
   title: {
     default: `${site.name} | ${site.role}`,
     template: `%s | ${site.name}`,
   },
-  description: `${site.tagline} Student at ${site.college}.`,
+  description: site.description,
   keywords: [
     "Himanshu Kumar",
     "Himansh133",
@@ -29,11 +30,19 @@ export const metadata: Metadata = {
     "JV Micronics",
   ],
   authors: [{ name: site.name, url: site.social.github }],
+  // The preview image is app/opengraph-image.tsx
   openGraph: {
     title: `${site.name} | ${site.role}`,
-    description: site.tagline,
+    description: site.description,
+    url: site.url,
+    siteName: site.name,
     type: "website",
     locale: "en_US",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `${site.name} | ${site.role}`,
+    description: site.description,
   },
 };
 

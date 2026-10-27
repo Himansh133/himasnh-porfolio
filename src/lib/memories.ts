@@ -46,6 +46,22 @@ export const RETURN_KEY = "memories-return";
  */
 export const handoff = { until: 0 };
 
+/**
+ * Marks the next page change as the memories portal opening or closing, so the
+ * page transition (globals.css) reveals or shrinks the scene through a circle
+ * centred on the avatar at (x, y)
+ */
+export function portal(direction: "open" | "close", x: number, y: number) {
+  const root = document.documentElement;
+  root.dataset.portal = direction;
+  root.style.setProperty("--portal-x", `${Math.round(x)}px`);
+  root.style.setProperty("--portal-y", `${Math.round(y)}px`);
+  // Longer than the slowest part of the transition
+  window.setTimeout(() => {
+    if (root.dataset.portal === direction) delete root.dataset.portal;
+  }, 1400);
+}
+
 /** The ids the avatar is showing, so the scene knows which photos glide over from it */
 const PEEK_KEY = "memories-peek";
 

@@ -48,6 +48,10 @@ export interface Achievement {
 
 export const site = {
   name: "Himanshu Kumar",
+  url: "https://himansh.tech",
+  /** Shown under the link when the site is shared, and to search engines */
+  description:
+    "Software engineer building autonomous LLM agents, scalable backends and C++ tools that drive real hardware. Final year at JIIT Noida.",
   role: "Software Engineer & Systems Builder",
   college: "Jaypee Institute of Information Technology (JIIT)",
   degree: "B.Tech in Electronics and Communication Engineering (ECE-CS), 2023 - 2027",

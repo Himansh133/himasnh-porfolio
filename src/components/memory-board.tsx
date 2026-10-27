@@ -705,7 +705,7 @@ export function MemoryBoard() {
       setLoadedId(id);
       deck.sfx("drop");
       // A file that can't play just leaves the photo sitting silently on the glass
-      deck.play(m.track.src).catch(() => {});
+      if (m.track) deck.play(m.track.src).catch(() => {});
       placeTargets();
       wake();
     };
@@ -929,7 +929,7 @@ export function MemoryBoard() {
           key={m.id}
           type="button"
           data-memory={m.id}
-          aria-label={`${m.caption ?? m.alt}. ${loadedId === m.id ? "Playing; press to stop." : `Press to play ${m.track.title}.`}`}
+          aria-label={`${m.caption ?? m.alt}. ${loadedId === m.id ? "Playing; press to stop." : m.track ? `Press to play ${m.track.title}.` : "No song yet."}`}
           aria-pressed={loadedId === m.id}
           onKeyDown={(e) => onPhotoKey(e, m.id)}
           className="memory-photo absolute top-0 left-0 z-10 block cursor-grab outline-none"

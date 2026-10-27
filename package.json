@@ -3,8 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
+    "memories": "node scripts/memories.mjs",
+    "dev": "node scripts/memories.mjs --watch & next dev",
+    "build": "node scripts/memories.mjs && next build",
     "start": "next start",
     "lint": "eslint"
   },

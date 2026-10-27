@@ -1,0 +1,20 @@
+# Optional. Captions for photos and names for songs, one line per file.
+# Photos without a line here have no caption. Songs without one are named after the file.
+#
+#   goa-trip.jpg: goa, 2024
+#   goa-trip.mp3: Kho Gaye Hum Kahan - Prateek Kuhad
+
+road-trip-2.jpg: the fjord
+sunday-3.jpg: cold morning
+home-3.jpg: home
+monsoon-1.jpg: the valley
+first-day-2.jpg: first coffee
+late-night-6.jpg: aquarium, 2am
+sunday-4.jpg: summer market
+
+road-trip.wav: Road Trip - Sample Loop
+sunday.wav: Sunday - Sample Loop
+first-day.wav: First Day - Sample Loop
+home.wav: Home - Sample Loop
+monsoon.wav: Monsoon - Sample Loop
+late-night.wav: Late Night - Sample Loop

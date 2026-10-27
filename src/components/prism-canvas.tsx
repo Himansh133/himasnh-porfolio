@@ -13,17 +13,22 @@ import {
 } from "@/lib/prism-optics";
 
 const REST_ANGLE = (16 * Math.PI) / 180;
-const BEAM_RISE = (8 * Math.PI) / 180;
-const SAMPLES = 72;
-const WAVELENGTH_STEP = (WAVELENGTH_MAX - WAVELENGTH_MIN) / (SAMPLES - 1);
+// Steep enough that the fan leaves the glass close to level and stays in the strip
+const BEAM_RISE = (20 * Math.PI) / 180;
 // Neighbouring colours that leave further apart than this are not joined
 const MAX_BAND_ANGLE = 0.1;
-// Points along each colour ribbon
-const SEGMENTS = 96;
 
+// Prism size the pixel constants below were tuned for
+const BASE_SIZE = 84;
 // Pointer pushes the light aside
 const PUSH = 26;
 const PUSH_RADIUS = 60;
+
+// Colour samples and points along each ribbon; fewer on small or touch screens
+const QUALITY = {
+  high: { samples: 72, segments: 96 },
+  low: { samples: 44, segments: 60 },
+};
 
 type Mode = "move" | "rotate" | "source";
 
@@ -71,12 +76,21 @@ export function PrismCanvas() {
     const canBlur = typeof ctx.filter === "string";
 
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const coarse = window.matchMedia("(pointer: coarse)");
     const root = document.documentElement;
 
     let width = 0;
     let height = 0;
     let dpr = 1;
-    let size = 80;
+    let size = BASE_SIZE;
+    // Everything measured in pixels scales with the prism
+    let scale = 1;
+    let samples = QUALITY.high.samples;
+    let segments = QUALITY.high.segments;
+    let wavelengthStep = (WAVELENGTH_MAX - WAVELENGTH_MIN) / (samples - 1);
+    // Smoothed frame time; the wide glow pass is dropped when frames run slow
+    let frameMs = 16;
+    let glow = true;
     let raf = 0;
     let last = 0;
     let visible = true;
@@ -92,16 +106,18 @@ export function PrismCanvas() {
     let hover: Mode | null = null;
 
     // Ribbon points, reused every frame
-    let pts = new Float32Array(SAMPLES * (SEGMENTS + 1) * 2);
+    let pts = new Float32Array(samples * (segments + 1) * 2);
 
     // Smoothed pointer, used to bend the light
     const ptr = { x: 0, y: 0, rawX: 0, rawY: 0, k: 0, kTarget: 0 };
 
     const layout = () => {
-      size = Math.min(92, height * 0.5);
-      home.x = width * 0.4;
-      home.y = height * 0.52;
-      home.sx = width * 0.12;
+      size = Math.min(clamp(width * 0.15, 50, BASE_SIZE), height * 0.45);
+      scale = size / BASE_SIZE;
+      // Prism sits left of centre so the colours get most of the strip
+      home.x = Math.max(width * 0.34, size * 1.9);
+      home.y = height * 0.42;
+      home.sx = width * 0.07;
       // A beam that rises slightly and crosses the prism's upper-left face
       home.sy = home.y - size * 0.2 + Math.tan(BEAM_RISE) * (home.x - home.sx);
     };
@@ -118,7 +134,12 @@ export function PrismCanvas() {
 
     const resize = () => {
       const rect = wrap.getBoundingClientRect();
-      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      // Phones have dense screens and little GPU to spare; the light is blurred anyway
+      dpr = Math.min(window.devicePixelRatio || 1, coarse.matches ? 1.5 : 2);
+      const q = rect.width < 480 || coarse.matches ? QUALITY.low : QUALITY.high;
+      samples = q.samples;
+      segments = q.segments;
+      wavelengthStep = (WAVELENGTH_MAX - WAVELENGTH_MIN) / (samples - 1);
       const firstLayout = width === 0;
       width = rect.width;
       height = rect.height;
@@ -139,10 +160,12 @@ export function PrismCanvas() {
     };
 
     const hitTest = (p: Vec): Mode | null => {
-      if (Math.hypot(p.x - st.sx, p.y - st.sy) < 22) return "source";
+      // Fingers need bigger targets than a mouse
+      const reach = coarse.matches ? 1.4 : 1;
+      if (Math.hypot(p.x - st.sx, p.y - st.sy) < 22 * reach) return "source";
       const { prism } = geometry();
       const verts = prismVertices(prism);
-      if (verts.some((v) => Math.hypot(p.x - v.x, p.y - v.y) < 18)) return "rotate";
+      if (verts.some((v) => Math.hypot(p.x - v.x, p.y - v.y) < 18 * reach)) return "rotate";
       if (pointInTriangle(p, verts)) return "move";
       return null;
     };
@@ -150,7 +173,7 @@ export function PrismCanvas() {
     const draw = () => {
       const dark = root.classList.contains("dark");
       const { prism, beam } = geometry();
-      const rays = traceSpectrum(prism, beam, SAMPLES);
+      const rays = traceSpectrum(prism, beam, samples);
       const verts = prismVertices(prism);
       const t = reducedMotion.matches ? 0 : time;
 
@@ -201,10 +224,10 @@ export function PrismCanvas() {
 
       // Flowing ribbons of light leaving the glass
       const length = width * 1.15;
-      const need = rays.length * (SEGMENTS + 1) * 2;
+      const need = rays.length * (segments + 1) * 2;
       if (pts.length < need) pts = new Float32Array(need);
       const alphaAt = (i: number, j: number) => {
-        const u = j / SEGMENTS;
+        const u = j / segments;
         const fadeIn = Math.min(1, u * 14);
         const fadeOut = Math.pow(1 - u, 0.85);
         // Slow brightness packets drifting outward, out of step across the spectrum
@@ -216,27 +239,31 @@ export function PrismCanvas() {
       rays.forEach((ray, i) => {
         const nx = -ray.dir.y;
         const ny = ray.dir.x;
-        for (let j = 0; j <= SEGMENTS; j++) {
-          const u = j / SEGMENTS;
+        for (let j = 0; j <= segments; j++) {
+          const u = j / segments;
           const s = length * Math.pow(u, 1.2);
           const bx = ray.exit.x + ray.dir.x * s;
           const by = ray.exit.y + ray.dir.y * s;
 
+          // Wave lengths and heights follow the prism, so small screens get the same shape
+          const sw = s / scale;
           const ramp = 1 - Math.exp(-u * 5);
           let disp =
-            (3.2 * Math.sin(s * 0.021 - t * 0.9 + i * 0.21) +
-              8 * Math.sin(s * 0.0075 - t * 0.5 + 1.7 + i * 0.07)) *
-            ramp;
+            (3.2 * Math.sin(sw * 0.021 - t * 0.9 + i * 0.21) +
+              8 * Math.sin(sw * 0.0075 - t * 0.5 + 1.7 + i * 0.07)) *
+            ramp *
+            scale;
 
           // Light bends away from the pointer
           if (ptr.k > 0.001) {
             const dx = bx - ptr.x;
             const dy = by - ptr.y;
-            const g = Math.exp(-(dx * dx + dy * dy) / (2 * PUSH_RADIUS * PUSH_RADIUS));
-            disp += ptr.k * PUSH * g * Math.tanh((dx * nx + dy * ny) / 14);
+            const radius = PUSH_RADIUS * scale;
+            const g = Math.exp(-(dx * dx + dy * dy) / (2 * radius * radius));
+            disp += ptr.k * PUSH * scale * g * Math.tanh((dx * nx + dy * ny) / 14);
           }
 
-          const k = (i * (SEGMENTS + 1) + j) * 2;
+          const k = (i * (segments + 1) + j) * 2;
           pts[k] = bx + nx * disp;
           pts[k + 1] = by + ny * disp;
         }
@@ -254,19 +281,19 @@ export function PrismCanvas() {
 
         const joined =
           b &&
-          a.wavelength - b.wavelength < WAVELENGTH_STEP * 2.5 &&
+          a.wavelength - b.wavelength < wavelengthStep * 2.5 &&
           Math.abs(Math.atan2(a.dir.y, a.dir.x) - Math.atan2(b.dir.y, b.dir.x)) < MAX_BAND_ANGLE;
 
-        for (let j = 0; j < SEGMENTS; j++) {
+        for (let j = 0; j < segments; j++) {
           const alpha = (alphaAt(i, j) + alphaAt(i, j + 1)) / 2;
           fanCtx.globalAlpha = alpha;
-          const p0 = (i * (SEGMENTS + 1) + j) * 2;
+          const p0 = (i * (segments + 1) + j) * 2;
           const p1 = p0 + 2;
           fanCtx.beginPath();
           fanCtx.moveTo(pts[p0], pts[p0 + 1]);
           fanCtx.lineTo(pts[p1], pts[p1 + 1]);
           if (joined) {
-            const q0 = ((i + 1) * (SEGMENTS + 1) + j) * 2;
+            const q0 = ((i + 1) * (segments + 1) + j) * 2;
             const q1 = q0 + 2;
             fanCtx.lineTo(pts[q1], pts[q1 + 1]);
             fanCtx.lineTo(pts[q0], pts[q0 + 1]);
@@ -282,9 +309,11 @@ export function PrismCanvas() {
       // Soft glow underneath, then a tighter pass for the body of the light
       ctx.globalCompositeOperation = dark ? "lighter" : "source-over";
       if (canBlur) {
-        ctx.filter = `blur(${4 * dpr}px)`;
-        ctx.globalAlpha = dark ? 0.55 : 0.45;
-        ctx.drawImage(fan, 0, 0, width, height);
+        if (glow) {
+          ctx.filter = `blur(${4 * dpr}px)`;
+          ctx.globalAlpha = dark ? 0.55 : 0.45;
+          ctx.drawImage(fan, 0, 0, width, height);
+        }
         ctx.filter = `blur(${0.8 * dpr}px)`;
         ctx.globalAlpha = dark ? 0.85 : 0.8;
         ctx.drawImage(fan, 0, 0, width, height);
@@ -339,14 +368,19 @@ export function PrismCanvas() {
 
     const step = (now: number) => {
       raf = requestAnimationFrame(step);
-      const dt = Math.min((now - last) / 1000 || 0.016, 1 / 30);
+      const elapsed = now - last;
+      const dt = Math.min(elapsed / 1000 || 0.016, 1 / 30);
       last = now;
       time += dt;
       const calm = reducedMotion.matches;
 
+      // Once dropped, the glow stays off so the light doesn't flicker between looks
+      if (elapsed > 0 && elapsed < 200) frameMs += (elapsed - frameMs) * 0.05;
+      if (glow && frameMs > 24) glow = false;
+
       // Where things want to rest: home, plus a slow idle drift
-      const driftX = calm ? 0 : 6 * Math.sin(now / 2300);
-      const driftY = calm ? 0 : 4 * Math.cos(now / 1900);
+      const driftX = calm ? 0 : 6 * scale * Math.sin(now / 2300);
+      const driftY = calm ? 0 : 4 * scale * Math.cos(now / 1900);
       const sway = calm ? 0 : 0.05 * Math.sin(now / 1400);
 
       const follow = Math.min(1, dt * 26);
@@ -544,9 +578,9 @@ export function PrismCanvas() {
         className="relative h-44 w-full outline-none focus-visible:ring-1 focus-visible:ring-[var(--muted-light)] sm:h-48"
         style={{
           maskImage:
-            "linear-gradient(to bottom, transparent, black 10%, black 90%, transparent), linear-gradient(to right, transparent, black 4%, black 80%, transparent)",
+            "linear-gradient(to bottom, transparent, black 10%, black 90%, transparent), linear-gradient(to right, transparent, black 4%, black 85%, transparent)",
           WebkitMaskImage:
-            "linear-gradient(to bottom, transparent, black 10%, black 90%, transparent), linear-gradient(to right, transparent, black 4%, black 80%, transparent)",
+            "linear-gradient(to bottom, transparent, black 10%, black 90%, transparent), linear-gradient(to right, transparent, black 4%, black 85%, transparent)",
           maskComposite: "intersect",
           WebkitMaskComposite: "source-in",
         }}

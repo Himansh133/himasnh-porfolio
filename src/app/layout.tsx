@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
+import { Geist } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider";
-import { Nav } from "@/components/nav";
+import { SiteHeader } from "@/components/site-header";
 import { Footer } from "@/components/footer";
-import { ParticleCanvas } from "@/components/particle-canvas";
 import { Analytics } from "@vercel/analytics/next";
 import { site } from "@/lib/site";
 import "./globals.css";
+
+const geist = Geist({ subsets: ["latin"], variable: "--font-geist-sans" });
 
 export const metadata: Metadata = {
   title: {
@@ -41,7 +43,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" data-scroll-behavior="smooth" suppressHydrationWarning className="h-full antialiased">
+    <html lang="en" data-scroll-behavior="smooth" suppressHydrationWarning className={`${geist.variable} h-full antialiased`}>
       <head>
         <script
           dangerouslySetInnerHTML={{
@@ -60,10 +62,15 @@ export default function RootLayout({
       </head>
       <body className="flex min-h-full flex-col bg-[var(--background)] text-[var(--foreground)] transition-colors duration-300">
         <ThemeProvider>
-          <ParticleCanvas />
-          <Nav />
-          <main className="flex-1">{children}</main>
-          <Footer />
+          <div aria-hidden className="page-rails">
+            <span />
+            <span />
+          </div>
+          <div className="relative z-10 flex flex-1 flex-col">
+            <SiteHeader />
+            <main className="flex-1">{children}</main>
+            <Footer />
+          </div>
           <Analytics />
         </ThemeProvider>
       </body>

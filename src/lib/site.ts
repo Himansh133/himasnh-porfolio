@@ -4,10 +4,9 @@ export interface Project {
   year: string;
   eyebrow: string;
   category: "ai" | "systems" | "web";
+  /** Short blurb shown in the project list */
   summary: string;
-  /** One curious line shown on the project card */
-  hook: string;
-  /** Cover screenshot under /public, e.g. "/projects/my-app.png" */
+  /** Optional screenshot under /public, shown on the project page */
   image?: string;
   description: string;
   challenge: string;
@@ -15,9 +14,8 @@ export interface Project {
   outcome: string;
   metrics: string[];
   stack: string[];
-  githubUrl?: string;
+  githubUrl: string;
   liveUrl?: string;
-  tone: "blue" | "cyan" | "emerald" | "amber";
   featured: boolean;
 }
 
@@ -25,9 +23,13 @@ export interface Experience {
   role: string;
   company: string;
   badge?: string;
+  /** Company site, linked from the experience list */
+  url?: string;
   period: string;
   location: string;
   summary: string;
+  /** Short paragraphs shown in the experience list */
+  blurb: string[];
   stack: string[];
   points: string[];
   links?: { label: string; url: string }[];
@@ -69,7 +71,7 @@ export const site = {
     email: "mailto:himanshu3836@gmail.com",
   },
   stats: [
-    { value: "10h → 7h", label: "RF sweep cycle time reduction", highlight: "98.8% faster" },
+    { value: "10h → 7m", label: "RF sweep cycle time reduction", highlight: "98.8% faster" },
     { value: "15K+", label: "GitHub Stars on Corsair SDK", highlight: "3 PRs Merged" },
     { value: "50+", label: "Engineers using production tool", highlight: "JV Micronics" },
     { value: "500+", label: "DSA problems solved", highlight: "1700+ Rating" },
@@ -107,10 +109,14 @@ export const experiences: Experience[] = [
   {
     role: "Software Engineering Intern",
     company: "JV Micronics",
-    period: "May 2026 - July 2026",
+    period: "May – Jul 2026",
     location: "dabad, India",
     summary:
       "Engineered automated RF test software and high-throughput instrument control for microwave & antenna testing.",
+    blurb: [
+      "Built a Windows desktop tool in C++17 and Qt6 that drives a Keysight FieldFox VNA over SCPI, replacing manual antenna test runs.",
+      "A full sweep went from 10 hours to 7 minutes, and about 50 RF engineers now use it.",
+    ],
     stack: ["C++17", "Qt6", "SCPI", "GPIB", "USB VISA", "Keysight FieldFox"],
     points: [
       "Built a production Windows desktop tool in C++17 and Qt6 that drives a Keysight FieldFox N9951B VNA over SCPI (GPIB/USB), replacing manual RF test runs and slashing antenna sweep duration from 10 hours to 7 minutes.",
@@ -125,10 +131,15 @@ export const experiences: Experience[] = [
     role: "Open Source Contributor",
     company: "Corsair (YC W25)",
     badge: "15K+ Stars SDK",
+    url: "https://corsair.dev",
     period: "Oct 2026",
     location: "Remote / Open Source",
     summary:
       "Core contributor to the high-performance AI-agent integration SDK powering modern agentic workflows.",
+    blurb: [
+      "Built the Turbot Pipes plugin end to end for the agent-integration SDK: 17 API modules and 86 tests.",
+      "Also fixed delete-sync bugs in the GitLab and Trello integrations so agents stop acting on stale state.",
+    ],
     stack: ["TypeScript", "Node.js", "Jest / Vitest", "Turbot Pipes", "GitLab API", "Trello API"],
     points: [
       "PR #1828: Built the Turbot Pipes plugin end-to-end featuring 17 API modules, strictly typed schemas, comprehensive documentation, and 86 unit and integration tests.",
@@ -148,84 +159,102 @@ export const projects: Project[] = [
     slug: "revenue-rescue-agent",
     title: "Revenue Rescue Agent",
     year: "2026",
-    eyebrow: "Autonomous AI Agent",
+    eyebrow: "Autonomous AI agent",
     category: "ai",
     summary:
-      "Autonomous agent using Gemini and 5 custom tools to recover failed invoices with deterministic discount guardrails.",
-    hook: "Can an LLM chase unpaid invoices without ever giving away the store?",
+      "An agent that chases overdue invoices on its own. Gemini picks the offer, but plain code sets the discount limit, so it can never give away margin.",
     description:
-      "Revenue Rescue Agent is an intelligent invoice recovery system that ranks overdue invoices, predicts offer acceptance probability, and dynamically negotiates payments over multichannel outreach.",
+      "Revenue Rescue Agent is an invoice recovery system. It ranks overdue invoices, predicts how likely each customer is to accept an offer, and negotiates payment over multichannel outreach.",
     challenge:
-      "Direct LLM financial decisions risk hallucinations, unsafe discounts, and unvalidated payouts. The system needed deterministic guardrails preventing the model from ever issuing unauthorized terms.",
+      "Letting an LLM make financial decisions risks hallucinated terms and unsafe discounts. The system needed hard guardrails so the model could never issue terms nobody authorized.",
     solution:
-      "Decoupled financial logic from LLM prompt execution into deterministic verification services. The AI agent (powered by Gemini) invokes 5 specialized tools to score debts, while strict mathematical floors protect margin and automatically generate authenticated Razorpay links.",
+      "Financial logic lives in deterministic verification services, separate from the prompt. The Gemini agent calls 5 specialized tools to score each debt, while strict mathematical floors protect margin and generate authenticated Razorpay payment links.",
     outcome:
-      "Trained an offer-acceptance classifier on 30K synthetic invoice transactions, enabling dynamic discount optimization that turns delinquent accounts into completed Razorpay settlements.",
+      "An offer-acceptance classifier trained on 30K synthetic invoice transactions drives dynamic discounts, turning delinquent accounts into completed Razorpay settlements.",
     metrics: [
-      "30,000 synthetic transaction dataset",
+      "30,000 synthetic transactions in the training set",
       "5 autonomous agent tools",
-      "Zero hallucinatory discount breach guarantee",
+      "Discounts can never breach the margin floor",
     ],
     stack: ["Python", "FastAPI", "Gemini API", "PostgreSQL", "Razorpay API", "Docker"],
-    githubUrl: "https://github.com/Himansh133",
-    liveUrl: "https://github.com/Himansh133",
-    tone: "blue",
+    githubUrl: "https://github.com/Himansh133/razorpay--revenue-rescue",
+    liveUrl: "https://razorpay-revenue-rescue.vercel.app",
     featured: true,
   },
   {
     slug: "github-commit-explorer",
     title: "GitHub Commit Explorer",
     year: "2026",
-    eyebrow: "hyperSprint 2026 Winner",
+    eyebrow: "hyperSprint 2026 winner",
     category: "web",
     summary:
-      "Natural-language Git explorer parsing natural queries into deep commit analytics with parallelized API fetches.",
-    hook: "Ask a repo a question in plain English. Get its history back as a picture.",
+      "Ask about a repo in plain English, like “github repo facebook/react”, and get its commits, stats and contributor activity back. Won 1st place at hyperSprint 2026.",
     description:
-      "An award-winning developer tool that converts plain English developer questions like 'github repo facebook/react commits last month' into instant visual commit graphs, repository insights, and contributor heatmaps.",
+      "A developer tool built for the HyperDart hackathon. It turns plain-English questions such as “show github activity for gaearon” into commit history, repository insights and contributor activity.",
     challenge:
-      "GitHub REST API rate limits and sporadic calendar endpoint throttling caused sluggish searches and broken contribution graphs.",
+      "GitHub's REST API rate limits and a flaky contribution-calendar endpoint made searches slow and graphs incomplete.",
     solution:
-      "Engineered parallelized async fetching for commits, repository metadata, and contribution calendars with automatic failover to a secondary calendar cache provider.",
+      "Commits, repository metadata and contribution calendars are fetched in parallel, with automatic failover to a secondary calendar provider when the primary one throttles.",
     outcome:
-      "Won 1st Prize at hyperSprint 2026 (hyperDart hackathon hosted at JIIT) for its intuitive natural language interface and zero-latency visual exploration.",
+      "Won 1st prize at hyperSprint 2026, the HyperDart hackathon hosted at JIIT, for its natural-language interface and fast visual exploration.",
     metrics: [
-      "1st Place Hackathon Winner",
-      "Parallelized async multi-endpoint pipeline",
-      "Automatic secondary calendar failover",
+      "1st place at hyperSprint 2026",
+      "Parallel multi-endpoint fetching",
+      "Automatic calendar failover",
     ],
-    stack: ["React", "TypeScript", "Vite", "GitHub REST API", "Tailwind CSS"],
-    githubUrl: "https://github.com/Himansh133",
-    liveUrl: "https://github.com/Himansh133",
-    tone: "emerald",
+    stack: ["React", "TypeScript", "Vite", "GitHub REST API"],
+    githubUrl: "https://github.com/Himansh133/HyperDart_Hackathon",
     featured: true,
   },
   {
     slug: "fieldfox-rf-suite",
     title: "FieldFox RF Measurement Suite",
     year: "2026",
-    eyebrow: "Production C++17 Tool",
+    eyebrow: "C++17 desktop tool",
     category: "systems",
     summary:
-      "C++17/Qt6 automation software driving Keysight FieldFox VNA over SCPI, cutting 10-hour test runs to 7 minutes.",
-    hook: "A 10-hour antenna test, finished before your coffee gets cold.",
+      "Desktop software that runs antenna tests on a Keysight FieldFox VNA over SCPI. Built at JV Micronics, it cut a 10-hour sweep to 7 minutes.",
     description:
-      "High-reliability desktop automation application for high-frequency microwave and antenna testing, connecting multi-axis positioners and Keysight FieldFox N9951B Vector Network Analyzers.",
+      "A desktop automation app for microwave and antenna testing. It connects multi-axis positioners and a Keysight FieldFox N9951B vector network analyzer, and plots results live.",
     challenge:
-      "Manual RF test runs required continuous engineer intervention, taking up to 10 hours per antenna test matrix with high error susceptibility in manual calibration and angle indexing.",
+      "Manual RF test runs needed an engineer present for up to 10 hours per antenna, with plenty of room for error in calibration and angle indexing.",
     solution:
-      "Engineered a modular, layered C++17 architecture with asynchronous SCPI communication across GPIB and USB VISA backends, automated stepper positioners, and real-time polar/Cartesian Qt6 visualization.",
+      "A layered C++17 architecture keeps instrument control, data acquisition, positioner automation and test sequencing apart, so new instruments plug in without touching the UI. SCPI runs over GPIB and USB VISA, with real-time polar and Cartesian plots in Qt6.",
     outcome:
-      "Cut end-to-end antenna test sweep duration from 10 hours down to 7 minutes (98.8% time saved) and deployed into active production workflows across 50 RF engineers.",
+      "A full antenna sweep dropped from 10 hours to 7 minutes (98.8% faster), and the tool is now used by about 50 RF engineers.",
     metrics: [
-      "10h -> 7h sweep reduction (98.8%)",
-      "50 production engineers using the tool",
-      "Modular SCPI driver with zero UI coupling",
+      "10 hours → 7 minutes per sweep",
+      "About 50 engineers use it",
+      "SCPI driver fully decoupled from the UI",
     ],
-    stack: ["C++17", "Qt6", "SCPI Protocol", "GPIB / USB VISA", "CMake"],
-    githubUrl: "https://github.com/Himansh133",
-    tone: "cyan",
+    stack: ["C++17", "Qt6", "SCPI", "GPIB / USB VISA", "CMake"],
+    githubUrl: "https://github.com/Himansh133/AMAS_JV",
     featured: true,
+  },
+  {
+    slug: "vivobook-smart-power",
+    title: "Vivobook Smart Power",
+    year: "2026",
+    eyebrow: "Linux utility",
+    category: "systems",
+    summary:
+      "A small background service that switches a Linux laptop's power profile based on what it's doing. A rough stand-in for Windows' Dynamic mode.",
+    description:
+      "A background service for Linux laptops. It samples CPU and NVIDIA GPU load every 10 seconds and talks to power-profiles-daemon through powerprofilesctl to pick the right profile.",
+    challenge:
+      "Switching profiles on every load spike makes a machine twitchy, and cooling has to stay with the firmware, not with a script.",
+    solution:
+      "Heavy load has to last about 30 seconds before it switches to performance, and the load has to be gone for about 2 minutes before it drops back to balanced. A hot CPU package forces balanced until it cools down. Fan speed is never touched.",
+    outcome:
+      "Works as intended on the one laptop it has been tested on. It is experimental (v0.1.0), and the README lists its limitations.",
+    metrics: [
+      "Samples CPU and GPU every 10 seconds",
+      "30 s of sustained load before switching up",
+      "Never touches fan control",
+    ],
+    stack: ["Shell", "power-profiles-daemon", "NVIDIA GPU stats"],
+    githubUrl: "https://github.com/Himansh133/vivobook-smart-power",
+    featured: false,
   },
 ];
 

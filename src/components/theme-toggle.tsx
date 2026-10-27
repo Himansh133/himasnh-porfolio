@@ -22,12 +22,12 @@ export function ThemeToggle({ className = "" }: { className?: string }) {
       onClick={toggleTheme}
       type="button"
       aria-label={`Switch to ${isDark ? "light" : "dark"} mode`}
-      className={`relative inline-flex h-8 w-8 items-center justify-center rounded-lg border border-[var(--border)] bg-[var(--card)] text-[var(--muted)] hover:text-[#D21319] hover:border-[#D21319]/40 transition-all ${className}`}
+      className={`relative inline-flex h-8 w-8 items-center justify-center rounded-md text-[var(--muted-light)] hover:text-[var(--foreground)] transition-colors ${className}`}
       title={`Switch to ${isDark ? "light" : "dark"} mode`}
     >
       {isDark ? (
         <svg
-          className="h-4 w-4 text-[#D21319] transition-transform duration-300 hover:rotate-45"
+          className="h-4 w-4 transition-transform duration-300 hover:rotate-45"
           viewBox="0 0 24 24"
           fill="none"
           stroke="currentColor"
@@ -47,7 +47,7 @@ export function ThemeToggle({ className = "" }: { className?: string }) {
         </svg>
       ) : (
         <svg
-          className="h-4 w-4 text-neutral-800 transition-transform duration-300 hover:-rotate-12"
+          className="h-4 w-4 transition-transform duration-300 hover:-rotate-12"
           viewBox="0 0 24 24"
           fill="none"
           stroke="currentColor"

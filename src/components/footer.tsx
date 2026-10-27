@@ -1,61 +1,64 @@
-"use client";
-
-import React from "react";
+import Link from "next/link";
 import { site } from "@/lib/site";
+
+const socials = [
+  { label: "GitHub", href: site.social.github },
+  { label: "LinkedIn", href: site.social.linkedin },
+  { label: "LeetCode", href: site.social.leetcode },
+  { label: "Codeforces", href: site.social.codeforces },
+];
+
+const pages = [
+  { label: "Projects", href: "/projects" },
+  { label: "Open source", href: "/opensource" },
+  { label: "Activity", href: "/activity" },
+  { label: "Stack", href: "/stack" },
+  { label: "Resume", href: "/resume" },
+];
 
 export function Footer() {
   return (
-    <footer className="border-t border-[var(--border)] py-12 text-xs text-[var(--muted)] transition-colors mt-12">
-      <div className="container-narrow flex flex-col sm:flex-row items-center justify-between gap-6">
-        <div>
-          <p className="font-semibold text-[var(--foreground)]">Let&apos;s connect</p>
-          <small className="text-[var(--muted-light)]">Find me on these platforms</small>
-        </div>
+    <footer className="container-narrow mt-20 pb-12 sm:mt-28">
+      <div className="border-t border-[var(--border)] pt-5">
+        <p className="text-[10px] text-[var(--muted-light)]">if you like writing emails:</p>
+        <a
+          href={`mailto:${site.email}`}
+          className="mt-3 inline-block border-b border-[var(--border)] text-[12px] text-[var(--muted)] transition-colors hover:border-[var(--muted-light)] hover:text-[var(--foreground)]"
+        >
+          {site.email}
+        </a>
 
-        <div className="flex flex-wrap items-center gap-5 text-xs">
-          <a
-            href={site.social.github}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:text-[#D21319] transition-colors"
-          >
-            GitHub
-          </a>
-          <a
-            href={site.social.linkedin}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:text-[#D21319] transition-colors"
-          >
-            LinkedIn
-          </a>
-          <a
-            href={site.social.leetcode}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:text-[#D21319] transition-colors"
-          >
-            LeetCode
-          </a>
-          <a
-            href={site.social.codeforces}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:text-[#D21319] transition-colors"
-          >
-            Codeforces
-          </a>
-          <a
-            href={`mailto:${site.email}`}
-            className="hover:text-[#D21319] transition-colors"
-          >
-            Mail
-          </a>
-        </div>
+        <nav
+          aria-label="Social profiles"
+          className="mt-6 flex flex-wrap gap-x-5 gap-y-2 text-[13px] text-[var(--muted)]"
+        >
+          {socials.map((item) => (
+            <a
+              key={item.label}
+              href={item.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="transition-colors hover:text-[#D21319]"
+            >
+              {item.label}
+            </a>
+          ))}
+        </nav>
 
-        <p className="text-[11px] text-[var(--muted-light)] font-mono">
-          © 2026 {site.name}.
-        </p>
+        <nav
+          aria-label="Pages"
+          className="mt-3 flex flex-wrap gap-x-5 gap-y-2 text-[13px] text-[var(--muted-light)]"
+        >
+          {pages.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              className="transition-colors hover:text-[var(--foreground)]"
+            >
+              {item.label}
+            </Link>
+          ))}
+        </nav>
       </div>
     </footer>
   );

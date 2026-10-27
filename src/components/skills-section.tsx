@@ -52,7 +52,7 @@ export function SkillsSection() {
               key={idx}
               className="inline-flex items-center gap-2 rounded-lg border border-[var(--border)] bg-[var(--card)] px-3 py-1.5 text-xs font-mono text-[var(--foreground)] shadow-xs shrink-0"
             >
-              <span className="h-1.5 w-1.5 rounded-full bg-[#D21319]" />
+              <span className="h-1.5 w-1.5 rounded-full bg-[var(--accent)]" />
               <span>{item.name}</span>
             </div>
           ))}
@@ -65,8 +65,8 @@ export function SkillsSection() {
           onClick={() => setActiveGroup("all")}
           className={`rounded-lg px-3 py-1 text-xs font-medium transition-all ${
             activeGroup === "all"
-              ? "bg-[#D21319] text-white shadow-xs"
-              : "border border-[var(--border)] bg-[var(--card)] text-[var(--muted)] hover:text-[var(--foreground)] hover:border-[#D21319]/30"
+              ? "bg-[var(--accent)] text-white shadow-xs"
+              : "border border-[var(--border)] bg-[var(--card)] text-[var(--muted)] hover:text-[var(--foreground)] hover:border-[var(--accent)]/30"
           }`}
         >
           All Tech
@@ -77,8 +77,8 @@ export function SkillsSection() {
             onClick={() => setActiveGroup(grp.group)}
             className={`rounded-lg px-3 py-1 text-xs font-medium transition-all ${
               activeGroup === grp.group
-                ? "bg-[#D21319] text-white shadow-xs"
-                : "border border-[var(--border)] bg-[var(--card)] text-[var(--muted)] hover:text-[var(--foreground)] hover:border-[#D21319]/30"
+                ? "bg-[var(--accent)] text-white shadow-xs"
+                : "border border-[var(--border)] bg-[var(--card)] text-[var(--muted)] hover:text-[var(--foreground)] hover:border-[var(--accent)]/30"
             }`}
           >
             {grp.group}

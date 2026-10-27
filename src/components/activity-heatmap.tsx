@@ -1,192 +1,136 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
-import type { ActivityData, HeatmapDay } from "@/lib/activity";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { ActivityCalendar, type Activity } from "react-activity-calendar";
+import type { ActivityData } from "@/lib/activity";
+import { useTheme } from "@/components/theme-provider";
 
 type Platform = keyof ActivityData;
 
-const MONTH_NAMES = [
-  "Jan",
-  "Feb",
-  "Mar",
-  "Apr",
-  "May",
-  "Jun",
-  "Jul",
-  "Aug",
-  "Sep",
-  "Oct",
-  "Nov",
-  "Dec",
-];
+const TABS = [
+  { id: "github", label: "GitHub", unit: "contributions" },
+  { id: "leetcode", label: "LeetCode", unit: "submissions" },
+  { id: "codeforces", label: "Codeforces", unit: "accepted problems" },
+] as const;
 
-function chunkIntoWeeks(data: HeatmapDay[]): HeatmapDay[][] {
-  const weeks: HeatmapDay[][] = [];
-  for (let i = 0; i < data.length; i += 7) {
-    weeks.push(data.slice(i, i + 7));
-  }
-  return weeks;
-}
+// Burgundy scale built from the site accent, from empty to busiest day
+const THEME = {
+  light: ["#ebebee", "#f2ccd2", "#df8f9b", "#c14a5e", "#8c1427"],
+  dark: ["#1a1a1d", "#3a1820", "#682030", "#a52b41", "#e0566e"],
+};
+
+const BLOCK_MARGIN = 3;
+// Room the weekday labels take on the left
+const LABEL_WIDTH = 28;
+const WEEKS = 53;
+
+type Tip = { x: number; y: number; count: number; date: string } | null;
+
+const formatDate = (iso: string) =>
+  new Date(`${iso}T00:00:00Z`).toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+    timeZone: "UTC",
+  });
 
 export function ActivityHeatmap({ data }: { data: ActivityData }) {
+  const { theme } = useTheme();
   const [platform, setPlatform] = useState<Platform>("github");
-  const [hoveredCell, setHoveredCell] = useState<{
-    date: string;
-    count: number;
-    platformName: string;
-    unit: string;
-  } | null>(null);
+  const [tip, setTip] = useState<Tip>(null);
+  const [blockSize, setBlockSize] = useState(8);
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const tab = TABS.find((t) => t.id === platform)!;
 
-  // Data starts on a Sunday, so each chunk of 7 is one calendar week
-  const githubWeeks = useMemo(() => chunkIntoWeeks(data.github), [data.github]);
-  const leetcodeWeeks = useMemo(() => chunkIntoWeeks(data.leetcode), [data.leetcode]);
-  const codeforcesWeeks = useMemo(
-    () => chunkIntoWeeks(data.codeforces),
-    [data.codeforces]
-  );
+  // Size the blocks so a year fits the column; narrow phones scroll instead
+  useLayoutEffect(() => {
+    const wrap = wrapRef.current;
+    if (!wrap) return;
+    const fit = () => {
+      const pitch = Math.floor((wrap.clientWidth - LABEL_WIDTH) / WEEKS);
+      setBlockSize(Math.max(6, Math.min(12, pitch - BLOCK_MARGIN)));
+    };
+    fit();
+    const observer = new ResizeObserver(fit);
+    observer.observe(wrap);
+    return () => observer.disconnect();
+  }, []);
 
-  // Flat GitHub-style scale, readable in both themes
-  const getCellBg = (level: number) => {
-    switch (level) {
-      case 1:
-        return "bg-[#9be9a8] dark:bg-[#0e4429]";
-      case 2:
-        return "bg-[#40c463] dark:bg-[#006d32]";
-      case 3:
-        return "bg-[#30a14e] dark:bg-[#26a641]";
-      case 4:
-        return "bg-[#216e39] dark:bg-[#39d353]";
-      default:
-        return "bg-[#e8e8ec] dark:bg-[#1c1c1f]";
-    }
-  };
+  // When it does scroll, start at the most recent weeks
+  useEffect(() => {
+    const scroller = wrapRef.current?.querySelector<HTMLElement>("[class*='scroll'], div[style*='overflow']");
+    if (scroller) scroller.scrollLeft = scroller.scrollWidth;
+  }, [platform, blockSize]);
 
-  const renderHeatmapGrid = (
-    weeks: HeatmapDay[][],
-    label: string,
-    unit: string
-  ) => {
-    const total = weeks.flat().reduce((sum, day) => sum + day.count, 0);
+  // The tooltip is fixed to the viewport, so it can't follow a scroll
+  useEffect(() => {
+    if (!tip) return;
+    const hide = () => setTip(null);
+    window.addEventListener("scroll", hide, { passive: true, capture: true });
+    return () => window.removeEventListener("scroll", hide, { capture: true });
+  }, [tip]);
 
-    // Month markers based on week columns
-    const monthMarkers: { index: number; label: string }[] = [];
-    let lastMonth = -1;
-
-    weeks.forEach((week, wIdx) => {
-      if (week.length > 0) {
-        const m = parseInt(week[0].date.split("-")[1], 10) - 1;
-        if (
-          m !== lastMonth &&
-          wIdx - (monthMarkers[monthMarkers.length - 1]?.index ?? -10) >= 3
-        ) {
-          monthMarkers.push({ index: wIdx, label: MONTH_NAMES[m] });
-          lastMonth = m;
-        }
-      }
+  const renderBlock = (block: React.ReactElement<React.SVGProps<SVGRectElement>>, activity: Activity) =>
+    React.cloneElement(block, {
+      onMouseEnter: (e: React.MouseEvent<SVGRectElement>) => {
+        const r = e.currentTarget.getBoundingClientRect();
+        setTip({ x: r.left + r.width / 2, y: r.top - 8, count: activity.count, date: activity.date });
+      },
+      onMouseLeave: () => setTip(null),
     });
-
-    return (
-      <div className="w-full overflow-x-auto pb-1">
-        <div className="w-max">
-          <div className="relative mb-1 h-4 select-none text-[10px] text-[var(--muted-light)]">
-            {monthMarkers.map((marker) => (
-              <span
-                key={`${marker.label}-${marker.index}`}
-                className="absolute"
-                style={{ left: `${24 + marker.index * 10}px` }}
-              >
-                {marker.label}
-              </span>
-            ))}
-          </div>
-
-          <div className="flex items-start gap-1">
-            {/* Mon / Wed / Fri rows, 10px pitch */}
-            <div className="relative h-[68px] w-5 shrink-0 select-none text-[9px] text-[var(--muted-light)]">
-              <span className="absolute right-0 top-[8px]">Mon</span>
-              <span className="absolute right-0 top-[28px]">Wed</span>
-              <span className="absolute right-0 top-[48px]">Fri</span>
-            </div>
-
-            <div className="flex gap-[2px]">
-              {weeks.map((week, wIdx) => (
-                <div key={wIdx} className="flex shrink-0 flex-col gap-[2px]">
-                  {week.map((day) => (
-                    <div
-                      key={day.date}
-                      onMouseEnter={() =>
-                        setHoveredCell({
-                          date: day.date,
-                          count: day.count,
-                          platformName: label,
-                          unit,
-                        })
-                      }
-                      onMouseLeave={() => setHoveredCell(null)}
-                      className={`h-2 w-2 rounded-[2px] ${getCellBg(day.level)}`}
-                      title={`${day.count} ${unit} on ${day.date}`}
-                    />
-                  ))}
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div className="mt-3 flex items-center justify-between text-[11px] text-[var(--muted-light)]">
-            <span className="h-4">
-              {hoveredCell && hoveredCell.platformName === label ? (
-                <>
-                  <span className="text-[var(--foreground)]">{hoveredCell.count}</span>{" "}
-                  {hoveredCell.unit} on {hoveredCell.date}
-                </>
-              ) : (
-                <>
-                  {total} {unit} in the last year
-                </>
-              )}
-            </span>
-
-            <span className="flex select-none items-center gap-1">
-              less
-              {[0, 1, 2, 3, 4].map((level) => (
-                <span key={level} className={`size-2 rounded-[2px] ${getCellBg(level)}`} />
-              ))}
-              more
-            </span>
-          </div>
-        </div>
-      </div>
-    );
-  };
-
-  const tabs = [
-    { id: "github", label: "GitHub" },
-    { id: "leetcode", label: "LeetCode" },
-    { id: "codeforces", label: "Codeforces" },
-  ] as const;
 
   return (
     <section id="activity">
       <div className="mb-4 flex items-center gap-4 text-[13px]">
-        {tabs.map((tab) => (
+        {TABS.map((t) => (
           <button
-            key={tab.id}
-            onClick={() => setPlatform(tab.id)}
+            key={t.id}
+            onClick={() => {
+              setPlatform(t.id);
+              setTip(null);
+            }}
             className={`transition-colors ${
-              platform === tab.id
+              platform === t.id
                 ? "text-[var(--foreground)]"
                 : "text-[var(--muted-light)] hover:text-[var(--foreground)]"
             }`}
           >
-            {tab.label}
+            {t.label}
           </button>
         ))}
       </div>
 
-      {platform === "github" && renderHeatmapGrid(githubWeeks, "GitHub", "contributions")}
-      {platform === "leetcode" && renderHeatmapGrid(leetcodeWeeks, "LeetCode", "submissions")}
-      {platform === "codeforces" &&
-        renderHeatmapGrid(codeforcesWeeks, "Codeforces", "accepted problems")}
+      <div ref={wrapRef} className="activity-calendar text-[var(--muted-light)]">
+        <ActivityCalendar
+          key={platform}
+          data={data[platform]}
+          theme={THEME}
+          colorScheme={theme === "dark" ? "dark" : "light"}
+          blockSize={blockSize}
+          blockMargin={BLOCK_MARGIN}
+          blockRadius={2}
+          fontSize={11}
+          showWeekdayLabels={["mon", "wed", "fri"]}
+          labels={{
+            totalCount: `{{count}} ${tab.unit} in the last year`,
+            legend: { less: "less", more: "more" },
+          }}
+          renderBlock={renderBlock}
+        />
+      </div>
+
+      {tip && (
+        <div
+          role="tooltip"
+          className="pointer-events-none fixed z-50 -translate-x-1/2 -translate-y-full rounded-md bg-[var(--foreground)] px-2.5 py-1.5 text-[11px] whitespace-nowrap text-[var(--background)] shadow-lg"
+          style={{ left: tip.x, top: tip.y }}
+        >
+          <span className="font-medium">
+            {tip.count === 0 ? "No" : tip.count} {tab.unit}
+          </span>{" "}
+          on {formatDate(tip.date)}
+        </div>
+      )}
     </section>
   );
 }

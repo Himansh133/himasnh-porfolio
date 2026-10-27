@@ -36,11 +36,6 @@ export default function Home() {
       </div>
 
       <div className="mt-10 sm:mt-14">
-        <Label>work</Label>
-        <ExperienceSection />
-      </div>
-
-      <div className="mt-16 sm:mt-20">
         <Label>things i&apos;ve built</Label>
         <ProjectList projects={featured} />
         <Link
@@ -49,6 +44,11 @@ export default function Home() {
         >
           All projects →
         </Link>
+      </div>
+
+      <div className="mt-16 sm:mt-20">
+        <Label>work</Label>
+        <ExperienceSection />
       </div>
 
       <div className="mt-16 sm:mt-20">

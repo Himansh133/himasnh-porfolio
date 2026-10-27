@@ -17,10 +17,10 @@ export default function TerminalPage() {
       id: 1,
       command: "welcome",
       output: (
-        <div className="space-y-1 text-[#D21319]">
+        <div className="space-y-1 text-[var(--accent)]">
           <p className="font-bold">Himanshu Kumar Terminal [Version 2.0.26]</p>
           <p className="text-[#AFAEA2]">
-            Type &apos;<span className="text-[#D21319] font-bold">help</span>&apos; to view all available commands.
+            Type &apos;<span className="text-[var(--accent)] font-bold">help</span>&apos; to view all available commands.
           </p>
         </div>
       ),
@@ -49,17 +49,17 @@ export default function TerminalPage() {
       case "help":
         response = (
           <div className="space-y-1 text-xs sm:text-sm">
-            <p className="text-[#D21319] font-semibold">Available commands:</p>
+            <p className="text-[var(--accent)] font-semibold">Available commands:</p>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-1.5 pt-1 text-[#AFAEA2]">
-              <div><span className="text-[#D21319] font-mono">about</span> : Brief biography</div>
-              <div><span className="text-[#D21319] font-mono">skills</span> : Technical capabilities</div>
-              <div><span className="text-[#D21319] font-mono">projects</span> : Shipped applications</div>
-              <div><span className="text-[#D21319] font-mono">experience</span> : Work &amp; Open Source</div>
-              <div><span className="text-[#D21319] font-mono">socials</span> : Profiles &amp; handles</div>
-              <div><span className="text-[#D21319] font-mono">contact</span> : Email &amp; phone</div>
-              <div><span className="text-[#D21319] font-mono">resume</span> : View resume PDF</div>
-              <div><span className="text-[#D21319] font-mono">clear</span> : Clear screen</div>
-              <div><span className="text-[#D21319] font-mono">exit</span> : Back to portfolio</div>
+              <div><span className="text-[var(--accent)] font-mono">about</span> : Brief biography</div>
+              <div><span className="text-[var(--accent)] font-mono">skills</span> : Technical capabilities</div>
+              <div><span className="text-[var(--accent)] font-mono">projects</span> : Shipped applications</div>
+              <div><span className="text-[var(--accent)] font-mono">experience</span> : Work &amp; Open Source</div>
+              <div><span className="text-[var(--accent)] font-mono">socials</span> : Profiles &amp; handles</div>
+              <div><span className="text-[var(--accent)] font-mono">contact</span> : Email &amp; phone</div>
+              <div><span className="text-[var(--accent)] font-mono">resume</span> : View resume PDF</div>
+              <div><span className="text-[var(--accent)] font-mono">clear</span> : Clear screen</div>
+              <div><span className="text-[var(--accent)] font-mono">exit</span> : Back to portfolio</div>
             </div>
           </div>
         );
@@ -83,7 +83,7 @@ export default function TerminalPage() {
       case "skills":
         response = (
           <div className="space-y-1.5 text-xs sm:text-sm text-neutral-200">
-            <p className="text-[#D21319] font-semibold">Core Competencies:</p>
+            <p className="text-[var(--accent)] font-semibold">Core Competencies:</p>
             <p>• Languages: C++, C, Python, TypeScript, SQL, Bash</p>
             <p>• Frameworks: FastAPI, React.js, Qt6, Next.js, LangChain</p>
             <p>• AI / ML: Gemini API, LLM Agents, Tool-Calling, RAG</p>
@@ -97,19 +97,19 @@ export default function TerminalPage() {
         response = (
           <div className="space-y-2 text-xs sm:text-sm text-neutral-200">
             <div>
-              <p className="text-[#D21319] font-semibold">1. Revenue Rescue Agent (Sep 2026)</p>
+              <p className="text-[var(--accent)] font-semibold">1. Revenue Rescue Agent (Sep 2026)</p>
               <p className="text-[#AFAEA2]">
                 Autonomous AI agent (Gemini, 5 tools) that recovers invoices with deterministic discount floors and Razorpay payment links.
               </p>
             </div>
             <div>
-              <p className="text-[#D21319] font-semibold">2. GitHub Commit Explorer (Aug 2026 : hyperSprint 2026 Winner)</p>
+              <p className="text-[var(--accent)] font-semibold">2. GitHub Commit Explorer (Aug 2026 : hyperSprint 2026 Winner)</p>
               <p className="text-[#AFAEA2]">
                 Natural-language Git explorer with parallel API fetching and calendar failover.
               </p>
             </div>
             <div>
-              <p className="text-[#D21319] font-semibold">3. FieldFox RF Measurement Suite (May 2026)</p>
+              <p className="text-[var(--accent)] font-semibold">3. FieldFox RF Measurement Suite (May 2026)</p>
               <p className="text-[#AFAEA2]">
                 C++17/Qt6 automation tool driving Keysight FieldFox VNA, slashing sweeps from 10h to 7m.
               </p>
@@ -122,7 +122,7 @@ export default function TerminalPage() {
         response = (
           <div className="space-y-2 text-xs sm:text-sm text-neutral-200">
             <div>
-              <p className="text-[#D21319] font-semibold">
+              <p className="text-[var(--accent)] font-semibold">
                 Software Engineering Intern @ JV Micronics (May 2026 - July 2026)
               </p>
               <p className="text-[#AFAEA2]">
@@ -130,7 +130,7 @@ export default function TerminalPage() {
               </p>
             </div>
             <div>
-              <p className="text-[#D21319] font-semibold">
+              <p className="text-[var(--accent)] font-semibold">
                 Open Source Contributor @ Corsair (YC W25) (Oct 2026)
               </p>
               <p className="text-[#AFAEA2]">
@@ -164,7 +164,7 @@ export default function TerminalPage() {
 
       case "resume":
         window.open("/Himanshu_Kumar_Resume.pdf", "_blank");
-        response = <p className="text-[#D21319]">Opening resume in a new tab...</p>;
+        response = <p className="text-[var(--accent)]">Opening resume in a new tab...</p>;
         break;
 
       case "exit":
@@ -179,7 +179,7 @@ export default function TerminalPage() {
 
       default:
         response = (
-          <p className="text-[#D21319]">
+          <p className="text-[var(--accent)]">
             Command not recognized: &apos;{cmd}&apos;. Type &apos;help&apos; for list of valid commands.
           </p>
         );
@@ -203,7 +203,7 @@ export default function TerminalPage() {
         {/* Top Bar */}
         <div className="flex items-center justify-between pb-4 border-b border-neutral-800 text-xs">
           <div className="flex items-center gap-2">
-            <span className="h-3 w-3 rounded-full bg-[#D21319] inline-block" />
+            <span className="h-3 w-3 rounded-full bg-[var(--accent)] inline-block" />
             <span className="h-3 w-3 rounded-full bg-[#AFAEA2] inline-block" />
             <span className="h-3 w-3 rounded-full bg-neutral-700 inline-block" />
             <span className="ml-2 text-[#AFAEA2]">himanshu@terminal: ~</span>
@@ -211,7 +211,7 @@ export default function TerminalPage() {
 
           <Link
             href="/"
-            className="text-[#AFAEA2] hover:text-[#D21319] transition-colors"
+            className="text-[#AFAEA2] hover:text-[var(--accent)] transition-colors"
           >
             [Exit Terminal]
           </Link>
@@ -222,7 +222,7 @@ export default function TerminalPage() {
           {logs.map((log) => (
             <div key={log.id} className="space-y-1.5">
               <div className="flex items-center gap-2 text-xs sm:text-sm text-[#AFAEA2]">
-                <span className="text-[#D21319] font-bold">&gt;</span>
+                <span className="text-[var(--accent)] font-bold">&gt;</span>
                 <span className="text-white">{log.command}</span>
               </div>
               <div className="pl-4">{log.output}</div>
@@ -232,7 +232,7 @@ export default function TerminalPage() {
 
         {/* Command Input Prompt */}
         <form onSubmit={handleCommand} className="mt-6 flex items-center gap-2">
-          <span className="text-[#D21319] font-bold text-sm sm:text-base">&gt;</span>
+          <span className="text-[var(--accent)] font-bold text-sm sm:text-base">&gt;</span>
           <input
             ref={inputRef}
             type="text"

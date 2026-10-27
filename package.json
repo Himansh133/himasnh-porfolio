@@ -12,6 +12,7 @@
     "@vercel/analytics": "^2.0.1",
     "next": "16.4.2",
     "react": "19.3.0",
+    "react-activity-calendar": "^3.2.1",
     "react-dom": "19.3.0"
   },
   "devDependencies": {

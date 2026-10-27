@@ -63,7 +63,7 @@ export default function OpenSourcePage() {
       <div className="mb-6">
         <Link
           href="/"
-          className="inline-flex items-center gap-1.5 text-xs font-mono text-[var(--muted)] hover:text-[#D21319] transition-colors"
+          className="inline-flex items-center gap-1.5 text-xs font-mono text-[var(--muted)] hover:text-[var(--accent)] transition-colors"
         >
           <span>←</span>
           <span>Back to Home</span>
@@ -90,7 +90,7 @@ export default function OpenSourcePage() {
       {/* Metrics Banner */}
       <div className="grid grid-cols-3 gap-3 mb-8">
         <div className="modern-card p-4 text-center">
-          <div className="text-xl sm:text-2xl font-bold text-[#D21319] font-mono">
+          <div className="text-xl sm:text-2xl font-bold text-[var(--accent)] font-mono">
             3
           </div>
           <div className="text-[11px] text-[var(--muted)] mt-1">
@@ -108,7 +108,7 @@ export default function OpenSourcePage() {
         </div>
 
         <div className="modern-card p-4 text-center">
-          <div className="text-xl sm:text-2xl font-bold text-[#D21319] font-mono">
+          <div className="text-xl sm:text-2xl font-bold text-[var(--accent)] font-mono">
             15K+
           </div>
           <div className="text-[11px] text-[var(--muted)] mt-1">
@@ -126,7 +126,7 @@ export default function OpenSourcePage() {
           >
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 pb-4 border-b border-[var(--border)]">
               <div className="flex flex-wrap items-center gap-2">
-                <span className="font-mono font-bold text-base text-[#D21319]">
+                <span className="font-mono font-bold text-base text-[var(--accent)]">
                   {pr.prNumber}
                 </span>
                 <span className="text-xs text-[var(--muted)]">•</span>
@@ -139,7 +139,7 @@ export default function OpenSourcePage() {
               </div>
 
               <div className="flex items-center gap-2 self-start sm:self-auto">
-                <span className="inline-flex items-center rounded-full bg-[#D21319]/10 px-2.5 py-0.5 text-xs font-medium text-[#D21319] border border-[#D21319]/25">
+                <span className="inline-flex items-center rounded-full bg-[var(--accent)]/10 px-2.5 py-0.5 text-xs font-medium text-[var(--accent)] border border-[var(--accent)]/25">
                   {pr.status}
                 </span>
                 <span className="text-xs font-mono text-[var(--muted)] bg-[var(--tag-bg)] px-2.5 py-0.5 rounded border border-[var(--border)]">
@@ -155,7 +155,7 @@ export default function OpenSourcePage() {
             <ul className="mt-4 space-y-2.5 text-xs sm:text-sm text-[var(--muted)]">
               {pr.details.map((detail, dIdx) => (
                 <li key={dIdx} className="flex items-start gap-2.5">
-                  <span className="text-[#D21319] mt-1 text-xs font-bold">▸</span>
+                  <span className="text-[var(--accent)] mt-1 text-xs font-bold">▸</span>
                   <span className="leading-relaxed">{detail}</span>
                 </li>
               ))}
@@ -177,7 +177,7 @@ export default function OpenSourcePage() {
                 href={pr.link}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-xs font-medium text-[#D21319] hover:opacity-80 hover:underline flex items-center gap-1"
+                className="text-xs font-medium text-[var(--accent)] hover:opacity-80 hover:underline flex items-center gap-1"
               >
                 <span>View on GitHub</span>
                 <span>↗</span>

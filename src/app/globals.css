@@ -3,10 +3,10 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 /*
-  Full Black + Crimson Red + Warm Stone Grey Palette
+  Full Black + Burgundy Crimson + Warm Stone Grey Palette
   01. Full Black: #000000 / #0a0a0a
   02. Warm Stone Grey: #AFAEA2
-  03. Crimson Red: #D21319
+  03. Burgundy Crimson: #A8192F (a touch brighter, #C8364E, on dark)
 */
 
 :root {
@@ -17,10 +17,11 @@
   --card: #ffffff;
   --card-hover: #fafafa;
   --border: rgba(0, 0, 0, 0.07);
-  --border-strong: rgba(210, 19, 25, 0.35);
-  --accent: #D21319; /* Crimson Red */
+  --border-strong: rgba(168, 25, 47, 0.35);
+  --accent: #A8192F; /* Burgundy crimson */
+  --accent-hover: #8C1427;
   --accent-secondary: #171717;
-  --accent-glow: rgba(210, 19, 25, 0.2);
+  --accent-glow: rgba(168, 25, 47, 0.2);
   --tag-bg: #ececef;
   --tag-fg: #1d1d1f;
   --nav-bg: rgba(245, 245, 247, 0.85);
@@ -36,10 +37,12 @@
   --card: #141415;
   --card-hover: #1a1a1c;
   --border: rgba(255, 255, 255, 0.09);
-  --border-strong: rgba(210, 19, 25, 0.5);
-  --accent: #D21319; /* Crimson Red */
-  --accent-secondary: #e8272e;
-  --accent-glow: rgba(210, 19, 25, 0.32);
+  --border-strong: rgba(200, 54, 78, 0.5);
+  /* Brighter on black so text stays readable */
+  --accent: #C8364E;
+  --accent-hover: #B02A40;
+  --accent-secondary: #D9475F;
+  --accent-glow: rgba(200, 54, 78, 0.32);
   --tag-bg: rgba(255, 255, 255, 0.06);
   --tag-fg: #f5f5f7;
   --nav-bg: rgba(11, 11, 12, 0.85);
@@ -66,9 +69,10 @@ body {
   overflow-x: hidden;
 }
 
+/* A soft burgundy wash rather than a solid red block */
 ::selection {
-  background: var(--accent);
-  color: #ffffff;
+  background: color-mix(in srgb, var(--accent) 22%, transparent);
+  color: var(--foreground);
 }
 
 /* Container Narrow - Optimized for full heatmap visibility and clean editorial spacing */
@@ -195,7 +199,7 @@ body {
   display: inline-block;
   padding: 3px;
   border-radius: 9999px;
-  background: linear-gradient(135deg, #D21319, #AFAEA2, #262626);
+  background: linear-gradient(135deg, var(--accent), #AFAEA2, #262626);
   box-shadow: 0 0 24px -2px var(--accent-glow);
 }
 
@@ -204,6 +208,320 @@ body {
   object-fit: cover;
   object-position: center 20%;
   border: 3px solid var(--card);
+}
+
+/* Memories scene */
+.memory-photo {
+  opacity: 0;
+  transform-origin: center;
+  will-change: transform;
+  transition: opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.memory-photo[data-ready] {
+  opacity: 1;
+}
+
+.memory-photo[data-dragging] {
+  cursor: grabbing;
+}
+
+.memory-photo-frame {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: 10px;
+  background: var(--tag-bg);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.55), 0 2px 4px rgba(0, 0, 0, 0.08), 0 12px 28px -12px rgba(0, 0, 0, 0.35);
+  transition: box-shadow 0.25s ease;
+}
+
+.memory-photo[data-dragging] .memory-photo-frame {
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.55), 0 4px 8px rgba(0, 0, 0, 0.1), 0 26px 48px -14px rgba(0, 0, 0, 0.45);
+}
+
+.memory-photo:focus-visible .memory-photo-frame {
+  box-shadow: 0 0 0 2px var(--accent), 0 12px 28px -12px rgba(0, 0, 0, 0.35);
+}
+
+.memory-caption {
+  position: absolute;
+  top: 100%;
+  left: 2px;
+  margin-top: 6px;
+  font-size: 12px;
+  line-height: 1;
+  white-space: nowrap;
+  color: var(--muted);
+  transition: opacity 0.25s ease;
+}
+
+/* Captions step aside while the photo is held or on the glass, where it grows */
+.memory-photo:is([data-loaded], [data-dragging]) .memory-caption {
+  opacity: 0;
+}
+
+/*
+  Glass the photos are dropped onto, matched to unfunnyket.com: no blur, just two
+  translucent layers (a bright highlight up top-left over a cool-to-warm tint),
+  so the strings and photos behind it show through softened. --k scales it with
+  the screen, set by MemoryBoard.
+*/
+.memory-glass {
+  --glass-tint: radial-gradient(circle at 28% 18%, rgba(255, 255, 255, 0.92), transparent 42%),
+    linear-gradient(135deg, rgba(226, 234, 239, 0.62), rgba(246, 240, 242, 0.56));
+  --glass-face: radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.94), transparent 40%),
+    linear-gradient(135deg, rgba(222, 232, 238, 0.64), rgba(246, 238, 242, 0.58));
+  --glass-edge: rgba(86, 99, 109, 0.12);
+  --glass-shadow: 0 16px 30px -24px rgba(52, 64, 73, 0.3);
+  --glass-shadow-hot: 0 20px 38px -24px rgba(74, 88, 99, 0.32);
+  --glass-text: rgba(74, 84, 92, 0.62);
+  overflow: hidden;
+  border-radius: clamp(11px, calc(16px * var(--k, 1)), 16px);
+  background: var(--glass-tint);
+  border: 1px solid var(--glass-edge);
+  box-shadow: var(--glass-shadow);
+  transition: scale 0.48s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.35s ease, box-shadow 0.32s, filter 0.32s;
+}
+
+.memory-glass::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: var(--glass-face);
+  transition: filter 0.32s, scale 0.46s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.memory-glass p {
+  z-index: 1;
+  font-size: clamp(9px, calc(11px * var(--k, 1)), 11px);
+  line-height: 1.45;
+  letter-spacing: -0.01em;
+  color: var(--glass-text);
+}
+
+/* The reference only has a light theme; on a dark page the same layers, dimmed */
+.dark .memory-glass {
+  --glass-tint: radial-gradient(circle at 28% 18%, rgba(255, 255, 255, 0.14), transparent 42%),
+    linear-gradient(135deg, rgba(120, 132, 142, 0.14), rgba(142, 124, 132, 0.1));
+  --glass-face: radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.1), transparent 40%),
+    linear-gradient(135deg, rgba(120, 132, 142, 0.08), rgba(142, 124, 132, 0.06));
+  --glass-edge: rgba(255, 255, 255, 0.1);
+  --glass-shadow: 0 16px 30px -24px rgba(0, 0, 0, 0.7);
+  --glass-shadow-hot: 0 20px 38px -24px rgba(0, 0, 0, 0.8);
+  --glass-text: rgba(255, 255, 255, 0.45);
+}
+
+/* The photo on the glass becomes the player, so the glass steps aside */
+.memory-glass[data-loaded] {
+  opacity: 0;
+  scale: 0.96;
+}
+
+/* Opening: the glass eases in as the photos settle around it */
+.memory-glass {
+  animation: glass-in 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.1s backwards;
+}
+
+@keyframes glass-in {
+  from {
+    opacity: 0;
+    scale: 0.94;
+  }
+}
+
+/* Closing: everything but the avatar's photos fades, then the page changes */
+.memory-scene canvas {
+  transition: opacity 0.3s ease;
+}
+
+.memory-reset {
+  transition: opacity 0.3s ease, color 0.15s ease;
+}
+
+.memory-scene[data-leaving] :is(.memory-photo:not([data-peek]), canvas, .memory-reset) {
+  opacity: 0;
+  transition: opacity 0.22s cubic-bezier(0.4, 0, 1, 1);
+}
+
+.memory-scene[data-leaving] .memory-glass {
+  opacity: 0;
+  scale: 0.96;
+  transition: opacity 0.22s cubic-bezier(0.4, 0, 1, 1), scale 0.22s cubic-bezier(0.4, 0, 1, 1);
+}
+
+.memory-scene[data-leaving] {
+  pointer-events: none;
+}
+
+/* A photo held over it: the glass brightens and leans in a touch */
+.memory-glass[data-hot] {
+  scale: 1.015;
+  filter: brightness(1.025);
+  box-shadow: var(--glass-shadow-hot);
+}
+
+.memory-glass[data-hot]::before {
+  filter: brightness(1.035) saturate(1.08);
+  scale: 0.975;
+}
+
+/*
+  Photos in an arc above the avatar. Each card hangs from a pivot at the
+  avatar's centre, so rotating them spreads them along a circle around it.
+*/
+.avatar-peek-cards {
+  --card-w: 46px;
+  --card-h: 58px;
+  /* Space between the avatar's top edge and the bottom of the cards */
+  --gap: 14px;
+  position: absolute;
+  left: 20px; /* centre of the 40px avatar */
+  top: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+.avatar-peek-card {
+  position: absolute;
+  left: calc(var(--card-w) / -2);
+  top: calc((var(--gap) + var(--card-h)) * -1);
+  width: var(--card-w);
+  height: var(--card-h);
+  overflow: hidden;
+  border-radius: 8px;
+  background: var(--tag-bg);
+  box-shadow: 0 0 0 1.5px rgba(255, 255, 255, 0.9), 0 8px 18px -8px rgba(0, 0, 0, 0.4);
+  /* Pivot at the avatar's centre: 20px below its top edge */
+  transform-origin: 50% calc(100% + var(--gap) + 20px);
+  /*
+    translate, rotate and scale are separate properties so they can be timed
+    apart: the cards rise as a stack, then open into the arc.
+  */
+  translate: 0 26px;
+  rotate: 0deg;
+  scale: 0.5;
+  opacity: 0;
+  filter: blur(4px);
+  will-change: translate, rotate, scale, opacity;
+  backface-visibility: hidden;
+  /* Leaving: fold the arc first, then sink into the avatar */
+  transition:
+    rotate 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+    translate 0.4s cubic-bezier(0.4, 0, 0.2, 1) 0.12s,
+    scale 0.4s cubic-bezier(0.4, 0, 0.2, 1) 0.12s,
+    opacity 0.25s ease 0.24s,
+    filter 0.3s ease 0.15s;
+}
+
+.avatar-peek-card:nth-child(2) { z-index: 1; }
+
+/* Shown: an even arc, centred over the avatar */
+.avatar-peek[data-show] .avatar-peek-card {
+  /* Part of the avatar link, so clicking a photo opens the memories too */
+  pointer-events: auto;
+  cursor: pointer;
+  translate: 0 0;
+  scale: 1;
+  opacity: 1;
+  filter: blur(0);
+  /* Arriving: rise with a soft spring, then fan out once clear of the avatar */
+  transition:
+    translate 0.6s cubic-bezier(0.22, 1.2, 0.36, 1),
+    scale 0.6s cubic-bezier(0.22, 1.2, 0.36, 1),
+    opacity 0.3s ease,
+    filter 0.45s ease,
+    rotate 0.85s cubic-bezier(0.3, 1.3, 0.4, 1) 0.14s;
+}
+.avatar-peek[data-show] .avatar-peek-card:nth-child(1) { rotate: -24deg; }
+.avatar-peek[data-show] .avatar-peek-card:nth-child(3) { rotate: 24deg; }
+
+/* Hovering the avatar or name opens the arc a little wider, straight away */
+.avatar-peek[data-show]:is(:hover, :focus-visible) .avatar-peek-card {
+  translate: 0 -4px;
+  scale: 1.06;
+  transition-delay: 0s;
+}
+.avatar-peek[data-show]:is(:hover, :focus-visible) .avatar-peek-card:nth-child(1) { rotate: -30deg; }
+.avatar-peek[data-show]:is(:hover, :focus-visible) .avatar-peek-card:nth-child(3) { rotate: 30deg; }
+
+/* Coming back from the memories: already in the arc, no rise, to catch the glide home */
+.avatar-peek[data-instant] .avatar-peek-card {
+  transition: none !important;
+}
+
+/* The first time they appear, the arc sways once like it was just let go */
+.avatar-peek[data-tease] .avatar-peek-cards {
+  animation: peek-sway 1.6s cubic-bezier(0.37, 0, 0.63, 1) 0.7s;
+}
+
+@keyframes peek-sway {
+  30% { rotate: -4deg; }
+  65% { rotate: 2.5deg; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .avatar-peek-card,
+  .avatar-peek[data-show] .avatar-peek-card {
+    translate: none;
+    filter: none;
+    transition: opacity 0.2s ease;
+  }
+  .avatar-peek[data-tease] .avatar-peek-cards {
+    animation: none;
+  }
+}
+
+/* Page changes: the old page steps out quickly, the new one eases in */
+::view-transition-old(root) {
+  animation: 200ms ease-out both page-out;
+}
+
+::view-transition-new(root) {
+  animation: 420ms cubic-bezier(0.22, 1, 0.36, 1) both page-in;
+}
+
+@keyframes page-out {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes page-in {
+  from {
+    opacity: 0;
+  }
+}
+
+/* Photos glide between the avatar and the memories scene */
+::view-transition-group(.morph) {
+  animation-duration: 600ms;
+  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+::view-transition-image-pair(.morph) {
+  animation-name: via-blur;
+}
+
+@keyframes via-blur {
+  30% {
+    filter: blur(2px);
+  }
+}
+
+::view-transition {
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation-duration: 0s !important;
+    animation-delay: 0s !important;
+  }
 }
 
 /* Custom Scrollbar */
@@ -219,19 +537,13 @@ body {
   background: transparent;
 }
 
-/* Reference-style page frame: faint ruled lines and two side rails */
+/* Minimal page frame: two faint side rails */
 .page-rails {
   display: none;
   position: fixed;
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  background-image: repeating-linear-gradient(
-    to bottom,
-    transparent 0,
-    transparent 47px,
-    var(--rail) 48px
-  );
 }
 
 .page-rails span {

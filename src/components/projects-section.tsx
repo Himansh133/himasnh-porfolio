@@ -20,7 +20,7 @@ export function ProjectList({ projects }: { projects: Project[] }) {
               <h3 className="text-[var(--foreground)]">
                 <Link
                   href={`/projects/${project.slug}`}
-                  className="transition-colors hover:text-[#D21319]"
+                  className="transition-colors hover:text-[var(--accent)]"
                 >
                   {project.title}
                 </Link>
@@ -37,7 +37,7 @@ export function ProjectList({ projects }: { projects: Project[] }) {
                 href={link.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group inline-flex items-center gap-1 text-[var(--foreground)] transition-colors hover:text-[#D21319]"
+                className="group inline-flex items-center gap-1 text-[var(--foreground)] transition-colors hover:text-[var(--accent)]"
               >
                 {link.label}
                 <ExternalArrow />

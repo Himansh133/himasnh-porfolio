@@ -38,7 +38,7 @@ export function Footer() {
               href={item.href}
               target="_blank"
               rel="noopener noreferrer"
-              className="transition-colors hover:text-[#D21319]"
+              className="transition-colors hover:text-[var(--accent)]"
             >
               {item.label}
             </a>

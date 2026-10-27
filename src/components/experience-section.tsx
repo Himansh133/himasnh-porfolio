@@ -18,7 +18,7 @@ export function ExperienceSection() {
                     href={job.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="group inline-flex items-center gap-1 transition-colors hover:text-[#D21319]"
+                    className="group inline-flex items-center gap-1 transition-colors hover:text-[var(--accent)]"
                   >
                     {job.company}
                     <ExternalArrow />

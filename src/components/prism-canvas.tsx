@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef } from "react";
+import { handoff } from "@/lib/memories";
 import {
   WAVELENGTH_MAX,
   WAVELENGTH_MIN,
@@ -66,7 +67,6 @@ export function PrismCanvas() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const prismHitRef = useRef<HTMLDivElement>(null);
   const beamHitRef = useRef<HTMLDivElement>(null);
-  const hintRef = useRef<HTMLParagraphElement>(null);
 
   useEffect(() => {
     const wrap = wrapRef.current;
@@ -98,6 +98,7 @@ export function PrismCanvas() {
     let frameMs = 16;
     let glow = true;
     let raf = 0;
+    let hold = 0;
     let last = 0;
     let visible = true;
     let time = 0;
@@ -139,6 +140,9 @@ export function PrismCanvas() {
 
     const resize = () => {
       const rect = wrap.getBoundingClientRect();
+      // Nothing to draw into while the strip has no size (e.g. mid-navigation)
+      if (!rect.width || !rect.height) return;
+      if (rect.width === width && rect.height === height) return;
       // Phones have dense screens and little GPU to spare; the light is blurred anyway
       dpr = Math.min(window.devicePixelRatio || 1, coarse.matches ? 1.5 : 2);
       const q = rect.width < 480 || coarse.matches ? QUALITY.low : QUALITY.high;
@@ -197,41 +201,64 @@ export function PrismCanvas() {
       const entry = rays[0]?.entry ?? target;
       const edge = { x: 0, y: beam.origin.y + (beam.dir.y * BEAM_LEAD) / beam.dir.x };
       const held = active("source");
-      const beamGrad = ctx.createLinearGradient(edge.x, edge.y, entry.x, entry.y);
-      beamGrad.addColorStop(0, `rgba(${ink},0.15)`);
-      beamGrad.addColorStop(0.5, `rgba(${ink},0.6)`);
-      beamGrad.addColorStop(1, `rgba(${ink},${dark ? 1 : 0.85})`);
-      ctx.strokeStyle = beamGrad;
-      for (const [lw, alpha] of [
-        [14, 0.04],
-        [6, 0.1],
-        [2.6, 0.22],
-        [1.3 + 0.5 * held, 1],
-      ] as const) {
-        ctx.globalAlpha = alpha * (1 + 0.6 * held);
-        ctx.lineWidth = lw * scale;
+      const white = "255,255,255";
+      const beamLine = () => {
         ctx.beginPath();
         ctx.moveTo(beam.origin.x, beam.origin.y);
         ctx.lineTo(entry.x, entry.y);
         ctx.stroke();
+      };
+
+      // On a light page white light needs a soft shade around it to be seen at all
+      if (!dark) {
+        const shade = ctx.createLinearGradient(edge.x, edge.y, entry.x, entry.y);
+        shade.addColorStop(0, "rgba(70,72,90,0.02)");
+        shade.addColorStop(1, "rgba(70,72,90,0.16)");
+        ctx.strokeStyle = shade;
+        for (const [lw, alpha] of [
+          [12, 0.35],
+          [4.2, 1],
+        ] as const) {
+          ctx.globalAlpha = alpha * (1 + 0.5 * held);
+          ctx.lineWidth = lw * scale;
+          beamLine();
+        }
+      }
+
+      const beamGrad = ctx.createLinearGradient(edge.x, edge.y, entry.x, entry.y);
+      beamGrad.addColorStop(0, `rgba(${white},${dark ? 0.15 : 0.5})`);
+      beamGrad.addColorStop(0.5, `rgba(${white},${dark ? 0.6 : 0.9})`);
+      beamGrad.addColorStop(1, `rgba(${white},1)`);
+      ctx.strokeStyle = beamGrad;
+      for (const [lw, alpha] of dark
+        ? ([
+            [14, 0.04],
+            [6, 0.1],
+            [2.6, 0.22],
+            [1.3 + 0.5 * held, 1],
+          ] as const)
+        : ([[1.8 + 0.5 * held, 1]] as const)) {
+        ctx.globalAlpha = Math.min(1, alpha * (1 + 0.6 * held));
+        ctx.lineWidth = lw * scale;
+        beamLine();
       }
       ctx.globalAlpha = 1;
 
       // Packets of light running along the beam into the glass
       if (!calm) {
         const pulseGrad = ctx.createLinearGradient(edge.x, edge.y, entry.x, entry.y);
-        pulseGrad.addColorStop(0, `rgba(${ink},0)`);
+        pulseGrad.addColorStop(0, `rgba(${white},0)`);
         for (let k = 0; k < PULSES; k++) {
-          const f = (t * 0.22 + k / PULSES) % 1;
+          const f = (((t * 0.22 + k / PULSES) % 1) + 1) % 1;
           // Faint as it enters the strip, brightest just before the glass
-          const peak = (dark ? 0.85 : 0.5) * Math.min(1, f * 2.5);
-          pulseGrad.addColorStop(Math.max(0, f - 0.07), `rgba(${ink},0)`);
-          pulseGrad.addColorStop(f, `rgba(${ink},${peak})`);
-          pulseGrad.addColorStop(Math.min(1, f + 0.07), `rgba(${ink},0)`);
+          const peak = 0.85 * Math.min(1, f * 2.5);
+          pulseGrad.addColorStop(Math.max(0, f - 0.07), `rgba(${white},0)`);
+          pulseGrad.addColorStop(f, `rgba(${white},${peak})`);
+          pulseGrad.addColorStop(Math.min(1, f + 0.07), `rgba(${white},0)`);
         }
-        pulseGrad.addColorStop(1, `rgba(${ink},0)`);
+        pulseGrad.addColorStop(1, `rgba(${white},0)`);
         ctx.strokeStyle = pulseGrad;
-        ctx.lineWidth = 2.4 * scale;
+        ctx.lineWidth = (dark ? 2.4 : 3.4) * scale;
         ctx.beginPath();
         ctx.moveTo(edge.x, edge.y);
         ctx.lineTo(entry.x, entry.y);
@@ -239,11 +266,11 @@ export function PrismCanvas() {
       }
 
       // Soft flare where the light strikes the glass
-      const flareRadius = (dark ? 16 : 11) * scale;
+      const flareRadius = (dark ? 16 : 13) * scale;
       const flare = ctx.createRadialGradient(entry.x, entry.y, 0, entry.x, entry.y, flareRadius);
-      const flareAlpha = (dark ? 0.4 : 0.14) * (0.85 + 0.15 * Math.sin(t * 2.1));
-      flare.addColorStop(0, `rgba(${ink},${flareAlpha})`);
-      flare.addColorStop(1, `rgba(${ink},0)`);
+      const flareAlpha = (dark ? 0.4 : 0.9) * (0.85 + 0.15 * Math.sin(t * 2.1));
+      flare.addColorStop(0, `rgba(${white},${flareAlpha})`);
+      flare.addColorStop(1, `rgba(${white},0)`);
       ctx.fillStyle = flare;
       ctx.beginPath();
       ctx.arc(entry.x, entry.y, flareRadius, 0, Math.PI * 2);
@@ -419,7 +446,8 @@ export function PrismCanvas() {
     const step = (now: number) => {
       raf = requestAnimationFrame(step);
       const elapsed = now - last;
-      const dt = Math.min(elapsed / 1000 || 0.016, 1 / 30);
+      // The first frame's timestamp can predate `last`; never let time run backwards
+      const dt = clamp(elapsed / 1000 || 0.016, 0.001, 1 / 30);
       last = now;
       time += dt;
       const calm = reducedMotion.matches;
@@ -488,23 +516,30 @@ export function PrismCanvas() {
     };
 
     const start = () => {
-      if (raf || !visible || document.hidden) return;
+      if (raf || hold || !visible || document.hidden) return;
+      // Photos are gliding home from the memories scene; let them have the frames
+      const wait = handoff.until - performance.now();
+      if (wait > 0) {
+        hold = window.setTimeout(() => {
+          hold = 0;
+          start();
+        }, wait);
+        return;
+      }
       last = performance.now();
       raf = requestAnimationFrame(step);
     };
     const stop = () => {
       cancelAnimationFrame(raf);
+      clearTimeout(hold);
       raf = 0;
+      hold = 0;
     };
 
     const local = (e: PointerEvent): Vec => {
       const rect = wrap.getBoundingClientRect();
       return { x: e.clientX - rect.left, y: e.clientY - rect.top };
     };
-    const dismissHint = () => {
-      if (hintRef.current) hintRef.current.style.opacity = "0";
-    };
-
     const onDown = (e: PointerEvent) => {
       const p = local(e);
       const hit = hitTest(p);
@@ -514,7 +549,6 @@ export function PrismCanvas() {
       wrap.setPointerCapture(e.pointerId);
       wrap.style.cursor = "grabbing";
       ptr.kTarget = 0;
-      dismissHint();
 
       if (hit === "move") {
         grab = { x: p.x - st.px, y: p.y - st.py, angle: 0 };
@@ -581,7 +615,6 @@ export function PrismCanvas() {
       if (e.key !== "ArrowLeft" && e.key !== "ArrowRight") return;
       e.preventDefault();
       st.av += e.key === "ArrowRight" ? 3 : -3;
-      dismissHint();
     };
 
     const resizeObserver = new ResizeObserver(resize);
@@ -659,13 +692,6 @@ export function PrismCanvas() {
           style={{ touchAction: "none" }}
         />
       </div>
-      <p
-        ref={hintRef}
-        aria-hidden
-        className="pointer-events-none absolute bottom-0 left-0 text-[11px] text-[var(--muted-light)] transition-opacity duration-500"
-      >
-        drag the prism, turn its corners, swing the light
-      </p>
     </div>
   );
 }

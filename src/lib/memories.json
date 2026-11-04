@@ -1,441 +1,452 @@
 [
   {
-    "id": "first-day-1",
-    "photo": "/memories/first-day-1.jpg",
-    "alt": "first day 1",
+    "id": "allthestars",
+    "photo": "/memories/allTheStars.jpg",
+    "alt": "allTheStars",
     "ratio": 0.75,
     "track": {
-      "title": "First Day",
-      "artist": "Sample Loop",
-      "src": "/memories/first-day.wav"
+      "title": "All the Stars",
+      "artist": "Kendrick Lamar & SZA",
+      "src": "/memories/allTheStars.mp3"
     },
     "at": {
-      "x": 45,
-      "y": 84
+      "x": 82.6,
+      "y": 14.9
     },
-    "size": 140,
-    "tilt": -4,
-    "phone": false
-  },
-  {
-    "id": "first-day-2",
-    "photo": "/memories/first-day-2.jpg",
-    "alt": "first coffee",
-    "ratio": 0.75,
-    "caption": "first coffee",
-    "track": {
-      "title": "First Day",
-      "artist": "Sample Loop",
-      "src": "/memories/first-day.wav"
-    },
-    "at": {
-      "x": 55,
-      "y": 89
-    },
-    "size": 112,
+    "size": 121,
     "tilt": 5,
     "phone": true
   },
   {
-    "id": "first-day-3",
-    "photo": "/memories/first-day-3.jpg",
-    "alt": "first day 3",
-    "ratio": 0.8,
-    "track": {
-      "title": "First Day",
-      "artist": "Sample Loop",
-      "src": "/memories/first-day.wav"
-    },
-    "at": {
-      "x": 67,
-      "y": 81
-    },
-    "size": 170,
-    "tilt": -3,
-    "phone": false
-  },
-  {
-    "id": "home-1",
-    "photo": "/memories/home-1.jpg",
-    "alt": "home 1",
+    "id": "bittersweet",
+    "photo": "/memories/bitterSweet.jpg",
+    "alt": "bitterSweet",
     "ratio": 0.75,
     "track": {
-      "title": "Home",
-      "artist": "Sample Loop",
-      "src": "/memories/home.wav"
+      "title": "Bitter Sweet Symphony",
+      "artist": "The Verve",
+      "src": "/memories/bitterSweet.mp3"
     },
     "at": {
-      "x": 18.5,
-      "y": 53
+      "x": 7.4,
+      "y": 69.7
     },
-    "size": 118,
-    "tilt": 4,
-    "phone": false
-  },
-  {
-    "id": "home-2",
-    "photo": "/memories/home-2.jpg",
-    "alt": "home 2",
-    "ratio": 1.3333,
-    "track": {
-      "title": "Home",
-      "artist": "Sample Loop",
-      "src": "/memories/home.wav"
-    },
-    "at": {
-      "x": 30,
-      "y": 50
-    },
-    "size": 150,
-    "tilt": -5,
+    "size": 159,
+    "tilt": -1,
     "phone": true
   },
   {
-    "id": "home-3",
-    "photo": "/memories/home-3.jpg",
-    "alt": "home",
+    "id": "black",
+    "photo": "/memories/black.jpg",
+    "alt": "black",
     "ratio": 0.75,
-    "caption": "home",
     "track": {
-      "title": "Home",
-      "artist": "Sample Loop",
-      "src": "/memories/home.wav"
+      "title": "Black",
+      "artist": "Pearl Jam",
+      "src": "/memories/black.mp3"
     },
     "at": {
-      "x": 94,
-      "y": 48
+      "x": 77.9,
+      "y": 61.5
     },
-    "size": 112,
-    "tilt": -5,
-    "phone": false
+    "size": 114,
+    "tilt": 4,
+    "phone": true
   },
   {
-    "id": "home-4",
-    "photo": "/memories/home-4.jpg",
-    "alt": "home 4",
+    "id": "boyfriend",
+    "photo": "/memories/boyfriend.jpg",
+    "alt": "boyfriend",
+    "ratio": 0.75,
+    "track": {
+      "title": "Boyfriend",
+      "artist": "",
+      "src": "/memories/boyfriend.mp3"
+    },
+    "at": {
+      "x": 83.2,
+      "y": 42.7
+    },
+    "size": 102,
+    "tilt": -4,
+    "phone": true
+  },
+  {
+    "id": "cnumb",
+    "photo": "/memories/cNUMB.jpg",
+    "alt": "cNUMB",
     "ratio": 1.3333,
     "track": {
-      "title": "Home",
-      "artist": "Sample Loop",
-      "src": "/memories/home.wav"
+      "title": "Comfortably Numb",
+      "artist": "Pink Floyd",
+      "src": "/memories/cNUMB.mp3"
     },
     "at": {
-      "x": 25,
-      "y": 88
+      "x": 6.2,
+      "y": 90
     },
-    "size": 132,
-    "tilt": 4,
-    "phone": false
+    "size": 133,
+    "tilt": -3,
+    "phone": true
   },
   {
-    "id": "home-5",
-    "photo": "/memories/home-5.jpg",
-    "alt": "home 5",
-    "ratio": 0.8,
+    "id": "comingbackto",
+    "photo": "/memories/comingBackTo.jpeg",
+    "alt": "comingBackTo",
+    "ratio": 0.5625,
     "track": {
-      "title": "Home",
-      "artist": "Sample Loop",
-      "src": "/memories/home.wav"
+      "title": "Coming Back to Life",
+      "artist": "Pink Floyd",
+      "src": "/memories/comingBackTo.mp3"
     },
     "at": {
-      "x": 34,
-      "y": 91
+      "x": 52.1,
+      "y": 14.1
     },
-    "size": 160,
-    "tilt": 3,
-    "phone": false
+    "size": 116,
+    "tilt": -2,
+    "phone": true
   },
   {
-    "id": "late-night-1",
-    "photo": "/memories/late-night-1.jpg",
-    "alt": "late night 1",
-    "ratio": 0.8,
+    "id": "creep",
+    "photo": "/memories/creep.jpg",
+    "alt": "creep",
+    "ratio": 0.75,
     "track": {
-      "title": "Late Night",
-      "artist": "Sample Loop",
-      "src": "/memories/late-night.wav"
+      "title": "Creep",
+      "artist": "Radiohead",
+      "src": "/memories/creep.mp3"
     },
     "at": {
-      "x": 28.5,
-      "y": 25
+      "x": 6.6,
+      "y": 41.4
     },
-    "size": 118,
+    "size": 128,
+    "tilt": -4,
+    "phone": true
+  },
+  {
+    "id": "dtmf",
+    "photo": "/memories/DtMf.jpg",
+    "alt": "DtMf",
+    "ratio": 0.75,
+    "track": {
+      "title": "DtMF",
+      "artist": "Bad Bunny",
+      "src": "/memories/DtMf.mp3"
+    },
+    "at": {
+      "x": 72.9,
+      "y": 38.9
+    },
+    "size": 146,
     "tilt": 2,
     "phone": true
   },
   {
-    "id": "late-night-2",
-    "photo": "/memories/late-night-2.jpg",
-    "alt": "late night 2",
-    "ratio": 0.8,
+    "id": "eyeswithout",
+    "photo": "/memories/EyesWithout.jpg",
+    "alt": "EyesWithout",
+    "ratio": 0.75,
     "track": {
-      "title": "Late Night",
-      "artist": "Sample Loop",
-      "src": "/memories/late-night.wav"
+      "title": "Eyes Without a Face",
+      "artist": "Billy Idol",
+      "src": "/memories/EyesWithout.mp3"
     },
     "at": {
-      "x": 61,
-      "y": 23
+      "x": 75.9,
+      "y": 84.3
     },
-    "size": 124,
-    "tilt": 4,
+    "size": 148,
+    "tilt": -2,
     "phone": true
   },
   {
-    "id": "late-night-3",
-    "photo": "/memories/late-night-3.jpg",
-    "alt": "late night 3",
-    "ratio": 1,
+    "id": "fakeplastictrees",
+    "photo": "/memories/fakePlasticTrees.jpg",
+    "alt": "fakePlasticTrees",
+    "ratio": 0.75,
     "track": {
-      "title": "Late Night",
-      "artist": "Sample Loop",
-      "src": "/memories/late-night.wav"
+      "title": "Fake Plastic Trees",
+      "artist": "Radiohead",
+      "src": "/memories/FakePlasticTrees.mp3"
     },
     "at": {
-      "x": 93,
-      "y": 23
+      "x": 43.1,
+      "y": 84.2
     },
-    "size": 108,
+    "size": 141,
+    "tilt": -2,
+    "phone": true
+  },
+  {
+    "id": "haveyoueverseen",
+    "photo": "/memories/haveYouEverSeen.jpg",
+    "alt": "haveYouEverSeen",
+    "ratio": 0.75,
+    "track": {
+      "title": "Have You Ever Seen the Rain",
+      "artist": "Creedence Clearwater Revival",
+      "src": "/memories/HaveYouEverSeen.mp3"
+    },
+    "at": {
+      "x": 31.6,
+      "y": 30.8
+    },
+    "size": 100,
+    "tilt": -1,
+    "phone": true
+  },
+  {
+    "id": "hotelcal",
+    "photo": "/memories/hotelCal.jpg",
+    "alt": "hotelCal",
+    "ratio": 0.75,
+    "track": {
+      "title": "Hotel California",
+      "artist": "Eagles",
+      "src": "/memories/hotelCal.mp3"
+    },
+    "at": {
+      "x": 84.9,
+      "y": 81.3
+    },
+    "size": 93,
+    "tilt": -4,
+    "phone": false
+  },
+  {
+    "id": "hwhell",
+    "photo": "/memories/hWhell.jpg",
+    "alt": "hWhell",
+    "ratio": 0.75,
+    "track": {
+      "title": "Highway to Hell",
+      "artist": "AC/DC",
+      "src": "/memories/hWHell.mp3"
+    },
+    "at": {
+      "x": 58.7,
+      "y": 86
+    },
+    "size": 142,
     "tilt": 5,
     "phone": false
   },
   {
-    "id": "late-night-4",
-    "photo": "/memories/late-night-4.jpg",
-    "alt": "late night 4",
-    "ratio": 0.75,
+    "id": "immigrant",
+    "photo": "/memories/immigrant.jpeg",
+    "alt": "immigrant",
+    "ratio": 0.5625,
     "track": {
-      "title": "Late Night",
-      "artist": "Sample Loop",
-      "src": "/memories/late-night.wav"
+      "title": "Immigrant Song",
+      "artist": "Led Zeppelin",
+      "src": "/memories/immigrant.mp3"
     },
     "at": {
-      "x": 62,
-      "y": 52
+      "x": 93.9,
+      "y": 35.6
     },
-    "size": 170,
-    "tilt": -4,
+    "size": 143,
+    "tilt": 2,
     "phone": false
   },
   {
-    "id": "late-night-5",
-    "photo": "/memories/late-night-5.jpg",
-    "alt": "late night 5",
-    "ratio": 0.8,
+    "id": "kashmir",
+    "photo": "/memories/kashmir.jpg",
+    "alt": "kashmir",
+    "ratio": 0.75,
     "track": {
-      "title": "Late Night",
-      "artist": "Sample Loop",
-      "src": "/memories/late-night.wav"
+      "title": "Kashmir",
+      "artist": "Led Zeppelin",
+      "src": "/memories/kashmir.mp3"
     },
     "at": {
-      "x": 13,
-      "y": 90
+      "x": 8.2,
+      "y": 14.3
     },
-    "size": 190,
+    "size": 146,
+    "tilt": 5,
+    "phone": true
+  },
+  {
+    "id": "letdown",
+    "photo": "/memories/letDown.jpg",
+    "alt": "letDown",
+    "ratio": 0.75,
+    "track": {
+      "title": "Let Down",
+      "artist": "Radiohead",
+      "src": "/memories/letDown.mp3"
+    },
+    "at": {
+      "x": 23,
+      "y": 12.2
+    },
+    "size": 123,
     "tilt": -3,
     "phone": false
   },
   {
-    "id": "late-night-6",
-    "photo": "/memories/late-night-6.jpg",
-    "alt": "aquarium, 2am",
-    "ratio": 0.75,
-    "caption": "aquarium, 2am",
-    "track": {
-      "title": "Late Night",
-      "artist": "Sample Loop",
-      "src": "/memories/late-night.wav"
-    },
-    "at": {
-      "x": 78,
-      "y": 78
-    },
-    "size": 120,
-    "tilt": -6,
-    "phone": true
-  },
-  {
-    "id": "monsoon-1",
-    "photo": "/memories/monsoon-1.jpg",
-    "alt": "the valley",
-    "ratio": 0.75,
-    "caption": "the valley",
-    "track": {
-      "title": "Monsoon",
-      "artist": "Sample Loop",
-      "src": "/memories/monsoon.wav"
-    },
-    "at": {
-      "x": 13,
-      "y": 72
-    },
-    "size": 168,
-    "tilt": 6,
-    "phone": true
-  },
-  {
-    "id": "monsoon-2",
-    "photo": "/memories/monsoon-2.jpg",
-    "alt": "monsoon 2",
-    "ratio": 0.75,
-    "track": {
-      "title": "Monsoon",
-      "artist": "Sample Loop",
-      "src": "/memories/monsoon.wav"
-    },
-    "at": {
-      "x": 33,
-      "y": 70
-    },
-    "size": 196,
-    "tilt": -4,
-    "phone": true
-  },
-  {
-    "id": "road-trip-1",
-    "photo": "/memories/road-trip-1.jpg",
-    "alt": "road trip 1",
-    "ratio": 0.8,
-    "track": {
-      "title": "Road Trip",
-      "artist": "Sample Loop",
-      "src": "/memories/road-trip.wav"
-    },
-    "at": {
-      "x": 8,
-      "y": 20
-    },
-    "size": 112,
-    "tilt": -4,
-    "phone": true
-  },
-  {
-    "id": "road-trip-2",
-    "photo": "/memories/road-trip-2.jpg",
-    "alt": "the fjord",
+    "id": "letithappen",
+    "photo": "/memories/LetItHappen.jpg",
+    "alt": "LetItHappen",
     "ratio": 1.3333,
-    "caption": "the fjord",
     "track": {
-      "title": "Road Trip",
-      "artist": "Sample Loop",
-      "src": "/memories/road-trip.wav"
+      "title": "Let It Happen",
+      "artist": "Tame Impala",
+      "src": "/memories/LetItHappen.mp3"
     },
     "at": {
-      "x": 19,
-      "y": 18
+      "x": 27.5,
+      "y": 66.6
     },
-    "size": 160,
-    "tilt": 6,
-    "phone": true
-  },
-  {
-    "id": "road-trip-3",
-    "photo": "/memories/road-trip-3.jpg",
-    "alt": "road trip 3",
-    "ratio": 0.8,
-    "track": {
-      "title": "Road Trip",
-      "artist": "Sample Loop",
-      "src": "/memories/road-trip.wav"
-    },
-    "at": {
-      "x": 83,
-      "y": 52
-    },
-    "size": 200,
-    "tilt": 3,
-    "phone": true
-  },
-  {
-    "id": "road-trip-4",
-    "photo": "/memories/road-trip-4.jpg",
-    "alt": "road trip 4",
-    "ratio": 0.8,
-    "track": {
-      "title": "Road Trip",
-      "artist": "Sample Loop",
-      "src": "/memories/road-trip.wav"
-    },
-    "at": {
-      "x": 93,
-      "y": 74
-    },
-    "size": 112,
-    "tilt": 4,
+    "size": 123,
+    "tilt": -2,
     "phone": false
   },
   {
-    "id": "sunday-1",
-    "photo": "/memories/sunday-1.jpg",
-    "alt": "sunday 1",
-    "ratio": 1,
+    "id": "novrain",
+    "photo": "/memories/novRain.png",
+    "alt": "novRain",
+    "ratio": 0.5631,
     "track": {
-      "title": "Sunday",
-      "artist": "Sample Loop",
-      "src": "/memories/sunday.wav"
+      "title": "November Rain",
+      "artist": "Guns N' Roses",
+      "src": "/memories/novRain.mp3"
     },
     "at": {
-      "x": 47,
+      "x": 67.2,
+      "y": 69.9
+    },
+    "size": 146,
+    "tilt": -5,
+    "phone": false
+  },
+  {
+    "id": "onedance",
+    "photo": "/memories/OneDance.jpg",
+    "alt": "OneDance",
+    "ratio": 0.5625,
+    "track": {
+      "title": "One Dance",
+      "artist": "Drake feat. Wizkid & Kyla",
+      "src": "/memories/OneDance.mp3"
+    },
+    "at": {
+      "x": 17.6,
+      "y": 39
+    },
+    "size": 96,
+    "tilt": -3,
+    "phone": false
+  },
+  {
+    "id": "purplerain",
+    "photo": "/memories/purpleRain.jpg",
+    "alt": "purpleRain",
+    "ratio": 0.7506,
+    "track": {
+      "title": "Purple Rain",
+      "artist": "Prince",
+      "src": "/memories/purpleRain.mp3"
+    },
+    "at": {
+      "x": 59.8,
       "y": 14
     },
-    "size": 112,
+    "size": 162,
     "tilt": -5,
-    "phone": false
-  },
-  {
-    "id": "sunday-2",
-    "photo": "/memories/sunday-2.jpg",
-    "alt": "sunday 2",
-    "ratio": 1.3333,
-    "track": {
-      "title": "Sunday",
-      "artist": "Sample Loop",
-      "src": "/memories/sunday.wav"
-    },
-    "at": {
-      "x": 79,
-      "y": 21
-    },
-    "size": 210,
-    "tilt": -5,
-    "phone": false
-  },
-  {
-    "id": "sunday-3",
-    "photo": "/memories/sunday-3.jpg",
-    "alt": "cold morning",
-    "ratio": 0.8,
-    "caption": "cold morning",
-    "track": {
-      "title": "Sunday",
-      "artist": "Sample Loop",
-      "src": "/memories/sunday.wav"
-    },
-    "at": {
-      "x": 8,
-      "y": 49
-    },
-    "size": 112,
-    "tilt": -3,
     "phone": true
   },
   {
-    "id": "sunday-4",
-    "photo": "/memories/sunday-4.jpg",
-    "alt": "summer market",
-    "ratio": 1.3333,
-    "caption": "summer market",
+    "id": "queen",
+    "photo": "/memories/queen.jpg",
+    "alt": "queen",
+    "ratio": 0.75,
     "track": {
-      "title": "Sunday",
-      "artist": "Sample Loop",
-      "src": "/memories/sunday.wav"
+      "title": "Bohemian Rhapsody",
+      "artist": "Queen",
+      "src": "/memories/Queen.mp3"
     },
     "at": {
-      "x": 87,
-      "y": 91
+      "x": 31.1,
+      "y": 84.3
     },
-    "size": 190,
+    "size": 149,
     "tilt": 3,
-    "phone": true
+    "phone": false
+  },
+  {
+    "id": "stairtoheaven",
+    "photo": "/memories/stairToHeaven.jpg",
+    "alt": "stairToHeaven",
+    "ratio": 0.75,
+    "track": {
+      "title": "Stairway to Heaven",
+      "artist": "Led Zeppelin",
+      "src": "/memories/stairToHeaven.mp3"
+    },
+    "at": {
+      "x": 27.8,
+      "y": 49.7
+    },
+    "size": 144,
+    "tilt": 5,
+    "phone": false
+  },
+  {
+    "id": "sweetchildomine",
+    "photo": "/memories/SweetChildOmine.jpg",
+    "alt": "SweetChildOmine",
+    "ratio": 0.75,
+    "track": {
+      "title": "Sweet Child O' Mine",
+      "artist": "Guns N' Roses",
+      "src": "/memories/SweetChildOmine.mp3"
+    },
+    "at": {
+      "x": 67.8,
+      "y": 11.8
+    },
+    "size": 130,
+    "tilt": 5,
+    "phone": false
+  },
+  {
+    "id": "thegreatgiginthesky",
+    "photo": "/memories/theGreatGigInTheSky.jpg",
+    "alt": "theGreatGigInTheSky",
+    "ratio": 0.75,
+    "track": {
+      "title": "The Great Gig in the Sky",
+      "artist": "Pink Floyd",
+      "src": "/memories/theGreatGigInTheSky.mp3"
+    },
+    "at": {
+      "x": 93.7,
+      "y": 72.7
+    },
+    "size": 146,
+    "tilt": -5,
+    "phone": false
+  },
+  {
+    "id": "time",
+    "photo": "/memories/time.jpg",
+    "alt": "time",
+    "ratio": 0.5625,
+    "track": {
+      "title": "Time",
+      "artist": "Pink Floyd",
+      "src": "/memories/time.mp3"
+    },
+    "at": {
+      "x": 18.2,
+      "y": 76.4
+    },
+    "size": 93,
+    "tilt": -3,
+    "phone": false
   }
 ]

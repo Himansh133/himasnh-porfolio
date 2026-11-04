@@ -1,20 +1,30 @@
-# Optional. Captions for photos and names for songs, one line per file.
-# Photos without a line here have no caption. Songs without one are named after the file.
-#
-#   goa-trip.jpg: goa, 2024
-#   goa-trip.mp3: Kho Gaye Hum Kahan - Prateek Kuhad
-
-road-trip-2.jpg: the fjord
-sunday-3.jpg: cold morning
-home-3.jpg: home
-monsoon-1.jpg: the valley
-first-day-2.jpg: first coffee
-late-night-6.jpg: aquarium, 2am
-sunday-4.jpg: summer market
-
-road-trip.wav: Road Trip - Sample Loop
-sunday.wav: Sunday - Sample Loop
-first-day.wav: First Day - Sample Loop
-home.wav: Home - Sample Loop
-monsoon.wav: Monsoon - Sample Loop
-late-night.wav: Late Night - Sample Loop
+# Song labels and highlight start times for the supplied recordings.
+# Full recordings are preserved in .memories-originals for later adjustments.
+DtMf.mp3: DtMF - Bad Bunny @ 1:04
+EyesWithout.mp3: Eyes Without a Face - Billy Idol @ 1:23
+FakePlasticTrees.mp3: Fake Plastic Trees - Radiohead @ 2:37
+HaveYouEverSeen.mp3: Have You Ever Seen the Rain - Creedence Clearwater Revival @ 0:51
+LetItHappen.mp3: Let It Happen - Tame Impala @ 2:38
+NovRain.mp3: November Rain - Guns N' Roses @ 7:12
+OneDance.mp3: One Dance - Drake feat. Wizkid & Kyla @ 0:48
+Queen.mp3: Bohemian Rhapsody - Queen @ 3:03
+SweetChildOmine.mp3: Sweet Child O' Mine - Guns N' Roses @ 0:00
+allTheStars.mp3: All the Stars - Kendrick Lamar & SZA @ 0:38
+bitterSweet.mp3: Bitter Sweet Symphony - The Verve @ 0:00
+black.mp3: Black - Pearl Jam @ 4:40
+boyfriend.mp3: Boyfriend @ 0:45
+cNUMB.mp3: Comfortably Numb - Pink Floyd @ 2:00
+comingBackTo.mp3: Coming Back to Life - Pink Floyd @ 4:45
+creep.mp3: Creep - Radiohead @ 0:58
+cuzImMan.mp3: 'Cause I'm a Man - Tame Impala @ 1:00
+hWHell.mp3: Highway to Hell - AC/DC @ 0:58
+hotelCal.mp3: Hotel California - Eagles @ 5:00
+immigrant.mp3: Immigrant Song - Led Zeppelin @ 0:07
+kashmir.mp3: Kashmir - Led Zeppelin @ 1:00
+letDown.mp3: Let Down - Radiohead @ 3:40
+luther.mp3: luther - Kendrick Lamar & SZA @ 2:00
+pianoMan.mp3: Piano Man - Billy Joel @ 1:14
+purpleRain.mp3: Purple Rain - Prince @ 1:12
+stairToHeaven.mp3: Stairway to Heaven - Led Zeppelin @ 5:55
+theGreatGigInTheSky.mp3: The Great Gig in the Sky - Pink Floyd @ 1:07
+time.mp3: Time - Pink Floyd @ 3:05

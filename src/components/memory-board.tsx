@@ -329,15 +329,11 @@ export function MemoryBoard() {
       const top = idRect.bottom - sceneRect.top + 10;
       const gx = (playerBox.l + playerBox.r) / 2;
       const gy = (playerBox.t + playerBox.b) / 2;
-      // The glass counts as taken, so only the photos tucked under it on purpose land there
+      // Reserve extra space around the glass.
       const placed = [
-        { x: gx, y: gy, r: ((playerBox.r - playerBox.l) / 2) * 0.8 },
+        { x: gx, y: gy, r: ((playerBox.r - playerBox.l) / 2) * 1.2 },
       ];
       const out: Layout = {};
-      // The first two photos that aren't the avatar's sit partly under the glass
-      const tucked = bodies
-        .filter((b) => b.shown && !peek.has(b.id))
-        .slice(0, 2);
       bodies
         .filter((b) => b.shown)
         .forEach((b) => {
@@ -348,25 +344,18 @@ export function MemoryBoard() {
           const yMax = H - b.h / 2 - 28;
           let x: number;
           let y: number;
-          if (tucked.includes(b)) {
-            // so it has something to frost
-            const left = b === tucked[0];
-            x = left ? playerBox.l + b.w * 0.2 : playerBox.r - b.w * 0.2;
-            y = left ? playerBox.t + b.h * 0.2 : playerBox.b - b.h * 0.2;
-          } else {
-            let best = -Infinity;
-            x = y = 0;
-            for (let k = 0; k < 40; k++) {
-              const cx = xMin + Math.random() * (xMax - xMin);
-              const cy = yMin + Math.random() * (yMax - yMin);
-              let room = Infinity;
-              for (const p of placed)
-                room = Math.min(room, Math.hypot(p.x - cx, p.y - cy) - p.r - r);
-              if (room > best) {
-                best = room;
-                x = cx;
-                y = cy;
-              }
+          let best = -Infinity;
+          x = y = 0;
+          for (let k = 0; k < 40; k++) {
+            const cx = xMin + Math.random() * (xMax - xMin);
+            const cy = yMin + Math.random() * (yMax - yMin);
+            let room = Infinity;
+            for (const p of placed)
+              room = Math.min(room, Math.hypot(p.x - cx, p.y - cy) - p.r - r);
+            if (room > best) {
+              best = room;
+              x = cx;
+              y = cy;
             }
           }
           x = clamp(x, xMin, xMax);
@@ -403,6 +392,27 @@ export function MemoryBoard() {
       y: clamp(y, b.h / 2 + 6, H - b.h / 2 - 22),
     });
 
+    // Resting photos keep their rotated edges outside the glass, including saved layouts.
+    const keepClearOfPlayer = (b: Body, p: Vec): Vec => {
+      const angle = (Math.abs(b.tilt) * Math.PI) / 180;
+      const halfW = (b.w * Math.cos(angle) + b.h * Math.sin(angle)) / 2;
+      const halfH = (b.h * Math.cos(angle) + b.w * Math.sin(angle)) / 2;
+      const margin = 20;
+      const left = playerBox.l - halfW - margin;
+      const right = playerBox.r + halfW + margin;
+      const top = playerBox.t - halfH - margin;
+      const bottom = playerBox.b + halfH + margin;
+      if (p.x <= left || p.x >= right || p.y <= top || p.y >= bottom) return p;
+      const candidates = [
+        { x: left, y: p.y }, { x: right, y: p.y },
+        { x: p.x, y: top }, { x: p.x, y: bottom },
+      ].filter((q) => q.x >= halfW + 6 && q.x <= W - halfW - 6 &&
+        q.y >= halfH + 6 && q.y <= H - halfH - 22);
+      return candidates.sort((a, c) =>
+        Math.hypot(a.x - p.x, a.y - p.y) - Math.hypot(c.x - p.x, c.y - p.y),
+      )[0] ?? p;
+    };
+
     // On the glass a photo grows to fit a box as wide as the glass and 1.12 times
     // as tall, keeping its shape, the same frame unfunnyket.com mounts photos in
     const fitScale = (b: Body) =>
@@ -415,10 +425,14 @@ export function MemoryBoard() {
           b.tx = slot.x;
           b.ty = slot.y;
           b.tr = 0;
-          b.ts = fitScale(b);
+          b.ts = fitScale(b) * 1.3;
         } else {
           const home = homes[b.id];
-          const p = keepInside(b, (home.x / 100) * W, (home.y / 100) * H);
+          const p = keepClearOfPlayer(b, keepInside(
+            b,
+            slot.x + ((home.x / 100) * W - slot.x) * 1.2,
+            slot.y + ((home.y / 100) * H - slot.y) * 1.2,
+          ));
           b.tx = p.x;
           b.ty = p.y;
           b.tr = b.tilt;
@@ -486,6 +500,8 @@ export function MemoryBoard() {
       for (const b of bodies) {
         b.shown = !mobile || !!memories.find((m) => m.id === b.id)?.phone;
         b.el.style.display = b.shown ? "" : "none";
+        // Photos hidden during entrance still need revealing after a resize.
+        if (b.shown && !first) b.el.dataset.ready = "";
         b.w = Math.round(b.size * scale);
         b.h = Math.round(b.w / b.ratio);
         b.el.style.width = `${b.w}px`;
@@ -929,7 +945,10 @@ export function MemoryBoard() {
       } else {
         // Dragged off the glass: it stays on top where it was put
         if (current === b.id) eject(false);
-        homes[b.id] = { x: (b.tx / W) * 100, y: (b.ty / H) * 100 };
+        homes[b.id] = {
+          x: ((slot.x + (b.tx - slot.x) / 1.2) / W) * 100,
+          y: ((slot.y + (b.ty - slot.y) / 1.2) / H) * 100,
+        };
         saveLayout();
       }
       placeTargets();

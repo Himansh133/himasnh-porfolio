@@ -57,7 +57,7 @@ export default function TerminalPage() {
               <div><span className="text-[var(--accent)] font-mono">experience</span> : Work &amp; Open Source</div>
               <div><span className="text-[var(--accent)] font-mono">socials</span> : Profiles &amp; handles</div>
               <div><span className="text-[var(--accent)] font-mono">contact</span> : Email &amp; phone</div>
-              <div><span className="text-[var(--accent)] font-mono">resume</span> : View resume PDF</div>
+              <div><span className="text-[var(--accent)] font-mono">resume</span> : Download resume PDF</div>
               <div><span className="text-[var(--accent)] font-mono">clear</span> : Clear screen</div>
               <div><span className="text-[var(--accent)] font-mono">exit</span> : Back to portfolio</div>
             </div>
@@ -162,10 +162,16 @@ export default function TerminalPage() {
         );
         break;
 
-      case "resume":
-        window.open("/Himanshu_Kumar_Resume.pdf", "_blank");
-        response = <p className="text-[var(--accent)]">Opening resume in a new tab...</p>;
+      case "resume": {
+        const link = document.createElement("a");
+        link.href = "/himanshu_resume.pdf";
+        link.download = "himanshu_resume.pdf";
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        response = <p className="text-[var(--accent)]">Downloading resume...</p>;
         break;
+      }
 
       case "exit":
         window.location.href = "/";

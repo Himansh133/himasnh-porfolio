@@ -21,9 +21,8 @@ export default function ResumePage() {
         </Link>
 
         <a
-          href="/Himanshu_Kumar_Resume.pdf"
-          target="_blank"
-          rel="noopener noreferrer"
+          href="/himanshu_resume.pdf"
+          download="himanshu_resume.pdf"
           className="inline-flex items-center gap-1.5 rounded-lg bg-[var(--accent)] hover:bg-[var(--accent-hover)] px-4 py-2 text-xs font-medium text-white transition-all shadow-xs"
         >
           <svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">

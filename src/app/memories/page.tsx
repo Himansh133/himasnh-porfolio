@@ -1,4 +1,5 @@
 import { MemoryBoard } from "@/components/memory-board";
+import { memories } from "@/lib/memories";
 
 export const metadata = {
   title: "Memories",
@@ -6,5 +7,5 @@ export const metadata = {
 };
 
 export default function MemoriesPage() {
-  return <MemoryBoard />;
+  return <MemoryBoard key={memories.map((memory) => memory.id).join(",")} />;
 }

@@ -158,6 +158,58 @@ export const experiences: Experience[] = [
 
 export const projects: Project[] = [
   {
+    slug: "repopilot",
+    title: "RepoPilot",
+    year: "2026",
+    eyebrow: "GitHub issue-to-patch agent",
+    category: "ai",
+    summary:
+      "An AI agent that investigates a GitHub issue, proposes a minimal patch, and checks it with tests in Docker. A draft pull request needs your approval.",
+    description:
+      "A convincing explanation is easy to generate; a working fix needs evidence. I built RepoPilot to make that distinction visible. Give it a local repository or GitHub URL and an issue, then inspect its investigation, plan, diff, and test results in a CLI or React dashboard. The goal is to make routine issue work easier to review, with a record of what actually ran.",
+    challenge:
+      "An agent can sound confident while changing the wrong code, weakening tests, or spending too long investigating. Letting it run arbitrary commands or publish changes also gives a small task a much larger reach. RepoPilot needed bounded execution, an untouched original checkout, and a clear distinction between a proposed fix and a verified result.",
+    solution:
+      "A Python state machine coordinates investigation, planning, patch validation, sandbox tests, and up to two repair attempts. The CLI and FastAPI service share the same workflow; a React dashboard exposes the timeline, diff, and before-and-after tests. The model can search, read files, and propose a patch, while the backend owns command execution. Work happens in a temporary clone, and fixed test profiles run in resource-limited Docker containers without network access. SQLite stores runs, events, usage, and approvals. Only an explicit approval allows the GitHub API to create a draft PR.",
+    outcome:
+      "RepoPilot helps maintainers assess a suggested fix without reconstructing the agent's work. Reports distinguish passed, failed, inconclusive, and aborted runs, alongside token usage, cost, and unresolved items. The repository documents two approved draft PRs on a demo project. Its bundled synthetic benchmark demonstrates the workflow, but does not establish performance on large, real-world repositories.",
+    metrics: [
+      "Baseline and post-patch tests in isolated Docker containers",
+      "At most two repair attempts, with run and spending limits",
+      "Reviewable diff and explicit approval before a draft PR",
+    ],
+    stack: ["Python", "FastAPI", "React", "TypeScript", "SQLite", "Docker", "GitHub API", "OpenAI-compatible APIs"],
+    githubUrl: "https://github.com/Himansh133/repoPR",
+    liveUrl: "https://repoPilot.himansh.tech",
+    featured: true,
+  },
+  {
+    slug: "yourhealth",
+    title: "YourHealth",
+    year: "2026",
+    eyebrow: "Family health report tracker",
+    category: "web",
+    summary:
+      "Turns family lab reports into comparable trends, medicine context, and source-linked English or Hindi explanations, with share sheets for doctor visits.",
+    description:
+      "A family's health history often lives in scattered PDFs, phone photos, and WhatsApp messages. Finding an older result or preparing for an appointment becomes a search through files. I built YourHealth to organize those reports by family member and make changes over time easier to understand, while keeping the original evidence close to every extracted value.",
+    challenge:
+      "Reports from different labs use different layouts and units, and phone photos introduce OCR errors. A fluent AI answer can hide those errors or invent a number. The useful question was how to extract checkable facts, compare them consistently, and explain them in a language a family member understands without turning the app into a source of treatment instructions.",
+    solution:
+      "A React and TypeScript frontend talks to a FastAPI backend. Uploaded files live in S3-compatible storage; Redis and RQ move document processing to a background worker. The worker reads PDF text or uses OCR, then rule-based parsers normalize lab values and flag uncertain results for review. PostgreSQL stores family profiles, reports, medicines, and results, while pgvector supports document retrieval. A question router selects structured lab or medicine data, or document search, before generating an answer. Validation checks numerical claims against evidence, and Hindi translations are checked for unchanged numbers. Doctor sheets use expiring, revocable share links with PIN protection.",
+    outcome:
+      "Families can follow lab trends across reports, see medicine context drawn from drug labels, and bring a concise history to an appointment. Source links let them inspect the underlying report instead of trusting a summary alone. English and Hindi explanations make that history more accessible. The app flags uncertain extraction for review and directs treatment-change questions to a doctor; it supports organizing and discussing records rather than making clinical decisions.",
+    metrics: [
+      "Family profiles with normalized lab trends and report citations",
+      "English and Hindi explanations with evidence validation",
+      "Expiring doctor share sheets with PINs and revocation",
+    ],
+    stack: ["React", "TypeScript", "FastAPI", "PostgreSQL", "pgvector", "Redis", "RQ", "S3-compatible storage", "OCR", "Docker"],
+    githubUrl: "https://github.com/Himansh133/yourHealth",
+    liveUrl: "https://YourHealth.himansh.tech",
+    featured: true,
+  },
+  {
     slug: "revenue-rescue-agent",
     title: "Revenue Rescue Agent",
     year: "2026",
@@ -180,7 +232,7 @@ export const projects: Project[] = [
     ],
     stack: ["Python", "FastAPI", "Gemini API", "PostgreSQL", "Razorpay API", "Docker"],
     githubUrl: "https://github.com/Himansh133/razorpay--revenue-rescue",
-    liveUrl: "https://razorpay-revenue-rescue.vercel.app",
+    liveUrl: "https://revenue-rescue-agent.himansh.tech",
     featured: true,
   },
   {

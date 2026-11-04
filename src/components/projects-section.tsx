@@ -32,7 +32,7 @@ export function ProjectList({ projects }: { projects: Project[] }) {
             <p className="text-[var(--muted-light)]">{project.eyebrow}</p>
             <p className="mt-2.5 text-[var(--muted)]">{project.summary}</p>
 
-            <div className="mt-3 flex items-center gap-5 text-[13px]">
+            <div className="mt-3 flex flex-wrap items-center gap-5 text-[13px]">
               <a
                 href={link.href}
                 target="_blank"
@@ -42,6 +42,17 @@ export function ProjectList({ projects }: { projects: Project[] }) {
                 {link.label}
                 <ExternalArrow />
               </a>
+              {project.liveUrl && (
+                <a
+                  href={project.githubUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group inline-flex items-center gap-1 text-[var(--muted)] transition-colors hover:text-[var(--accent)]"
+                >
+                  GitHub
+                  <ExternalArrow />
+                </a>
+              )}
               <Link
                 href={`/projects/${project.slug}`}
                 className="text-[var(--muted-light)] transition-colors hover:text-[var(--foreground)]"

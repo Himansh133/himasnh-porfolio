@@ -13,7 +13,6 @@ const pages = [
   { label: "Open source", href: "/opensource" },
   { label: "Activity", href: "/activity" },
   { label: "Stack", href: "/stack" },
-  { label: "Resume", href: "/resume" },
 ];
 
 export function Footer() {
@@ -58,6 +57,13 @@ export function Footer() {
               {item.label}
             </Link>
           ))}
+          <a
+            href="/Himanshu_Kumar_Resume.pdf"
+            download="Himanshu_Kumar_Resume.pdf"
+            className="transition-colors hover:text-[var(--foreground)]"
+          >
+            Resume
+          </a>
         </nav>
       </div>
     </footer>

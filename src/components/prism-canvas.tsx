@@ -222,7 +222,9 @@ export function PrismCanvas() {
         const pulseGrad = ctx.createLinearGradient(edge.x, edge.y, entry.x, entry.y);
         pulseGrad.addColorStop(0, `rgba(${ink},0)`);
         for (let k = 0; k < PULSES; k++) {
-          const f = (t * 0.22 + k / PULSES) % 1;
+          const phase = (t * 0.22 + k / PULSES) % 1;
+          // Remainders can be negative; keep the centre finite and inside the gradient.
+          const f = Number.isFinite(phase) ? clamp(phase < 0 ? phase + 1 : phase, 0, 1) : 0;
           // Faint as it enters the strip, brightest just before the glass
           const peak = (dark ? 0.85 : 0.5) * Math.min(1, f * 2.5);
           pulseGrad.addColorStop(Math.max(0, f - 0.07), `rgba(${ink},0)`);
@@ -419,7 +421,8 @@ export function PrismCanvas() {
     const step = (now: number) => {
       raf = requestAnimationFrame(step);
       const elapsed = now - last;
-      const dt = Math.min(elapsed / 1000 || 0.016, 1 / 30);
+      // The first frame timestamp can precede performance.now() from start().
+      const dt = Number.isFinite(elapsed) && elapsed > 0 ? Math.min(elapsed / 1000, 1 / 30) : 0.016;
       last = now;
       time += dt;
       const calm = reducedMotion.matches;

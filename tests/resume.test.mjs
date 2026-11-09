@@ -4,8 +4,8 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 
 const read = (path) => readFileSync(new URL(`../${path}`, import.meta.url), "utf8");
-const PDF = "/Himanshu_Kumar_Resume.pdf";
-const FILENAME = "Himanshu_Kumar_Resume.pdf";
+const PDF = "/himanshu_resume.pdf";
+const FILENAME = "himanshu_resume.pdf";
 
 const assertDownloadLink = (source, label) => {
   const anchor = [...source.matchAll(/<a\b([^>]*)>([\s\S]*?)<\/a>/g)]

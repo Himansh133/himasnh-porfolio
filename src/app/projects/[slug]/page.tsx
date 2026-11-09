@@ -57,7 +57,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
               href={project.liveUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="group inline-flex items-center gap-1 text-[var(--foreground)] transition-colors hover:text-[#D21319]"
+              className="group inline-flex items-center gap-1 text-[var(--foreground)] transition-colors hover:text-[var(--accent)]"
             >
               Live demo
               <ExternalArrow />
@@ -67,7 +67,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
             href={project.githubUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className={`group inline-flex items-center gap-1 transition-colors hover:text-[#D21319] ${
+            className={`group inline-flex items-center gap-1 transition-colors hover:text-[var(--accent)] ${
               project.liveUrl ? "text-[var(--muted)]" : "text-[var(--foreground)]"
             }`}
           >

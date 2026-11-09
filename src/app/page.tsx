@@ -17,10 +17,10 @@ export default function Home() {
       <section className="pt-16 sm:pt-24">
         <div className="flex flex-col gap-5">
           <p className="max-w-[560px] text-[17px] leading-[1.4] tracking-[-0.01em] text-[var(--foreground)] sm:text-[19px]">
-            I build autonomous LLM agents, scalable backends and high-performance C++ tools.
-            This summer at JV Micronics I took an antenna test sweep from 10 hours to 7
-            minutes. I also contribute to Corsair (YC W25), and I&apos;m in my final year at
-            JIIT Noida.
+            I build autonomous LLM agents, scalable backends and C++ tools that drive real
+            hardware. This summer I wrote the software JV Micronics now uses to run its
+            antenna tests. I also contribute to Corsair (YC W25), and I&apos;m in my final
+            year at JIIT Noida.
           </p>
           <p className="max-w-[520px] text-[var(--muted)]">
             I like systems that are fast and can&apos;t lie to you.{" "}
@@ -36,11 +36,6 @@ export default function Home() {
       </div>
 
       <div className="mt-10 sm:mt-14">
-        <Label>work</Label>
-        <ExperienceSection />
-      </div>
-
-      <div className="mt-16 sm:mt-20">
         <Label>things i&apos;ve built</Label>
         <ProjectList projects={featured} />
         <Link
@@ -49,6 +44,11 @@ export default function Home() {
         >
           All projects →
         </Link>
+      </div>
+
+      <div className="mt-16 sm:mt-20">
+        <Label>work</Label>
+        <ExperienceSection />
       </div>
 
       <div className="mt-16 sm:mt-20">

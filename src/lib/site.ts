@@ -48,6 +48,10 @@ export interface Achievement {
 
 export const site = {
   name: "Himanshu Kumar",
+  url: "https://himansh.tech",
+  /** Shown under the link when the site is shared, and to search engines */
+  description:
+    "Software engineer building autonomous LLM agents, scalable backends and C++ tools that drive real hardware. Final year at JIIT Noida.",
   role: "Software Engineer & Systems Builder",
   college: "Jaypee Institute of Information Technology (JIIT)",
   degree: "B.Tech in Electronics and Communication Engineering (ECE-CS), 2023 - 2027",
@@ -71,9 +75,7 @@ export const site = {
     email: "mailto:himanshu3836@gmail.com",
   },
   stats: [
-    { value: "10h → 7m", label: "RF sweep cycle time reduction", highlight: "98.8% faster" },
     { value: "15K+", label: "GitHub Stars on Corsair SDK", highlight: "3 PRs Merged" },
-    { value: "50+", label: "Engineers using production tool", highlight: "JV Micronics" },
     { value: "500+", label: "DSA problems solved", highlight: "1700+ Rating" },
   ],
   skills: [
@@ -83,24 +85,24 @@ export const site = {
       items: ["C++17", "C", "Python", "TypeScript", "SQL", "Bash"],
     },
     {
-      group: "Frameworks & Backend",
+      group: "Frameworks",
       description: "Modern frameworks for web services and native GUI applications",
-      items: ["FastAPI", "React.js", "Qt6", "Next.js", "LangChain", "Node.js"],
+      items: ["FastAPI", "React", "Qt6", "Next.js", "LangChain", "Node.js"],
     },
     {
-      group: "AI / ML & Agents",
+      group: "AI & agents",
       description: "Autonomous reasoning, deterministic guardrails, and LLM tooling",
-      items: ["Gemini API", "LLM Tool-Calling", "RAG Pipelines", "OpenAI & Llama APIs", "Hugging Face"],
+      items: ["Gemini API", "OpenAI API", "Llama", "Hugging Face", "LLM tool calling", "RAG pipelines"],
     },
     {
       group: "Cloud & DevOps",
       description: "Automated pipelines, containerization, and enterprise deployments",
-      items: ["Docker", "GitHub Actions (CI/CD)", "AWS", "Oracle Cloud (OCI Certified)", "Linux", "PostgreSQL"],
+      items: ["Docker", "GitHub Actions", "AWS", "Oracle Cloud (OCI)", "Linux", "PostgreSQL"],
     },
     {
       group: "Hardware & EDA",
       description: "Instrument communication protocols and RF design software",
-      items: ["SCPI / GPIB Protocol", "Keysight VNA VISA", "MATLAB", "ANSYS HFSS", "Cadence Virtuoso"],
+      items: ["SCPI / GPIB", "Keysight VISA", "MATLAB", "ANSYS HFSS", "Cadence Virtuoso"],
     },
   ],
 };
@@ -110,18 +112,18 @@ export const experiences: Experience[] = [
     role: "Software Engineering Intern",
     company: "JV Micronics",
     period: "May – Jul 2026",
-    location: "dabad, India",
+    location: "Faridabad, India",
     summary:
       "Engineered automated RF test software and high-throughput instrument control for microwave & antenna testing.",
     blurb: [
       "Built a Windows desktop tool in C++17 and Qt6 that drives a Keysight FieldFox VNA over SCPI, replacing manual antenna test runs.",
-      "A full sweep went from 10 hours to 7 minutes, and about 50 RF engineers now use it.",
+      "It drives the analyzer and the positioners through a full antenna sweep on its own, then writes the report.",
     ],
     stack: ["C++17", "Qt6", "SCPI", "GPIB", "USB VISA", "Keysight FieldFox"],
     points: [
-      "Built a production Windows desktop tool in C++17 and Qt6 that drives a Keysight FieldFox N9951B VNA over SCPI (GPIB/USB), replacing manual RF test runs and slashing antenna sweep duration from 10 hours to 7 minutes.",
+      "Built a production Windows desktop tool in C++17 and Qt6 that drives a Keysight FieldFox N9951B VNA over SCPI (GPIB/USB), replacing manual RF test runs with automated antenna sweeps.",
       "Designed a clean layered architecture separating instrument control, data acquisition, positioner automation, and test sequencing so new instruments and test plans plug in seamlessly without modifying the UI layer.",
-      "Shipped a real-time Qt GUI with live plotting, automated calibration checks, and one-click test report generation adopted by 50 RF engineers.",
+      "Shipped a real-time Qt GUI with live plotting, automated calibration checks, and one-click test report generation.",
     ],
     links: [
       { label: "Antenna Measurement Software", url: "https://github.com/Himansh133" },
@@ -156,6 +158,58 @@ export const experiences: Experience[] = [
 
 export const projects: Project[] = [
   {
+    slug: "repopilot",
+    title: "RepoPilot",
+    year: "2026",
+    eyebrow: "GitHub issue-to-patch agent",
+    category: "ai",
+    summary:
+      "An AI agent that investigates a GitHub issue, proposes a minimal patch, and checks it with tests in Docker. A draft pull request needs your approval.",
+    description:
+      "A convincing explanation is easy to generate; a working fix needs evidence. I built RepoPilot to make that distinction visible. Give it a local repository or GitHub URL and an issue, then inspect its investigation, plan, diff, and test results in a CLI or React dashboard. The goal is to make routine issue work easier to review, with a record of what actually ran.",
+    challenge:
+      "An agent can sound confident while changing the wrong code, weakening tests, or spending too long investigating. Letting it run arbitrary commands or publish changes also gives a small task a much larger reach. RepoPilot needed bounded execution, an untouched original checkout, and a clear distinction between a proposed fix and a verified result.",
+    solution:
+      "A Python state machine coordinates investigation, planning, patch validation, sandbox tests, and up to two repair attempts. The CLI and FastAPI service share the same workflow; a React dashboard exposes the timeline, diff, and before-and-after tests. The model can search, read files, and propose a patch, while the backend owns command execution. Work happens in a temporary clone, and fixed test profiles run in resource-limited Docker containers without network access. SQLite stores runs, events, usage, and approvals. Only an explicit approval allows the GitHub API to create a draft PR.",
+    outcome:
+      "RepoPilot helps maintainers assess a suggested fix without reconstructing the agent's work. Reports distinguish passed, failed, inconclusive, and aborted runs, alongside token usage, cost, and unresolved items. The repository documents two approved draft PRs on a demo project. Its bundled synthetic benchmark demonstrates the workflow, but does not establish performance on large, real-world repositories.",
+    metrics: [
+      "Baseline and post-patch tests in isolated Docker containers",
+      "At most two repair attempts, with run and spending limits",
+      "Reviewable diff and explicit approval before a draft PR",
+    ],
+    stack: ["Python", "FastAPI", "React", "TypeScript", "SQLite", "Docker", "GitHub API", "OpenAI-compatible APIs"],
+    githubUrl: "https://github.com/Himansh133/repoPR",
+    liveUrl: "https://repoPilot.himansh.tech",
+    featured: true,
+  },
+  {
+    slug: "yourhealth",
+    title: "YourHealth",
+    year: "2026",
+    eyebrow: "Family health report tracker",
+    category: "web",
+    summary:
+      "Turns family lab reports into comparable trends, medicine context, and source-linked English or Hindi explanations, with share sheets for doctor visits.",
+    description:
+      "A family's health history often lives in scattered PDFs, phone photos, and WhatsApp messages. Finding an older result or preparing for an appointment becomes a search through files. I built YourHealth to organize those reports by family member and make changes over time easier to understand, while keeping the original evidence close to every extracted value.",
+    challenge:
+      "Reports from different labs use different layouts and units, and phone photos introduce OCR errors. A fluent AI answer can hide those errors or invent a number. The useful question was how to extract checkable facts, compare them consistently, and explain them in a language a family member understands without turning the app into a source of treatment instructions.",
+    solution:
+      "A React and TypeScript frontend talks to a FastAPI backend. Uploaded files live in S3-compatible storage; Redis and RQ move document processing to a background worker. The worker reads PDF text or uses OCR, then rule-based parsers normalize lab values and flag uncertain results for review. PostgreSQL stores family profiles, reports, medicines, and results, while pgvector supports document retrieval. A question router selects structured lab or medicine data, or document search, before generating an answer. Validation checks numerical claims against evidence, and Hindi translations are checked for unchanged numbers. Doctor sheets use expiring, revocable share links with PIN protection.",
+    outcome:
+      "Families can follow lab trends across reports, see medicine context drawn from drug labels, and bring a concise history to an appointment. Source links let them inspect the underlying report instead of trusting a summary alone. English and Hindi explanations make that history more accessible. The app flags uncertain extraction for review and directs treatment-change questions to a doctor; it supports organizing and discussing records rather than making clinical decisions.",
+    metrics: [
+      "Family profiles with normalized lab trends and report citations",
+      "English and Hindi explanations with evidence validation",
+      "Expiring doctor share sheets with PINs and revocation",
+    ],
+    stack: ["React", "TypeScript", "FastAPI", "PostgreSQL", "pgvector", "Redis", "RQ", "S3-compatible storage", "OCR", "Docker"],
+    githubUrl: "https://github.com/Himansh133/yourHealth",
+    liveUrl: "https://YourHealth.himansh.tech",
+    featured: true,
+  },
+  {
     slug: "revenue-rescue-agent",
     title: "Revenue Rescue Agent",
     year: "2026",
@@ -178,7 +232,7 @@ export const projects: Project[] = [
     ],
     stack: ["Python", "FastAPI", "Gemini API", "PostgreSQL", "Razorpay API", "Docker"],
     githubUrl: "https://github.com/Himansh133/razorpay--revenue-rescue",
-    liveUrl: "https://razorpay-revenue-rescue.vercel.app",
+    liveUrl: "https://revenue-rescue-agent.himansh.tech",
     featured: true,
   },
   {
@@ -213,18 +267,18 @@ export const projects: Project[] = [
     eyebrow: "C++17 desktop tool",
     category: "systems",
     summary:
-      "Desktop software that runs antenna tests on a Keysight FieldFox VNA over SCPI. Built at JV Micronics, it cut a 10-hour sweep to 7 minutes.",
+      "Desktop software that runs antenna tests on a Keysight FieldFox VNA over SCPI. Built at JV Micronics to replace manual test runs.",
     description:
       "A desktop automation app for microwave and antenna testing. It connects multi-axis positioners and a Keysight FieldFox N9951B vector network analyzer, and plots results live.",
     challenge:
-      "Manual RF test runs needed an engineer present for up to 10 hours per antenna, with plenty of room for error in calibration and angle indexing.",
+      "Manual RF test runs needed an engineer at the bench for the whole sweep, with plenty of room for error in calibration and angle indexing.",
     solution:
       "A layered C++17 architecture keeps instrument control, data acquisition, positioner automation and test sequencing apart, so new instruments plug in without touching the UI. SCPI runs over GPIB and USB VISA, with real-time polar and Cartesian plots in Qt6.",
     outcome:
-      "A full antenna sweep dropped from 10 hours to 7 minutes (98.8% faster), and the tool is now used by about 50 RF engineers.",
+      "A full antenna sweep runs on its own, from calibration checks to the finished report.",
     metrics: [
-      "10 hours → 7 minutes per sweep",
-      "About 50 engineers use it",
+      "Sweeps run unattended, end to end",
+      "Calibration checks and reports built in",
       "SCPI driver fully decoupled from the UI",
     ],
     stack: ["C++17", "Qt6", "SCPI", "GPIB / USB VISA", "CMake"],

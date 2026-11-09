@@ -49,3 +49,6 @@ src/data/*.mjs
 src/data/*.html
 src/data/*-fetched.json
 src/data/*-exact-days.json
+
+# trimmed full songs, kept to re-cut clips (scripts/trim-songs.mjs)
+/.memories-originals/

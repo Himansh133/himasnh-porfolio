@@ -9,7 +9,7 @@ const pulseCode = source.slice(source.indexOf("        for (let k = 0; k < PULSE
 assert.ok(pulseCode.includes("pulseGrad.addColorStop"));
 const drawPulses = new Function("t", "dark", "pulseGrad", `
   const PULSES = 3;
-  const ink = dark ? "255,255,255" : "29,29,31";
+  const white = "255,255,255";
   const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
   ${pulseCode}
 `);
@@ -43,15 +43,15 @@ test("pulse stops remain finite and ordered at negative, wrap and invalid times"
 
 test("normal pulse positions and colors are unchanged across repeated cycles", () => {
   for (const dark of [true, false]) {
-    const ink = dark ? "255,255,255" : "29,29,31";
+    const white = "255,255,255";
     for (let frame = 0; frame < 1800; frame++) {
       const time = frame / 60;
       const expected = [];
       for (let k = 0; k < 3; k++) {
         const f = (time * 0.22 + k / 3) % 1;
-        const peak = (dark ? 0.85 : 0.5) * Math.min(1, f * 2.5);
-        expected.push([Math.max(0, f - 0.07), `rgba(${ink},0)`],
-          [f, `rgba(${ink},${peak})`], [Math.min(1, f + 0.07), `rgba(${ink},0)`]);
+        const peak = 0.85 * Math.min(1, f * 2.5);
+        expected.push([Math.max(0, f - 0.07), `rgba(${white},0)`],
+          [f, `rgba(${white},${peak})`], [Math.min(1, f + 0.07), `rgba(${white},0)`]);
       }
       assert.deepEqual(stopsAt(time, dark), expected);
     }

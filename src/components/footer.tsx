@@ -37,7 +37,7 @@ export function Footer() {
               href={item.href}
               target="_blank"
               rel="noopener noreferrer"
-              className="transition-colors hover:text-[#D21319]"
+              className="transition-colors hover:text-[var(--accent)]"
             >
               {item.label}
             </a>
@@ -58,8 +58,8 @@ export function Footer() {
             </Link>
           ))}
           <a
-            href="/Himanshu_Kumar_Resume.pdf"
-            download="Himanshu_Kumar_Resume.pdf"
+            href="/himanshu_resume.pdf"
+            download="himanshu_resume.pdf"
             className="transition-colors hover:text-[var(--foreground)]"
           >
             Resume

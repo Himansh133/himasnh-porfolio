@@ -1,0 +1,452 @@
+[
+  {
+    "id": "allthestars",
+    "photo": "/memories/allTheStars.jpg",
+    "alt": "allTheStars",
+    "ratio": 0.75,
+    "track": {
+      "title": "All the Stars",
+      "artist": "Kendrick Lamar & SZA",
+      "src": "/memories/allTheStars.mp3"
+    },
+    "at": {
+      "x": 82.6,
+      "y": 14.9
+    },
+    "size": 121,
+    "tilt": 5,
+    "phone": true
+  },
+  {
+    "id": "bittersweet",
+    "photo": "/memories/bitterSweet.jpg",
+    "alt": "bitterSweet",
+    "ratio": 0.75,
+    "track": {
+      "title": "Bitter Sweet Symphony",
+      "artist": "The Verve",
+      "src": "/memories/bitterSweet.mp3"
+    },
+    "at": {
+      "x": 7.4,
+      "y": 69.7
+    },
+    "size": 159,
+    "tilt": -1,
+    "phone": true
+  },
+  {
+    "id": "black",
+    "photo": "/memories/black.jpg",
+    "alt": "black",
+    "ratio": 0.75,
+    "track": {
+      "title": "Black",
+      "artist": "Pearl Jam",
+      "src": "/memories/black.mp3"
+    },
+    "at": {
+      "x": 77.9,
+      "y": 61.5
+    },
+    "size": 114,
+    "tilt": 4,
+    "phone": true
+  },
+  {
+    "id": "boyfriend",
+    "photo": "/memories/boyfriend.jpg",
+    "alt": "boyfriend",
+    "ratio": 0.75,
+    "track": {
+      "title": "Boyfriend",
+      "artist": "",
+      "src": "/memories/boyfriend.mp3"
+    },
+    "at": {
+      "x": 83.2,
+      "y": 42.7
+    },
+    "size": 102,
+    "tilt": -4,
+    "phone": true
+  },
+  {
+    "id": "cnumb",
+    "photo": "/memories/cNUMB.jpg",
+    "alt": "cNUMB",
+    "ratio": 1.3333,
+    "track": {
+      "title": "Comfortably Numb",
+      "artist": "Pink Floyd",
+      "src": "/memories/cNUMB.mp3"
+    },
+    "at": {
+      "x": 6.2,
+      "y": 90
+    },
+    "size": 133,
+    "tilt": -3,
+    "phone": true
+  },
+  {
+    "id": "comingbackto",
+    "photo": "/memories/comingBackTo.jpeg",
+    "alt": "comingBackTo",
+    "ratio": 0.5625,
+    "track": {
+      "title": "Coming Back to Life",
+      "artist": "Pink Floyd",
+      "src": "/memories/comingBackTo.mp3"
+    },
+    "at": {
+      "x": 52.1,
+      "y": 14.1
+    },
+    "size": 116,
+    "tilt": -2,
+    "phone": true
+  },
+  {
+    "id": "creep",
+    "photo": "/memories/creep.jpg",
+    "alt": "creep",
+    "ratio": 0.75,
+    "track": {
+      "title": "Creep",
+      "artist": "Radiohead",
+      "src": "/memories/creep.mp3"
+    },
+    "at": {
+      "x": 6.6,
+      "y": 41.4
+    },
+    "size": 128,
+    "tilt": -4,
+    "phone": true
+  },
+  {
+    "id": "dtmf",
+    "photo": "/memories/DtMf.jpg",
+    "alt": "DtMf",
+    "ratio": 0.75,
+    "track": {
+      "title": "DtMF",
+      "artist": "Bad Bunny",
+      "src": "/memories/DtMf.mp3"
+    },
+    "at": {
+      "x": 72.9,
+      "y": 38.9
+    },
+    "size": 146,
+    "tilt": 2,
+    "phone": true
+  },
+  {
+    "id": "eyeswithout",
+    "photo": "/memories/EyesWithout.jpg",
+    "alt": "EyesWithout",
+    "ratio": 0.75,
+    "track": {
+      "title": "Eyes Without a Face",
+      "artist": "Billy Idol",
+      "src": "/memories/EyesWithout.mp3"
+    },
+    "at": {
+      "x": 75.9,
+      "y": 84.3
+    },
+    "size": 148,
+    "tilt": -2,
+    "phone": true
+  },
+  {
+    "id": "fakeplastictrees",
+    "photo": "/memories/fakePlasticTrees.jpg",
+    "alt": "fakePlasticTrees",
+    "ratio": 0.75,
+    "track": {
+      "title": "Fake Plastic Trees",
+      "artist": "Radiohead",
+      "src": "/memories/FakePlasticTrees.mp3"
+    },
+    "at": {
+      "x": 43.1,
+      "y": 84.2
+    },
+    "size": 141,
+    "tilt": -2,
+    "phone": true
+  },
+  {
+    "id": "haveyoueverseen",
+    "photo": "/memories/haveYouEverSeen.jpg",
+    "alt": "haveYouEverSeen",
+    "ratio": 0.75,
+    "track": {
+      "title": "Have You Ever Seen the Rain",
+      "artist": "Creedence Clearwater Revival",
+      "src": "/memories/HaveYouEverSeen.mp3"
+    },
+    "at": {
+      "x": 31.6,
+      "y": 30.8
+    },
+    "size": 100,
+    "tilt": -1,
+    "phone": true
+  },
+  {
+    "id": "hotelcal",
+    "photo": "/memories/hotelCal.jpg",
+    "alt": "hotelCal",
+    "ratio": 0.75,
+    "track": {
+      "title": "Hotel California",
+      "artist": "Eagles",
+      "src": "/memories/hotelCal.mp3"
+    },
+    "at": {
+      "x": 84.9,
+      "y": 81.3
+    },
+    "size": 93,
+    "tilt": -4,
+    "phone": false
+  },
+  {
+    "id": "hwhell",
+    "photo": "/memories/hWhell.jpg",
+    "alt": "hWhell",
+    "ratio": 0.75,
+    "track": {
+      "title": "Highway to Hell",
+      "artist": "AC/DC",
+      "src": "/memories/hWHell.mp3"
+    },
+    "at": {
+      "x": 58.7,
+      "y": 86
+    },
+    "size": 142,
+    "tilt": 5,
+    "phone": false
+  },
+  {
+    "id": "immigrant",
+    "photo": "/memories/immigrant.jpeg",
+    "alt": "immigrant",
+    "ratio": 0.5625,
+    "track": {
+      "title": "Immigrant Song",
+      "artist": "Led Zeppelin",
+      "src": "/memories/immigrant.mp3"
+    },
+    "at": {
+      "x": 93.9,
+      "y": 35.6
+    },
+    "size": 143,
+    "tilt": 2,
+    "phone": false
+  },
+  {
+    "id": "kashmir",
+    "photo": "/memories/kashmir.jpg",
+    "alt": "kashmir",
+    "ratio": 0.75,
+    "track": {
+      "title": "Kashmir",
+      "artist": "Led Zeppelin",
+      "src": "/memories/kashmir.mp3"
+    },
+    "at": {
+      "x": 8.2,
+      "y": 14.3
+    },
+    "size": 146,
+    "tilt": 5,
+    "phone": true
+  },
+  {
+    "id": "letdown",
+    "photo": "/memories/letDown.jpg",
+    "alt": "letDown",
+    "ratio": 0.75,
+    "track": {
+      "title": "Let Down",
+      "artist": "Radiohead",
+      "src": "/memories/letDown.mp3"
+    },
+    "at": {
+      "x": 23,
+      "y": 12.2
+    },
+    "size": 123,
+    "tilt": -3,
+    "phone": false
+  },
+  {
+    "id": "letithappen",
+    "photo": "/memories/LetItHappen.jpg",
+    "alt": "LetItHappen",
+    "ratio": 1.3333,
+    "track": {
+      "title": "Let It Happen",
+      "artist": "Tame Impala",
+      "src": "/memories/LetItHappen.mp3"
+    },
+    "at": {
+      "x": 27.5,
+      "y": 66.6
+    },
+    "size": 123,
+    "tilt": -2,
+    "phone": false
+  },
+  {
+    "id": "novrain",
+    "photo": "/memories/novRain.png",
+    "alt": "novRain",
+    "ratio": 0.5631,
+    "track": {
+      "title": "November Rain",
+      "artist": "Guns N' Roses",
+      "src": "/memories/novRain.mp3"
+    },
+    "at": {
+      "x": 67.2,
+      "y": 69.9
+    },
+    "size": 146,
+    "tilt": -5,
+    "phone": false
+  },
+  {
+    "id": "onedance",
+    "photo": "/memories/OneDance.jpg",
+    "alt": "OneDance",
+    "ratio": 0.5625,
+    "track": {
+      "title": "One Dance",
+      "artist": "Drake feat. Wizkid & Kyla",
+      "src": "/memories/OneDance.mp3"
+    },
+    "at": {
+      "x": 17.6,
+      "y": 39
+    },
+    "size": 96,
+    "tilt": -3,
+    "phone": false
+  },
+  {
+    "id": "purplerain",
+    "photo": "/memories/purpleRain.jpg",
+    "alt": "purpleRain",
+    "ratio": 0.7506,
+    "track": {
+      "title": "Purple Rain",
+      "artist": "Prince",
+      "src": "/memories/purpleRain.mp3"
+    },
+    "at": {
+      "x": 59.8,
+      "y": 14
+    },
+    "size": 162,
+    "tilt": -5,
+    "phone": true
+  },
+  {
+    "id": "queen",
+    "photo": "/memories/queen.jpg",
+    "alt": "queen",
+    "ratio": 0.75,
+    "track": {
+      "title": "Bohemian Rhapsody",
+      "artist": "Queen",
+      "src": "/memories/Queen.mp3"
+    },
+    "at": {
+      "x": 31.1,
+      "y": 84.3
+    },
+    "size": 149,
+    "tilt": 3,
+    "phone": false
+  },
+  {
+    "id": "stairtoheaven",
+    "photo": "/memories/stairToHeaven.jpg",
+    "alt": "stairToHeaven",
+    "ratio": 0.75,
+    "track": {
+      "title": "Stairway to Heaven",
+      "artist": "Led Zeppelin",
+      "src": "/memories/stairToHeaven.mp3"
+    },
+    "at": {
+      "x": 27.8,
+      "y": 49.7
+    },
+    "size": 144,
+    "tilt": 5,
+    "phone": false
+  },
+  {
+    "id": "sweetchildomine",
+    "photo": "/memories/SweetChildOmine.jpg",
+    "alt": "SweetChildOmine",
+    "ratio": 0.75,
+    "track": {
+      "title": "Sweet Child O' Mine",
+      "artist": "Guns N' Roses",
+      "src": "/memories/SweetChildOmine.mp3"
+    },
+    "at": {
+      "x": 67.8,
+      "y": 11.8
+    },
+    "size": 130,
+    "tilt": 5,
+    "phone": false
+  },
+  {
+    "id": "thegreatgiginthesky",
+    "photo": "/memories/theGreatGigInTheSky.jpg",
+    "alt": "theGreatGigInTheSky",
+    "ratio": 0.75,
+    "track": {
+      "title": "The Great Gig in the Sky",
+      "artist": "Pink Floyd",
+      "src": "/memories/theGreatGigInTheSky.mp3"
+    },
+    "at": {
+      "x": 93.7,
+      "y": 72.7
+    },
+    "size": 146,
+    "tilt": -5,
+    "phone": false
+  },
+  {
+    "id": "time",
+    "photo": "/memories/time.jpg",
+    "alt": "time",
+    "ratio": 0.5625,
+    "track": {
+      "title": "Time",
+      "artist": "Pink Floyd",
+      "src": "/memories/time.mp3"
+    },
+    "at": {
+      "x": 18.2,
+      "y": 76.4
+    },
+    "size": 93,
+    "tilt": -3,
+    "phone": false
+  }
+]
